@@ -27,6 +27,13 @@ const commonConfig = {
     },
     extensions: ['.js', '.json', '.ts', '.tsx'],
   },
+
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
+
   module: {
     rules: [
       {
