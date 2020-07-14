@@ -13,6 +13,9 @@ function createWindow(): void {
   mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
+    minWidth: 200,
+    minHeight: 200,
+    frame: false,
     webPreferences: {
       webSecurity: false,
       devTools: process.env.NODE_ENV === 'production' ? false : true,
