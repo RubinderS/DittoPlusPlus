@@ -72,14 +72,14 @@ mainConfig.plugins = [
   }),
 ];
 
-const appConfig = lodash.cloneDeep(commonConfig);
-appConfig.entry = './src/app/index.tsx';
-appConfig.target = 'electron-renderer';
-appConfig.output.filename = 'app.bundle.js';
-appConfig.plugins = [
+const rendererConfig = lodash.cloneDeep(commonConfig);
+rendererConfig.entry = './src/renderer/index.tsx';
+rendererConfig.target = 'electron-renderer';
+rendererConfig.output.filename = 'renderer.bundle.js';
+rendererConfig.plugins = [
   new HtmlWebpackPlugin({
     template: path.resolve(__dirname, './public/index.html'),
   }),
 ];
 
-module.exports = [mainConfig, appConfig];
+module.exports = [mainConfig, rendererConfig];
