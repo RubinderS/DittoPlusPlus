@@ -24,14 +24,9 @@ const commonConfig = {
       '@public': srcPaths('public'),
       '@renderer': srcPaths('src/renderer'),
       '@utils': srcPaths('src/utils'),
+      '@types': srcPaths('src/types'),
     },
     extensions: ['.js', '.json', '.ts', '.tsx'],
-  },
-
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
   },
 
   module: {
