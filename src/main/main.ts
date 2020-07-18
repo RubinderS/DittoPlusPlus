@@ -4,6 +4,9 @@
 import {app, BrowserWindow} from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import * as Datastore from 'nedb';
+
+global.Datastore = Datastore;
 
 let mainWindow: Electron.BrowserWindow | null;
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -15,10 +18,11 @@ function createWindow(): void {
     width: 800,
     minWidth: 200,
     minHeight: 200,
-    frame: false,
+    frame: isDevelopment,
     webPreferences: {
       webSecurity: false,
       devTools: process.env.NODE_ENV === 'production' ? false : true,
+      nodeIntegration: true,
     },
   });
 
