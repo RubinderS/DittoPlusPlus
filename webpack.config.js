@@ -8,9 +8,7 @@ function srcPaths(src) {
 }
 
 const isEnvProduction = process.env.NODE_ENV === 'production';
-const isEnvDevelopment =
-  process.env.NODE_ENV === 'development' ||
-  process.env.NODE_ENV === 'devserver';
+const isEnvDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'devserver';
 
 // #region Common settings
 const commonConfig = {
@@ -26,7 +24,8 @@ const commonConfig = {
       '@public': srcPaths('public'),
       '@renderer': srcPaths('src/renderer'),
       '@utils': srcPaths('src/utils'),
-      '@types': srcPaths('src/types'),
+      '@type': srcPaths('src/type'),
+      '@plugins': srcPaths('src/renderer/plugins'),
     },
     extensions: ['.js', '.json', '.ts', '.tsx'],
   },

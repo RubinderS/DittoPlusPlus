@@ -8,9 +8,10 @@
       "@public/*": ["public/*"],
       "@main/*": ["src/main/*"],
       "@models/*": ["src/models/*"],
-      "@renderer*/": ["src/renderer/*"],
+      "@renderer/*": ["src/renderer/*"],
       "@utils/*": ["src/utils/*"],
-      "@types/*": ["src/types/*"]
+      "@type/*": ["src/type/*"],
+      "@plugins/*": ["src/renderer/plugins/*"]
     },
     "module": "commonjs",
     "moduleResolution": "node",
