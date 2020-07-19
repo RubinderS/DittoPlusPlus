@@ -1,27 +1,55 @@
 import * as React from 'react';
 import {clipboard, remote} from 'electron';
+import * as fs from 'fs';
+import * as path from 'path';
 import {PluginBase, InitializeArgs, DatastoreType} from '@plugins/pluginBase';
-
-let lastClipText = clipboard.readText();
+import {DocType} from './types';
 
 export class Clipboard extends PluginBase {
   name = 'Clipboard';
   readonly requiresDb = true;
   db: DatastoreType;
+  lastClip = '';
 
   constructor() {
     super();
   }
 
+  saveFile(fileName: string, data: Buffer) {
+    fs.writeFile(fileName, data, (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+  }
+
   watchClipboard = () => {
     const currClipText = clipboard.readText();
+    const currClipImageBuffer = clipboard.readImage().toPNG();
+    const currClipImageString = currClipImageBuffer.toString();
+    const isImage = currClipImageBuffer.length !== 0;
 
-    if (currClipText !== lastClipText) {
-      lastClipText = currClipText;
-      console.log(currClipText);
-      this.db.insert({data: currClipText}, (err: any, _doc: any) => {
+    if (
+      (currClipText && currClipText !== this.lastClip) ||
+      (currClipImageString && currClipImageString !== this.lastClip)
+    ) {
+      this.lastClip = isImage ? currClipImageString : currClipText;
+
+      const doc: DocType = {
+        type: isImage ? 'image' : 'text',
+        data: isImage ? undefined : currClipText,
+      };
+
+      this.db.insert(doc, (err: any, doc: any) => {
         if (err) {
           throw err;
+        }
+
+        if (isImage) {
+          this.saveFile(
+            path.join('db', 'clipboardImages', `${doc._id}.png`),
+            currClipImageBuffer,
+          );
         }
       });
     }
