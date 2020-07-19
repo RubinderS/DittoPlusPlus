@@ -6,7 +6,9 @@ import * as ReactDOM from 'react-dom';
 
 // Import the styles here to process them with webpack
 import '@public/style.css';
-import {main} from './plugins/clipboard';
+import {activatePlugins} from './managePlugins';
+
+activatePlugins();
 
 ReactDOM.render(
   <div className="app">
@@ -15,5 +17,3 @@ ReactDOM.render(
   </div>,
   document.getElementById('app'),
 );
-
-main();
