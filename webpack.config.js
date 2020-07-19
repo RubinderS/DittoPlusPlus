@@ -1,5 +1,6 @@
 const lodash = require('lodash');
 const CopyPkgJsonPlugin = require('copy-pkg-json-webpack-plugin');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
@@ -66,6 +67,11 @@ mainConfig.plugins = [
       postinstall: 'electron-builder install-app-deps',
     },
   }),
+  new webpack.DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+    },
+  }),
 ];
 
 const rendererConfig = lodash.cloneDeep(commonConfig);
@@ -75,6 +81,11 @@ rendererConfig.output.filename = 'renderer.bundle.js';
 rendererConfig.plugins = [
   new HtmlWebpackPlugin({
     template: path.resolve(__dirname, './public/index.html'),
+  }),
+  new webpack.DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+    },
   }),
 ];
 
