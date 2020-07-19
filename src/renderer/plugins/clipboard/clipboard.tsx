@@ -11,8 +11,21 @@ export class Clipboard extends PluginBase {
 
   constructor() {
     super();
-    console.log('plugin constructed');
   }
+
+  watchClipboard = () => {
+    const currClipText = clipboard.readText();
+
+    if (currClipText !== lastClipText) {
+      lastClipText = currClipText;
+      console.log(currClipText);
+      this.db.insert({data: currClipText}, (err: any, _doc: any) => {
+        if (err) {
+          throw err;
+        }
+      });
+    }
+  };
 
   onInitialize(args: InitializeArgs) {
     const {db} = args;
@@ -21,22 +34,6 @@ export class Clipboard extends PluginBase {
       this.db = db;
     }
 
-    setInterval(() => {
-      const currClipText = clipboard.readText();
-
-      if (currClipText !== lastClipText) {
-        lastClipText = currClipText;
-        console.log(currClipText);
-        this.db.insert({data: currClipText}, (err: any, doc: any) => {
-          if (err) {
-            console.log('error', JSON.stringify(err));
-
-            return;
-          }
-
-          console.log(JSON.stringify(doc));
-        });
-      }
-    }, 200);
+    setInterval(this.watchClipboard, 200);
   }
 }
