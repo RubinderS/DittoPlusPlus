@@ -21,8 +21,6 @@ export class Clipboard extends PluginBase {
       this.db = db;
     }
 
-    console.log('initialized');
-
     setInterval(() => {
       const currClipText = clipboard.readText();
 

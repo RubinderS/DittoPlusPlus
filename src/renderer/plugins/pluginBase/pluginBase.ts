@@ -12,10 +12,6 @@ export class PluginBase {
   requiresDb?: boolean;
   db?: Datastore;
 
-  constructor() {
-    console.log('Plugin base constructed');
-  }
-
   onInitialize?(e: InitializeArgs): void;
   onClick?(e: any): void;
   onAppFocus?(e: any): void;
