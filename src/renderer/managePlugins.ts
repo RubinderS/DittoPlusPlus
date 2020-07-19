@@ -1,6 +1,7 @@
 import {plugins} from '@renderer/plugins/index';
 import {PluginBase, DatastoreType, InitializeArgs} from '@plugins/pluginBase';
 import {remote} from 'electron';
+import * as path from 'path';
 
 let activePlugins: PluginBase[] = [];
 let allPlugins: PluginBase[] = [];
@@ -20,7 +21,7 @@ export const activatePlugins = () => {
 
       if (pObj.requiresDb) {
         const Datastore = remote.getGlobal('Datastore');
-        initArgs.db = new Datastore({filename: pObj.name.toLowerCase(), autoload: true});
+        initArgs.db = new Datastore({filename: path.join('db', `${pObj.name.toLowerCase()}.db`), autoload: true});
       }
 
       pObj.onInitialize(initArgs);
