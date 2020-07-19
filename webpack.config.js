@@ -8,7 +8,9 @@ function srcPaths(src) {
 }
 
 const isEnvProduction = process.env.NODE_ENV === 'production';
-const isEnvDevelopment = process.env.NODE_ENV === 'development';
+const isEnvDevelopment =
+  process.env.NODE_ENV === 'development' ||
+  process.env.NODE_ENV === 'devserver';
 
 // #region Common settings
 const commonConfig = {
@@ -68,7 +70,7 @@ mainConfig.plugins = [
 ];
 
 const rendererConfig = lodash.cloneDeep(commonConfig);
-rendererConfig.entry = './src/renderer/index.tsx';
+rendererConfig.entry = './src/renderer/renderer.tsx';
 rendererConfig.target = 'electron-renderer';
 rendererConfig.output.filename = 'renderer.bundle.js';
 rendererConfig.plugins = [

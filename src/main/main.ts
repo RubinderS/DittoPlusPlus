@@ -9,7 +9,9 @@ import * as Datastore from 'nedb';
 global.Datastore = Datastore;
 
 let mainWindow: Electron.BrowserWindow | null;
+
 const isDevelopment = process.env.NODE_ENV === 'development';
+const isDevserver = process.env.NODE_ENV === 'devserver';
 
 function createWindow(): void {
   // Create the browser window.
@@ -18,7 +20,7 @@ function createWindow(): void {
     width: 800,
     minWidth: 200,
     minHeight: 200,
-    frame: isDevelopment,
+    frame: isDevelopment || isDevserver,
     webPreferences: {
       webSecurity: false,
       devTools: process.env.NODE_ENV === 'production' ? false : true,
@@ -27,7 +29,7 @@ function createWindow(): void {
   });
 
   // and load the index.html of the app.
-  if (isDevelopment) {
+  if (isDevserver) {
     mainWindow.loadURL('http://localhost:8080/');
   } else {
     mainWindow.loadURL(
