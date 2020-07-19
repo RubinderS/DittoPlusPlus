@@ -6,8 +6,8 @@ let lastClipText = clipboard.readText();
 
 export class Clipboard extends PluginBase {
   name = 'Clipboard';
-  db: DatastoreType;
   readonly requiresDb = true;
+  db: DatastoreType;
 
   constructor() {
     super();

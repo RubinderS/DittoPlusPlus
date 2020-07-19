@@ -7,7 +7,7 @@ export interface InitializeArgs {
 }
 
 export class PluginBase {
-  name: string;
+  name: string = 'name_not_defined';
   sideBarIcon?: SVGAElement;
   requiresDb?: boolean;
   db?: Datastore;
