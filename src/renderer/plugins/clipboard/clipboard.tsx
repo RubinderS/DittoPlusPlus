@@ -40,7 +40,7 @@ export class Clipboard extends PluginBase {
         data: isImage ? undefined : currClipText,
       };
 
-      this.db.insert(doc, (err: any, doc: any) => {
+      this.db.insert(doc, (err: any, doc: DocType) => {
         if (err) {
           throw err;
         }
