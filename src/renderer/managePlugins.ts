@@ -1,5 +1,5 @@
 import {plugins} from '@renderer/plugins/index';
-import {PluginBase, DatastoreType} from '@plugins/pluginBase';
+import {PluginBase, DatastoreType, InitializeArgs} from '@plugins/pluginBase';
 import {remote} from 'electron';
 
 let activePlugins: PluginBase[] = [];
@@ -15,15 +15,15 @@ export const activatePlugins = () => {
     allPlugins.push(pObj);
     activePlugins.push(pObj);
 
-    let db = undefined;
-
-    if (pObj.requiresDb) {
-      const Datastore = remote.getGlobal('Datastore');
-      db = new Datastore({filename: pObj.name.toLowerCase(), autoload: true});
-    }
-
     if (pObj.onInitialize) {
-      pObj.onInitialize({db});
+      const initArgs: InitializeArgs = {};
+
+      if (pObj.requiresDb) {
+        const Datastore = remote.getGlobal('Datastore');
+        initArgs.db = new Datastore({filename: pObj.name.toLowerCase(), autoload: true});
+      }
+
+      pObj.onInitialize(initArgs);
     }
   });
 

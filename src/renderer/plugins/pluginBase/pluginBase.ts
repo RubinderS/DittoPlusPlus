@@ -13,7 +13,7 @@ export class PluginBase {
   db?: Datastore;
 
   constructor() {
-    console.log('Plaugin base constructed');
+    console.log('Plugin base constructed');
   }
 
   onInitialize?(e: InitializeArgs): void;
