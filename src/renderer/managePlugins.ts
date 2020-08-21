@@ -1,5 +1,5 @@
 import {plugins} from '@renderer/plugins/index';
-import {PluginBase, DatastoreType, InitializeArgs} from '@plugins/pluginBase';
+import {PluginBase, InitializeArgs} from '@plugins/pluginBase';
 import {remote} from 'electron';
 import * as path from 'path';
 
@@ -10,9 +10,7 @@ export const activatePlugins = () => {
   plugins.map((plugin) => {
     const pObj = new plugin();
 
-    allPlugins.push(pObj);
-    activePlugins.push(pObj);
-
+    /* perform initalization logic */
     if (pObj.onInitialize) {
       const initArgs: InitializeArgs = {};
 
@@ -26,6 +24,10 @@ export const activatePlugins = () => {
 
       pObj.onInitialize(initArgs);
     }
+
+    /* maintain plugin lists */
+    allPlugins.push(pObj);
+    activePlugins.push(pObj);
   });
 
   activePlugins.forEach((plugin) => {
