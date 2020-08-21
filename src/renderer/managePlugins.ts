@@ -7,9 +7,6 @@ let activePlugins: PluginBase[] = [];
 let allPlugins: PluginBase[] = [];
 
 export const activatePlugins = () => {
-  console.log('called activate');
-  allPlugins;
-
   plugins.map((plugin) => {
     const pObj = new plugin();
 
