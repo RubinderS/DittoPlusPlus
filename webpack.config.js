@@ -3,13 +3,16 @@ const CopyPkgJsonPlugin = require('copy-pkg-json-webpack-plugin');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 function srcPaths(src) {
   return path.join(__dirname, src);
 }
 
 const isEnvProduction = process.env.NODE_ENV === 'production';
-const isEnvDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'devserver';
+const isEnvDevelopment =
+  process.env.NODE_ENV === 'development' ||
+  process.env.NODE_ENV === 'devserver';
 
 // #region Common settings
 const commonConfig = {
@@ -18,16 +21,11 @@ const commonConfig = {
   output: {path: srcPaths('dist')},
   node: {__dirname: false, __filename: false},
   resolve: {
-    alias: {
-      '@': srcPaths('src'),
-      '@main': srcPaths('src/main'),
-      '@models': srcPaths('src/models'),
-      '@public': srcPaths('public'),
-      '@renderer': srcPaths('src/renderer'),
-      '@utils': srcPaths('src/utils'),
-      '@type': srcPaths('src/type'),
-      '@plugins': srcPaths('src/renderer/plugins'),
-    },
+    plugins: [
+      new TsconfigPathsPlugin({
+        /* options: see below */
+      }),
+    ],
     extensions: ['.js', '.json', '.ts', '.tsx'],
   },
 
