@@ -25,7 +25,7 @@ export const activatePlugins = () => {
       pObj.onInitialize(initArgs);
     }
 
-    /* maintain plugin lists */
+    /* maintain plugins lists */
     allPlugins.push(pObj);
     activePlugins.push(pObj);
   });
