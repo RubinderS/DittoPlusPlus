@@ -16,6 +16,7 @@ export const activatePlugins = () => {
 
       if (pObj.requiresDb) {
         const Datastore = remote.getGlobal('Datastore');
+
         initArgs.db = new Datastore({
           filename: path.join('db', `${pObj.name.toLowerCase()}.db`),
           autoload: true,
