@@ -7,13 +7,13 @@ import * as ReactDOM from 'react-dom';
 // Import the styles here to process them with webpack
 import '@public/style.css';
 import {activatePlugins} from './managePlugins';
+import {Home} from './ui';
 
 activatePlugins();
 
 ReactDOM.render(
   <div className="app">
-    <h4>Welcome to React, Electron and Typescript 5</h4>
-    <p>Hello</p>
+    <Home />
   </div>,
   document.getElementById('app'),
 );
