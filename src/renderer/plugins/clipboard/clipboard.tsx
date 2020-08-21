@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {clipboard, remote} from 'electron';
+import {clipboard} from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
 import {PluginBase, InitializeArgs, DatastoreType} from '@plugins/pluginBase';
