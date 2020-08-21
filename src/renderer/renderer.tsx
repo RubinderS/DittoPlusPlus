@@ -11,9 +11,4 @@ import {Home} from './ui';
 
 activatePlugins();
 
-ReactDOM.render(
-  <div className="app">
-    <Home />
-  </div>,
-  document.getElementById('app'),
-);
+ReactDOM.render(<Home />, document.getElementById('app'));
