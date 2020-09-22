@@ -5,8 +5,8 @@
   "main": "./dist/main.bundle.js",
   "scripts": {
     "start": "electron ./dist/main.bundle.js",
-    "build:main:server": "nodemon -e ts,tsx -w ./src --exec \"npm run build:dev && npm start\"",
-    "build:renderer:server": "rimraf dist && cross-env NODE_ENV=devserver webpack --progress --colors && webpack-dev-server",
+    "build:remote:main": "nodemon -e ts,tsx -w ./src --exec \"npm run build:dev && npm start\"",
+    "build:remote:renderer": "rimraf dist && cross-env NODE_ENV=devserver webpack --progress --colors && webpack-dev-server",
     "build:dev": "rimraf dist && cross-env NODE_ENV=development webpack --progress --colors",
     "build:prod": "rimraf dist && cross-env NODE_ENV=production webpack --progress --colors",
     "test": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.ts\"",
