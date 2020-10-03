@@ -21,6 +21,7 @@ function createWindow(): void {
     minWidth: 200,
     minHeight: 200,
     frame: isDevelopment || isDevserver,
+    alwaysOnTop: true,
     webPreferences: {
       webSecurity: false,
       devTools: process.env.NODE_ENV === 'production' ? false : true,

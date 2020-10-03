@@ -8,7 +8,22 @@ import * as ReactDOM from 'react-dom';
 import '@public/style.css';
 import {activatePlugins} from './managePlugins';
 import {Home} from '@ui/home';
+import {createMuiTheme, ThemeProvider} from '@material-ui/core';
 
 activatePlugins();
 
-ReactDOM.render(<Home />, document.getElementById('app'));
+const theme = createMuiTheme({
+  palette: {
+    // primary: {
+    // main: '#898989',
+    // },
+  },
+});
+
+ReactDOM.render(
+  <ThemeProvider theme={theme}>
+    <Home />
+  </ThemeProvider>,
+
+  document.getElementById('app'),
+);

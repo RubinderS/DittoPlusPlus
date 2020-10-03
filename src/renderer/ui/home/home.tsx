@@ -1,25 +1,32 @@
+import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import * as React from 'react';
 
 export const Home = (props: any) => {
-  return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-      }}
-    >
-      <div
-        style={{
-          width: '7%',
-          float: 'left',
-          backgroundColor: 'blue',
-          height: '100%',
-        }}
-      >
-        #left content in here
-      </div>
+  const classes = useStyles();
 
-      <div style={{width: '93%', float: 'right'}}>#right content in there</div>
+  return (
+    <div className={classes.container}>
+      <div className={classes.sideBar}></div>
+      <div className={classes.content}></div>
     </div>
   );
 };
+
+const useStyles = makeStyles((theme: Theme) => {
+  const {palette} = theme;
+
+  return createStyles({
+    container: {
+      display: 'flex',
+      height: '100%',
+      width: '100%',
+    },
+    sideBar: {
+      flex: '10%',
+      backgroundColor: palette.primary.main,
+    },
+    content: {
+      flex: '90%',
+    },
+  });
+});
