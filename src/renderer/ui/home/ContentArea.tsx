@@ -7,7 +7,7 @@ interface Props {
   selectedIndex: number;
 }
 
-const Content = (props: Props) => {
+const ContentArea = (props: Props) => {
   const classes = useStyles();
   const {activePlugins, selectedIndex} = props;
 
@@ -34,4 +34,4 @@ const Content = (props: Props) => {
   );
 };
 
-export default Content;
+export default ContentArea;

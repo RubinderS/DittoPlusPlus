@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useStyles} from './styles';
 import {PluginBase} from '@pluginBase';
 import Sidebar from './Sidebar';
-import Content from './Content';
+import ContentArea from './ContentArea';
 
 interface Props {
   activePlugins: PluginBase[];
@@ -16,7 +16,10 @@ export const Home = (props: Props) => {
   return (
     <div className={classes.container}>
       <Sidebar activePlugins={activePlugins} selectedIndex={selectedIndex} />
-      <Content activePlugins={activePlugins} selectedIndex={selectedIndex} />
+      <ContentArea
+        activePlugins={activePlugins}
+        selectedIndex={selectedIndex}
+      />
     </div>
   );
 };
