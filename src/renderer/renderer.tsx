@@ -7,7 +7,7 @@ import * as ReactDOM from 'react-dom';
 // Import the styles here to process them with webpack
 import '@public/style.css';
 import {activatePlugins} from './managePlugins';
-import {Home} from './ui';
+import {Home} from '@ui/home';
 
 activatePlugins();
 

@@ -11,7 +11,8 @@
       "@renderer/*": ["src/renderer/*"],
       "@utils/*": ["src/utils/*"],
       "@type/*": ["src/type/*"],
-      "@plugins/*": ["src/renderer/plugins/*"]
+      "@plugins/*": ["src/renderer/plugins/*"],
+      "@ui/*": ["src/renderer/ui/*"]
     },
     "module": "commonjs",
     "moduleResolution": "node",
