@@ -20,12 +20,15 @@ const ContentArea = (props: Props) => {
   };
 
   return (
-    <div className={classes.content}>
+    <div className={classes.contentArea}>
       {activePlugins
         .filter((_plugin, index) => index === selectedIndex)
         .map((plugin, index) => {
           return (
-            <div key={`${index}_content_selected_${plugin.name.toLowerCase()}`}>
+            <div
+              key={`${index}_content_selected_${plugin.name.toLowerCase()}`}
+              className={classes.contentRendered}
+            >
               {getContent(plugin)}
             </div>
           );

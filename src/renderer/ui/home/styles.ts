@@ -7,15 +7,19 @@ export const useStyles = makeStyles((theme: Theme) => {
     container: {
       display: 'flex',
       height: '100%',
-      width: '100%',
+      // minWidth: '400px',
+      // maxWidth: '400px',
     },
     sideBar: {
-      flex: '10%',
+      width: '80px',
       backgroundColor: palette.primary.main,
     },
-    content: {
-      flex: '90%',
+    contentArea: {
       margin: '5px',
+    },
+    contentRendered: {
+      overflowY: 'scroll',
+      height: '100%',
     },
     pluginIcon: {
       height: '50px',
