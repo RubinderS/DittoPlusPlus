@@ -1,4 +1,4 @@
-import {Clipboard} from '@plugins/clipboard';
-import {PluginBase} from '@plugins/pluginBase';
+import {PluginBase} from '@pluginBase';
+import {Clipboard} from './clipboard';
 
 export const plugins: typeof PluginBase[] = [Clipboard];

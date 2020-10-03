@@ -2,12 +2,18 @@ import * as React from 'react';
 import {clipboard} from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
-import {PluginBase, InitializeArgs, DatastoreType} from '@plugins/pluginBase';
-import {DocType} from './types';
+import {PluginBase} from '@pluginBase';
+import {DatastoreType, PluginInitArgs} from '@types';
+
+interface DocType {
+  _id?: string;
+  data?: string;
+  type: 'text' | 'image';
+}
 
 export class Clipboard extends PluginBase {
   name = 'Clipboard';
-  readonly requiresDb = true;
+  requiresDb = true;
   db: DatastoreType;
   lastClip = '';
 
@@ -55,7 +61,7 @@ export class Clipboard extends PluginBase {
     }
   };
 
-  onInitialize(args: InitializeArgs) {
+  onInitialize(args: PluginInitArgs) {
     const {db} = args;
 
     if (db) {
@@ -63,5 +69,9 @@ export class Clipboard extends PluginBase {
     }
 
     setInterval(this.watchClipboard, 200);
+  }
+
+  render() {
+    return <div>yo</div>;
   }
 }

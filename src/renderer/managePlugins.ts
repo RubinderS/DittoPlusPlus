@@ -1,34 +1,35 @@
-import {plugins} from '@renderer/plugins/index';
-import {PluginBase, InitializeArgs} from '@plugins/pluginBase';
-import {remote} from 'electron';
+import {plugins} from '@plugins';
+import {PluginBase} from '@pluginBase';
+import {PluginInitArgs} from '@types';
 import * as path from 'path';
+import {remote} from 'electron';
 
 let activePlugins: PluginBase[] = [];
 let allPlugins: PluginBase[] = [];
 
-export const activatePlugins = () => {
+export const loadPlugins = (): PluginBase[] => {
   plugins.map((plugin) => {
-    const pObj = new plugin();
+    const pluginObj = new plugin();
 
     /* perform initalization logic */
-    if (pObj.onInitialize) {
-      const initArgs: InitializeArgs = {};
+    if (pluginObj.onInitialize) {
+      const initArgs: PluginInitArgs = {};
 
-      if (pObj.requiresDb) {
+      if (pluginObj.requiresDb) {
         const Datastore = remote.getGlobal('Datastore');
 
         initArgs.db = new Datastore({
-          filename: path.join('db', `${pObj.name.toLowerCase()}.db`),
+          filename: path.join('db', `${pluginObj.name.toLowerCase()}.db`),
           autoload: true,
         });
       }
 
-      pObj.onInitialize(initArgs);
+      pluginObj.onInitialize(initArgs);
     }
 
     /* maintain plugins lists */
-    allPlugins.push(pObj);
-    activePlugins.push(pObj);
+    allPlugins.push(pluginObj);
+    activePlugins.push(pluginObj);
   });
 
   activePlugins.forEach((plugin) => {
@@ -38,4 +39,6 @@ export const activatePlugins = () => {
   setInterval(() => {
     // keep listening for main process msgs
   }, 100);
+
+  return activePlugins;
 };
