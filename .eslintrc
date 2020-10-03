@@ -12,19 +12,15 @@
         "ignoreUrls": true
       }
     ],
-    "import/no-extraneous-dependencies": [
-      "error",
-      {
-        "devDependencies": ["webpack.*.js", "test/**/*.js"]
-      }
-    ],
+    "import/no-extraneous-dependencies": "off",
     "sort-imports": 2,
     "import/prefer-default-export": 0,
     "import/no-default-export": 2,
     "import/no-named-default": 0,
     "react/jsx-no-bind": false,
     "linebreak-style": 0,
-    "object-curly-spacing": 0
+    "object-curly-spacing": 0,
+    "operator-linebreak": "off"
   },
   "plugins": ["import"],
   "settings": {
