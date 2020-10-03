@@ -5,13 +5,14 @@
   "main": "./dist/main.bundle.js",
   "scripts": {
     "start": "electron ./dist/main.bundle.js",
-    "build:remote:main": "nodemon -e ts,tsx -w ./src --exec \"npm run build:dev && npm start\"",
-    "build:remote:renderer": "rimraf dist && cross-env NODE_ENV=devserver webpack --progress --colors && webpack-dev-server",
-    "build:dev": "rimraf dist && cross-env NODE_ENV=development webpack --progress --colors",
-    "build:prod": "rimraf dist && cross-env NODE_ENV=production webpack --progress --colors",
-    "test": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.ts\"",
+    "build": "rimraf dist && webpack --progress --colors",
+    "build:dev": "cross-env NODE_ENV=development npm run build",
+    "build:prod": "cross-env NODE_ENV=production npm run build",
+    "build:main:remote": "nodemon -e ts,tsx -w ./src --exec \"npm run build:dev && npm start\"",
+    "build:renderer:remote": "cross-env NODE_ENV=devserver npm run build && webpack-dev-server",
     "build:win": "electron-builder build --win --x64",
-    "build:mac": "electron-builder build --mac --x64"
+    "build:mac": "electron-builder build --mac --x64",
+    "test": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.ts\""
   },
   "build": {
     "appId": "dittoplusplus",
@@ -41,7 +42,6 @@
   },
   "devDependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^14.11.2",
     "@types/react-router": "^4.4.5",
     "@types/react-router-dom": "^4.3.5",
     "acorn": "^6.4.1",
