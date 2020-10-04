@@ -1,1 +1,1 @@
-export * from './clipboard';
+export * from './plugin';
