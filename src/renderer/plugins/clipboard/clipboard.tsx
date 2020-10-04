@@ -100,6 +100,20 @@ export class Clipboard extends PluginBase {
     });
   };
 
+  onClickClipItem = (e: ClipItem) => {
+    const id = this.clipItems.findIndex(
+      (clipItem, index) => clipItem._id === e._id,
+    );
+
+    this.clipItems = [
+      ...this.clipItems.slice(0, id),
+      ...this.clipItems.slice(id + 1),
+    ];
+
+    this.updateClipItems(this.clipItems);
+    clipboard.writeText(e.data!);
+  };
+
   render = () => {
     const classes = useStyles();
     const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
@@ -123,7 +137,11 @@ export class Clipboard extends PluginBase {
     return (
       <Box className={classes.container}>
         {clipItems.map((item, index) => (
-          <Box key={`${index}_clipItem`} className={classes.clipItem}>
+          <Box
+            key={`${index}_clipItem`}
+            className={classes.clipItem}
+            onClick={() => this.onClickClipItem(item)}
+          >
             {item.data}
           </Box>
         ))}
