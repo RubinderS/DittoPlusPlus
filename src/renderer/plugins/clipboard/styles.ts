@@ -18,6 +18,8 @@ export const useStyles = makeStyles((theme: Theme) => {
       padding: '5px',
       borderRadius: '4px',
       marginTop: '2px',
+      // width: '100%',
+      // minWidth: '100px',
       maxWidth: '700px',
     },
     // pluginIcon: {
