@@ -21,7 +21,6 @@ function createWindow(): void {
     minWidth: 200,
     minHeight: 200,
     frame: isDevelopment || isDevserver,
-    alwaysOnTop: true,
     webPreferences: {
       webSecurity: false,
       devTools: process.env.NODE_ENV === 'production' ? false : true,
@@ -41,6 +40,9 @@ function createWindow(): void {
       }),
     );
   }
+
+  mainWindow.setAlwaysOnTop(true);
+
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows
