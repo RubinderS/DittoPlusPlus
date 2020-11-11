@@ -9,8 +9,8 @@ export class PluginBase {
   constructor() {}
 
   onInitialize?(e: PluginInitArgs): void;
-  onClick?(e: any): void;
   onAppFocus?(e: any): void;
   onAppUnFocus?(e: any): void;
-  render?(): React.ReactNode;
+  onIconClick?(e: any): void;
+  getComponent?(): React.ReactNode;
 }

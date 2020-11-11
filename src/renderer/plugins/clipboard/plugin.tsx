@@ -114,7 +114,7 @@ export class Clipboard extends PluginBase {
     clipboard.writeText(e.data!);
   };
 
-  render = () => {
+  getComponent = () => {
     const classes = useStyles();
     const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
 

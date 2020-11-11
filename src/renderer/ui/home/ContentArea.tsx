@@ -12,11 +12,11 @@ const ContentArea = (props: Props) => {
   const {activePlugins, selectedIndex} = props;
 
   const getContent = (plugin: PluginBase) => {
-    if (!plugin.render) {
+    if (!plugin.getComponent) {
       return <div>plugin doesn't have a ui</div>;
     }
 
-    return plugin.render();
+    return plugin.getComponent();
   };
 
   return (
