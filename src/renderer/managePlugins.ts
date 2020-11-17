@@ -1,7 +1,12 @@
 import {pluginManifests} from '@plugins';
 import * as path from 'path';
 import {remote} from 'electron';
-import {ActivePlugin, PluginInitArgs, PluginManifest} from '@type/pluginTypes';
+import {
+  ActivePlugin,
+  PluginInitArgs,
+  PluginManifest,
+  PluginProcessAbstract,
+} from '@type/pluginTypes';
 
 let activePlugins: ActivePlugin[] = [];
 let allPlugins: PluginManifest[] = [];
@@ -28,6 +33,9 @@ export const loadPlugins = () => {
         }
 
         activeProcess.initialize(initArgs);
+      } else {
+        // initialize with an empty process if process doesn't exist
+        activeProcess = new PluginProcessAbstract();
       }
 
       activePlugin = {...pluginManifest, process: activeProcess};

@@ -6,10 +6,10 @@ export interface PluginInitArgs {
 }
 
 export interface PluginRenderProps {
-  process?: PluginProcess;
+  process: PluginProcessAbstract;
 }
 
-export class PluginProcess extends EventEmitter {
+export class PluginProcessAbstract extends EventEmitter {
   sendMessage: (message: string, cb: (response: any) => void) => void;
   initialize: (args: PluginInitArgs) => void;
   onAppFocus?(e: any): void;
@@ -22,7 +22,7 @@ export interface PluginManifest {
   name: string;
   sideIcon?: string;
   requiresDb?: boolean;
-  process?: typeof PluginProcess;
+  process?: typeof PluginProcessAbstract;
   render?: (props: PluginRenderProps) => React.ReactNode;
 }
 
@@ -31,6 +31,6 @@ export interface ActivePlugin {
   name: string;
   sideIcon?: string;
   requiresDb?: boolean;
-  process?: PluginProcess;
+  process?: PluginProcessAbstract;
   render?: (props: PluginRenderProps) => React.ReactNode;
 }

@@ -11,10 +11,6 @@ export const ClipboardComponent = (props: PluginRenderProps) => {
   const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
   const {process} = props;
 
-  if (!process) {
-    return null;
-  }
-
   process.on(ClipEvents.NewClip, (doc: ClipItem) => {
     updateClipItems([...clipItems, doc]);
   });
