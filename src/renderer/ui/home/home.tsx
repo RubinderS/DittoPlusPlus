@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {useStyles} from './styles';
-import {PluginBase} from '@pluginBase';
 import Sidebar from './Sidebar';
 import ContentArea from './ContentArea';
+import {ActivePlugin} from '@type/pluginTypes';
 
 interface Props {
-  activePlugins: PluginBase[];
+  activePlugins: ActivePlugin[];
   selectedIndex: number;
 }
 

@@ -7,6 +7,7 @@ export const useStyles = makeStyles((theme: Theme) => {
     container: {
       display: 'flex',
       height: '100%',
+      backgroundColor: 'red',
     },
     sideBar: {
       width: '80px',

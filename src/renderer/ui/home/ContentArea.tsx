@@ -1,9 +1,9 @@
-import {PluginBase} from '@pluginBase';
+import {ActivePlugin} from '@type/pluginTypes';
 import * as React from 'react';
 import {useStyles} from './styles';
 
 interface Props {
-  activePlugins: PluginBase[];
+  activePlugins: ActivePlugin[];
   selectedIndex: number;
 }
 
@@ -11,12 +11,14 @@ const ContentArea = (props: Props) => {
   const classes = useStyles();
   const {activePlugins, selectedIndex} = props;
 
-  const getContent = (plugin: PluginBase) => {
-    if (!plugin.getComponent) {
+  const getContent = (plugin: ActivePlugin) => {
+    const {process, render} = plugin;
+
+    if (!render) {
       return <div>plugin doesn't have a ui</div>;
     }
 
-    return plugin.getComponent();
+    return render({process: process});
   };
 
   return (
