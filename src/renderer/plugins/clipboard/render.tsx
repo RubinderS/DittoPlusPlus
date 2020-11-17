@@ -15,11 +15,9 @@ export const ClipboardComponent = (props: PluginRenderProps) => {
     return null;
   }
 
-  if (process) {
-    process.on(ClipEvents.NewClip, (doc: ClipItem) => {
-      updateClipItems([...clipItems, doc]);
-    });
-  }
+  process.on(ClipEvents.NewClip, (doc: ClipItem) => {
+    updateClipItems([...clipItems, doc]);
+  });
 
   const onClickClipItem = (e: ClipItem) => {
     const id = clipItems.findIndex((clipItem, index) => clipItem._id === e._id);
