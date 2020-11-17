@@ -10,10 +10,6 @@ export interface PluginRenderProps {
 }
 
 export class PluginProcess extends EventEmitter {
-  // constructor() {
-  //   super();
-  // }
-
   sendMessage: (message: string, cb: (response: any) => void) => void;
   initialize: (args: PluginInitArgs) => void;
   onAppFocus?(e: any): void;
