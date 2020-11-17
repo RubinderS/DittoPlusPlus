@@ -1,6 +1,6 @@
 import {ClipItem, ClipListener} from './types';
 import {PluginProcess, PluginManifest, PluginInitArgs} from '@type/pluginTypes';
-import {ClipboardComponent} from './component';
+import {ClipboardComponent} from './render';
 import {ClipboardProcess} from './process';
 
 // export class Clipboard extends PluginBase {
