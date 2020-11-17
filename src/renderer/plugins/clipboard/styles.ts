@@ -8,6 +8,7 @@ export const useStyles = makeStyles((theme: Theme) => {
       display: 'flex',
       height: '100%',
       // width: '100%',
+      minWidth: '200px',
       flexDirection: 'column',
       // backgroundColor: 'grey',
     },

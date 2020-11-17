@@ -27,7 +27,7 @@ export interface PluginManifest {
   sideIcon?: string;
   requiresDb?: boolean;
   process?: typeof PluginProcess;
-  render?: (props: PluginRenderProps) => JSX.Element;
+  render?: (props: PluginRenderProps) => React.ReactNode;
 }
 
 export interface ActivePlugin {
@@ -36,5 +36,5 @@ export interface ActivePlugin {
   sideIcon?: string;
   requiresDb?: boolean;
   process?: PluginProcess;
-  render?: (props: PluginRenderProps) => JSX.Element;
+  render?: (props: PluginRenderProps) => React.ReactNode;
 }

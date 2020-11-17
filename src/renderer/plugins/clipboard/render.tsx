@@ -1,68 +1,34 @@
 import {Box} from '@material-ui/core';
 import * as React from 'react';
 import {useStyles} from './styles';
-import {ClipItem} from './types';
+import {ClipItem, ClipEvents, ClipMessages} from './types';
+import {PluginRenderProps} from '@type/pluginTypes';
+import {useState} from 'react';
+import {clipboard} from 'electron';
 
-export const ClipboardComponent = () => {
+export const ClipboardComponent = (props: PluginRenderProps) => {
   const classes = useStyles();
-  // const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
+  const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
+  const {process} = props;
 
-  // const saveFile = (fileName: string, data: Buffer) => {
-  //   fs.writeFile(fileName, data, (err) => {
-  //     if (err) {
-  //       throw err;
-  //     }
-  //   });
-  // };
+  if (!process) {
+    return null;
+  }
 
-  // const watchClipboard = () => {
-  //   const currClipText = clipboard.readText();
-  //   const currClipImageBuffer = clipboard.readImage().toPNG();
-  //   const currClipImageString = currClipImageBuffer.toString();
-  //   const isImage = currClipImageBuffer.length !== 0;
+  if (process) {
+    process.on(ClipEvents.NewClip, (doc: ClipItem) => {
+      updateClipItems([...clipItems, doc]);
+    });
+  }
 
-  //   if (
-  //     (currClipText && currClipText !== this.lastClip) ||
-  //     (currClipImageString && currClipImageString !== this.lastClip)
-  //   ) {
-  //     this.lastClip = isImage ? currClipImageString : currClipText;
+  const onClickClipItem = (e: ClipItem) => {
+    const id = clipItems.findIndex((clipItem, index) => clipItem._id === e._id);
+    const _clipItems = [...clipItems.slice(0, id), ...clipItems.slice(id + 1)];
+    updateClipItems([e, ..._clipItems]);
+    // clipboard.writeText(e.data!);
+    process.sendMessage(ClipMessages.WriteClip, () => {});
+  };
 
-  //     const doc: ClipItem = {
-  //       type: isImage ? 'image' : 'text',
-  //       data: isImage ? undefined : currClipText,
-  //     };
-
-  //     this.db.insert(doc, (err: any, doc: ClipItem) => {
-  //       if (err) {
-  //         throw err;
-  //       }
-
-  //       if (isImage) {
-  //         this.saveFile(
-  //           path.join('db', 'clipboardImages', `${doc._id}.png`),
-  //           currClipImageBuffer,
-  //         );
-  //       }
-
-  //       this.clipItems = [doc, ...this.clipItems];
-  //       this.updateClipItems && this.updateClipItems(this.clipItems);
-  //     });
-  //   }
-  // };
-
-  // const onClickClipItem = (e: ClipItem) => {
-  //   const id = this.clipItems.findIndex(
-  //     (clipItem, index) => clipItem._id === e._id,
-  //   );
-
-  //   this.clipItems = [
-  //     ...this.clipItems.slice(0, id),
-  //     ...this.clipItems.slice(id + 1),
-  //   ];
-
-  //   this.updateClipItems(this.clipItems);
-  //   clipboard.writeText(e.data!);
-  // };
   // const getClipItems = async (): Promise<ClipItem[]> => {
   //   if (this.clipItems) {
   //     return this.clipItems;
@@ -96,19 +62,19 @@ export const ClipboardComponent = () => {
   //     });
   // }, []);
 
-  // return (
-  //   <Box className={classes.container}>
-  //     {clipItems.map((item, index) => (
-  //       <Box
-  //         key={`${index}_clipItem`}
-  //         className={classes.clipItem}
-  //         onClick={() => this.onClickClipItem(item)}
-  //       >
-  //         {item.data}
-  //       </Box>
-  //     ))}
-  //   </Box>
-  // );
+  return (
+    <Box className={classes.container}>
+      {clipItems.map((item, index) => (
+        <Box
+          key={`${index}_clipItem`}
+          className={classes.clipItem}
+          onClick={() => onClickClipItem(item)}
+        >
+          {item.data}
+        </Box>
+      ))}
+    </Box>
+  );
 
   return <Box className={classes.container}></Box>;
 };
