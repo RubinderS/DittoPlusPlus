@@ -1,29 +1,29 @@
 import {EventEmitter} from 'events';
 import {DatastoreType} from './dbTypes';
 
-export interface PluginInitArgs {
+export interface ProcessInitArgs {
   db?: DatastoreType;
 }
 
-export interface PluginRenderProps {
-  process: PluginProcessAbstract;
+export interface RenderProps {
+  process: ProcessAbstract;
 }
 
-export class PluginProcessAbstract extends EventEmitter {
+export class ProcessAbstract extends EventEmitter {
   sendMessage: (message: string, cb: (response: any) => void) => void;
-  initialize: (args: PluginInitArgs) => void;
+  initialize: (args: ProcessInitArgs) => void;
   onAppFocus?(e: any): void;
   onAppUnFocus?(e: any): void;
   onIconClick?(e: any): void;
 }
 
-export interface PluginManifest {
+export interface Manifest {
   id: number;
   name: string;
   sideIcon?: string;
   requiresDb?: boolean;
-  process?: typeof PluginProcessAbstract;
-  render?: (props: PluginRenderProps) => React.ReactNode;
+  process?: typeof ProcessAbstract;
+  render?: (props: RenderProps) => React.ReactNode;
 }
 
 export interface ActivePlugin {
@@ -31,6 +31,6 @@ export interface ActivePlugin {
   name: string;
   sideIcon?: string;
   requiresDb?: boolean;
-  process?: PluginProcessAbstract;
-  render?: (props: PluginRenderProps) => React.ReactNode;
+  process?: ProcessAbstract;
+  render?: (props: RenderProps) => React.ReactNode;
 }

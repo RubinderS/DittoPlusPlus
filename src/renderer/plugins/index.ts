@@ -1,4 +1,4 @@
 import {ClipBoard} from './clipboard';
-import {PluginManifest} from '@type/pluginTypes';
+import * as PluginTypes from '@type/pluginTypes';
 
-export const pluginManifests: PluginManifest[] = [ClipBoard];
+export const pluginManifests: PluginTypes.Manifest[] = [ClipBoard];

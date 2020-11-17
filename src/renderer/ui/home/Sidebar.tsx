@@ -1,9 +1,9 @@
-import {ActivePlugin} from '@type/pluginTypes';
+import * as PluginTypes from '@type/pluginTypes';
 import * as React from 'react';
 import {useStyles} from './styles';
 
 interface Props {
-  activePlugins: ActivePlugin[];
+  activePlugins: PluginTypes.ActivePlugin[];
   selectedIndex: number;
 }
 

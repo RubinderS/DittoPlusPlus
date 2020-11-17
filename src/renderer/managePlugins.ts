@@ -1,27 +1,22 @@
 import {pluginManifests} from '@plugins';
 import * as path from 'path';
 import {remote} from 'electron';
-import {
-  ActivePlugin,
-  PluginInitArgs,
-  PluginManifest,
-  PluginProcessAbstract,
-} from '@type/pluginTypes';
+import * as PluginTypes from '@type/pluginTypes';
 
-let activePlugins: ActivePlugin[] = [];
-let allPlugins: PluginManifest[] = [];
+let activePlugins: PluginTypes.ActivePlugin[] = [];
+let allPlugins: PluginTypes.Manifest[] = [];
 
 export const loadPlugins = () => {
   pluginManifests.map((pluginManifest, index) => {
     const {id, name, requiresDb, process, render} = pluginManifest;
 
     if (isPluginActive(id)) {
-      let activePlugin: ActivePlugin;
+      let activePlugin: PluginTypes.ActivePlugin;
       let activeProcess;
 
       if (process) {
         activeProcess = new process();
-        const initArgs: PluginInitArgs = {};
+        const initArgs: PluginTypes.ProcessInitArgs = {};
 
         if (requiresDb) {
           const Datastore = remote.getGlobal('Datastore');
@@ -33,9 +28,6 @@ export const loadPlugins = () => {
         }
 
         activeProcess.initialize(initArgs);
-      } else {
-        // initialize with an empty process if process doesn't exist
-        activeProcess = new PluginProcessAbstract();
       }
 
       activePlugin = {...pluginManifest, process: activeProcess};

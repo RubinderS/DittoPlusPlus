@@ -2,11 +2,11 @@ import {Box} from '@material-ui/core';
 import * as React from 'react';
 import {useStyles} from './styles';
 import {ClipItem, ClipEvents, ClipMessages} from './types';
-import {PluginRenderProps} from '@type/pluginTypes';
+import * as PluginTypes from '@type/pluginTypes';
 import {useState} from 'react';
 import {clipboard} from 'electron';
 
-export const ClipboardComponent = (props: PluginRenderProps) => {
+export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
   const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
   const {process} = props;

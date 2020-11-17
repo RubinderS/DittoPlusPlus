@@ -1,5 +1,5 @@
 import {ClipItem, ClipListener} from './types';
-import {PluginProcess, PluginManifest, PluginInitArgs} from '@type/pluginTypes';
+import * as PluginTypes from '@type/pluginTypes';
 import {ClipboardComponent} from './render';
 import {ClipboardProcess} from './process';
 
@@ -29,7 +29,7 @@ import {ClipboardProcess} from './process';
 //   getComponent = () => {};
 // }
 
-export const ClipBoard: PluginManifest = {
+export const ClipBoard: PluginTypes.Manifest = {
   id: 1,
   name: 'Clipboard',
   sideIcon: 'icon',

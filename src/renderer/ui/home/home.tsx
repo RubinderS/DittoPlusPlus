@@ -2,10 +2,10 @@ import * as React from 'react';
 import {useStyles} from './styles';
 import Sidebar from './Sidebar';
 import ContentArea from './ContentArea';
-import {ActivePlugin} from '@type/pluginTypes';
+import * as PluginTypes from '@type/pluginTypes';
 
 interface Props {
-  activePlugins: ActivePlugin[];
+  activePlugins: PluginTypes.ActivePlugin[];
   selectedIndex: number;
 }
 

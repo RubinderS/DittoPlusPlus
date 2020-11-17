@@ -2,10 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {clipboard} from 'electron';
 import {DatastoreType} from '@type/dbTypes';
-import {PluginProcess, PluginInitArgs} from '@type/pluginTypes';
+import * as PluginTypes from '@type/pluginTypes';
 import {ClipEvents, ClipItem} from './types';
 
-export class ClipboardProcess extends PluginProcess {
+export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   db: DatastoreType;
   lastClip = '';
   clipItems: ClipItem[];
@@ -61,7 +61,7 @@ export class ClipboardProcess extends PluginProcess {
     }
   };
 
-  initialize = (args: PluginInitArgs) => {
+  initialize = (args: PluginTypes.ProcessInitArgs) => {
     const {db} = args;
 
     if (db) {
