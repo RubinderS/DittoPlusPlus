@@ -45,6 +45,4 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
       ))}
     </Box>
   );
-
-  return <Box className={classes.container}></Box>;
 };
