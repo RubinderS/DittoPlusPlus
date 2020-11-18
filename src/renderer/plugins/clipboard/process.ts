@@ -1,33 +1,28 @@
-import * as React from 'react';
-import {clipboard} from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
-import {PluginBase} from '@pluginBase';
-import {DatastoreType, PluginInitArgs} from '@types';
+import {clipboard} from 'electron';
+import {DatastoreType} from '@type/dbTypes';
+import * as PluginTypes from '@type/pluginTypes';
+import {Events, ClipItem, Messages} from './types';
 
-interface DocType {
-  _id?: string;
-  data?: string;
-  type: 'text' | 'image';
-}
-
-export class Clipboard extends PluginBase {
-  name = 'Clipboard';
-  requiresDb = true;
+export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   db: DatastoreType;
   lastClip = '';
+  clipItems: ClipItem[];
 
   constructor() {
     super();
   }
 
-  saveFile(fileName: string, data: Buffer) {
+  saveFile = (fileName: string, data: Buffer, onFileSaved?: () => void) => {
     fs.writeFile(fileName, data, (err) => {
       if (err) {
         throw err;
       }
+
+      onFileSaved && onFileSaved();
     });
-  }
+  };
 
   watchClipboard = () => {
     const currClipText = clipboard.readText();
@@ -41,27 +36,32 @@ export class Clipboard extends PluginBase {
     ) {
       this.lastClip = isImage ? currClipImageString : currClipText;
 
-      const doc: DocType = {
+      const doc: ClipItem = {
         type: isImage ? 'image' : 'text',
         data: isImage ? undefined : currClipText,
       };
 
-      this.db.insert(doc, (err: any, doc: DocType) => {
+      this.db.insert(doc, (err: any, savedDoc: ClipItem) => {
         if (err) {
           throw err;
         }
 
         if (isImage) {
           this.saveFile(
-            path.join('db', 'clipboardImages', `${doc._id}.png`),
+            path.join('db', 'clipboardImages', `${savedDoc._id}.png`),
             currClipImageBuffer,
+            () => {
+              this.emit(Events.NewClip, savedDoc);
+            },
           );
+        } else {
+          this.emit(Events.NewClip, savedDoc);
         }
       });
     }
   };
 
-  onInitialize(args: PluginInitArgs) {
+  initialize = (args: PluginTypes.ProcessInitArgs) => {
     const {db} = args;
 
     if (db) {
@@ -69,9 +69,17 @@ export class Clipboard extends PluginBase {
     }
 
     setInterval(this.watchClipboard, 200);
-  }
+  };
 
-  render() {
-    return <div>yo</div>;
-  }
+  sendMessage = (
+    type: string,
+    data: any,
+    cb?: (error: any, response: any) => void,
+  ) => {
+    if (type === Messages.WriteClipText) {
+      this.lastClip = data;
+      clipboard.writeText(data);
+      cb && cb(undefined, true);
+    }
+  };
 }

@@ -1,44 +1,50 @@
-import {plugins} from '@plugins';
-import {PluginBase} from '@pluginBase';
-import {PluginInitArgs} from '@types';
+import {pluginManifests} from '@plugins';
 import * as path from 'path';
 import {remote} from 'electron';
+import * as PluginTypes from '@type/pluginTypes';
 
-let activePlugins: PluginBase[] = [];
-let allPlugins: PluginBase[] = [];
+let activePlugins: PluginTypes.ActivePlugin[] = [];
+let allPlugins: PluginTypes.Manifest[] = [];
 
-export const loadPlugins = (): PluginBase[] => {
-  plugins.map((plugin) => {
-    const pluginObj = new plugin();
+export const loadPlugins = () => {
+  pluginManifests.map((pluginManifest, index) => {
+    const {id, name, requiresDb, process, render} = pluginManifest;
 
-    /* perform initalization logic */
-    if (pluginObj.onInitialize) {
-      const initArgs: PluginInitArgs = {};
+    if (isPluginActive(id)) {
+      let activePlugin: PluginTypes.ActivePlugin;
+      let activeProcess;
 
-      if (pluginObj.requiresDb) {
-        const Datastore = remote.getGlobal('Datastore');
+      if (process) {
+        activeProcess = new process();
+        const initArgs: PluginTypes.ProcessInitArgs = {};
 
-        initArgs.db = new Datastore({
-          filename: path.join('db', `${pluginObj.name.toLowerCase()}.db`),
-          autoload: true,
-        });
+        if (requiresDb) {
+          const Datastore = remote.getGlobal('Datastore');
+
+          initArgs.db = new Datastore({
+            filename: path.join('db', `${name.toLowerCase()}.db`),
+            autoload: true,
+          });
+        }
+
+        activeProcess.initialize(initArgs);
       }
 
-      pluginObj.onInitialize(initArgs);
+      activePlugin = {...pluginManifest, process: activeProcess};
+      activePlugins.push(activePlugin);
     }
 
-    /* maintain plugins lists */
-    allPlugins.push(pluginObj);
-    activePlugins.push(pluginObj);
+    allPlugins.push(pluginManifest);
   });
 
-  activePlugins.forEach((plugin) => {
-    //
-  });
+  return {activePlugins, allPlugins};
+};
 
-  setInterval(() => {
-    // keep listening for main process msgs
-  }, 100);
+setInterval(() => {
+  // keep listening for main process msgs
+}, 100);
 
-  return activePlugins;
+const isPluginActive = (id: number) => {
+  // logic to identify if a plugin is active
+  return true;
 };

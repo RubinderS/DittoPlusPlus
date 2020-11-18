@@ -9,9 +9,8 @@
       "@renderer": ["src/renderer"],
       "@utils": ["src/utils"],
       "@plugins": ["src/renderer/plugins"],
-      "@pluginBase": ["src/renderer/pluginBase"],
       "@ui": ["src/renderer/ui"],
-      "@types": ["src/types.ts"]
+      "@type/*": ["src/type/*"]
     },
     "module": "commonjs",
     "moduleResolution": "node",

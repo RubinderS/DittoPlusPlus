@@ -10,7 +10,7 @@ import '../../public/style.css';
 import {loadPlugins} from './managePlugins';
 import {Home} from '@ui';
 
-const activePlugins = loadPlugins();
+const {activePlugins} = loadPlugins();
 
 const theme = createMuiTheme({
   palette: {
