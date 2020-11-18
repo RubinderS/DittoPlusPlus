@@ -4,7 +4,6 @@ import {useStyles} from './styles';
 import {ClipItem, Events, Messages} from './types';
 import * as PluginTypes from '@type/pluginTypes';
 import {useState} from 'react';
-import {clipboard} from 'electron';
 
 export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
@@ -32,39 +31,6 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
       });
     }
   };
-
-  // const getClipItems = async (): Promise<ClipItem[]> => {
-  //   if (this.clipItems) {
-  //     return this.clipItems;
-  //   }
-
-  //   return new Promise((resolve, reject) => {
-  //     this.db.find({}, (err: any, items: ClipItem[]) => {
-  //       if (err) {
-  //         reject(err);
-  //       }
-
-  //       this.clipItems = items;
-  //       resolve(this.clipItems);
-  //     });
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   if (!this.updateClipItems) {
-  //     this.updateClipItems = updateClipItems;
-  //   }
-
-  //   this.getClipItems()
-  //     .then((items) => {
-  //       updateClipItems(items.reverse());
-  //     })
-  //     .catch((error) => {
-  //       updateClipItems([
-  //         {data: 'error fetching clipboard data', type: 'text'},
-  //       ]);
-  //     });
-  // }, []);
 
   return (
     <Box className={classes.container}>
