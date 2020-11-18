@@ -16,8 +16,11 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
 
   const onClickClipItem = (e: ClipItem) => {
     const id = clipItems.findIndex((clipItem, index) => clipItem._id === e._id);
-    const _clipItems = [...clipItems.slice(0, id), ...clipItems.slice(id + 1)];
-    updateClipItems([e, ..._clipItems]);
+    const slicedClipItems = [
+      ...clipItems.slice(0, id),
+      ...clipItems.slice(id + 1),
+    ];
+    updateClipItems([e, ...slicedClipItems]);
 
     if (e.type === 'text') {
       process.sendMessage(Messages.WriteClipText, e.data, (err, res) => {
