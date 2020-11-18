@@ -10,7 +10,11 @@ export interface RenderProps {
 }
 
 export class ProcessAbstract extends EventEmitter {
-  sendMessage: (message: string, cb: (response: any) => void) => void;
+  sendMessage: (
+    type: string,
+    data: any,
+    cb?: (error: any, response: any) => void,
+  ) => void;
   initialize: (args: ProcessInitArgs) => void;
   onAppFocus?(e: any): void;
   onAppUnFocus?(e: any): void;

@@ -3,7 +3,7 @@ import * as path from 'path';
 import {clipboard} from 'electron';
 import {DatastoreType} from '@type/dbTypes';
 import * as PluginTypes from '@type/pluginTypes';
-import {ClipEvents, ClipItem} from './types';
+import {Events, ClipItem, Messages} from './types';
 
 export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   db: DatastoreType;
@@ -51,11 +51,11 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
             path.join('db', 'clipboardImages', `${savedDoc._id}.png`),
             currClipImageBuffer,
             () => {
-              this.emit(ClipEvents.NewClip, savedDoc);
+              this.emit(Events.NewClip, savedDoc);
             },
           );
         } else {
-          this.emit(ClipEvents.NewClip, savedDoc);
+          this.emit(Events.NewClip, savedDoc);
         }
       });
     }
@@ -71,7 +71,15 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     setInterval(this.watchClipboard, 200);
   };
 
-  sendMessage = (message: string, cb: (response: string) => void) => {
-    console.log(message);
+  sendMessage = (
+    type: string,
+    data: any,
+    cb?: (error: any, response: any) => void,
+  ) => {
+    if (type === Messages.WriteClipText) {
+      this.lastClip = data;
+      clipboard.writeText(data);
+      cb && cb(undefined, true);
+    }
   };
 }

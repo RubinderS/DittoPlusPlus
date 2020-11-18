@@ -6,10 +6,10 @@ export interface ClipItem {
 
 export type ClipListener = (clipItem: ClipItem) => void;
 
-export const ClipEvents = {
+export const Events = {
   NewClip: 'NewClip',
 };
 
-export const ClipMessages = {
-  WriteClip: 'WriteClip',
+export const Messages = {
+  WriteClipText: 'WriteClipText',
 };
