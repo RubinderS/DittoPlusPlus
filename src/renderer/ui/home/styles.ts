@@ -7,7 +7,6 @@ export const useStyles = makeStyles((theme: Theme) => {
     container: {
       display: 'flex',
       height: '100%',
-      backgroundColor: 'red',
     },
     sideBar: {
       width: '80px',
@@ -15,6 +14,7 @@ export const useStyles = makeStyles((theme: Theme) => {
     },
     contentArea: {
       margin: '5px',
+      width: '100%',
     },
     contentRendered: {
       overflowY: 'scroll',

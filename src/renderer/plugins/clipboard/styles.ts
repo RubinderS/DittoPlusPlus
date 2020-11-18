@@ -7,10 +7,9 @@ export const useStyles = makeStyles((theme: Theme) => {
     container: {
       display: 'flex',
       height: '100%',
-      // width: '100%',
+      width: '100%',
       minWidth: '200px',
       flexDirection: 'column',
-      // backgroundColor: 'grey',
     },
     clipItem: {
       backgroundColor: palette.primary.main,
@@ -19,9 +18,9 @@ export const useStyles = makeStyles((theme: Theme) => {
       padding: '5px',
       borderRadius: '4px',
       marginTop: '2px',
-      // width: '100%',
+      width: '100%',
       // minWidth: '100px',
-      maxWidth: '700px',
+      // maxWidth: '700px',
     },
     // pluginIcon: {
     //   height: '50px',
