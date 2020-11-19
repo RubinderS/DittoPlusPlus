@@ -51,10 +51,12 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
             path.join('db', 'clipboardImages', `${savedDoc._id}.png`),
             currClipImageBuffer,
             () => {
+              this.clipItems.push(savedDoc);
               this.emit(Events.NewClip, savedDoc);
             },
           );
         } else {
+          this.clipItems.push(savedDoc);
           this.emit(Events.NewClip, savedDoc);
         }
       });
@@ -64,9 +66,15 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   initialize = (args: PluginTypes.ProcessInitArgs) => {
     const {db} = args;
 
-    if (db) {
-      this.db = db;
+    if (!db) {
+      throw `database instance not provided to clipboard plugin`;
     }
+
+    this.db = db;
+    this.db.find({}, (err: any, docs: ClipItem[]) => {
+      this.clipItems = docs;
+      this.emit(Events.ClipsInitialized, this.clipItems);
+    });
 
     setInterval(this.watchClipboard, 200);
   };
@@ -74,12 +82,25 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   sendMessage = (
     type: string,
     data: any,
-    cb?: (error: any, response: any) => void,
+    cb: (error: any, response: any) => void = () => {},
   ) => {
-    if (type === Messages.WriteClipText) {
-      this.lastClip = data;
-      clipboard.writeText(data);
-      cb && cb(undefined, true);
+    switch (type) {
+      case Messages.WriteClipText:
+        this.lastClip = data;
+        clipboard.writeText(data);
+        cb(undefined, true);
+        break;
+
+      case Messages.GetAllClipItems:
+        if (this.clipItems) {
+          cb(undefined, this.clipItems);
+        } else {
+          cb('clip items are not ready yet', undefined);
+        }
+        break;
+
+      default:
+        cb('not a valid message type', undefined);
     }
   };
 }

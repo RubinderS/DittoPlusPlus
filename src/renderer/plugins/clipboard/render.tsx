@@ -3,16 +3,28 @@ import * as React from 'react';
 import {useStyles} from './styles';
 import {ClipItem, Events, Messages} from './types';
 import * as PluginTypes from '@type/pluginTypes';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
 export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
   const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
   const {process} = props;
 
-  process.on(Events.NewClip, (doc: ClipItem) => {
-    updateClipItems([doc, ...clipItems]);
-  });
+  useEffect(() => {
+    process.sendMessage(Messages.GetAllClipItems, '', (err, res) => {
+      if (!err) {
+        updateClipItems(res);
+      }
+    });
+
+    process.on(Events.NewClip, (doc: ClipItem) => {
+      updateClipItems((prevClipItems) => [doc, ...prevClipItems]);
+    });
+
+    process.on(Events.ClipsInitialized, (clips: ClipItem[]) => {
+      updateClipItems(clips);
+    });
+  }, []);
 
   const onClickClipItem = (e: ClipItem) => {
     const index = clipItems.findIndex((clipItem) => clipItem._id === e._id);
@@ -29,7 +41,7 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
         }
 
         if (res) {
-          console.log(res);
+          // console.log(res);
         }
       });
     }
