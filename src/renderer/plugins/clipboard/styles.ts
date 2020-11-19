@@ -20,14 +20,6 @@ export const useStyles = makeStyles((theme: Theme) => {
       borderRadius: '4px',
       marginTop: '2px',
       width: '100%',
-      // minWidth: '100px',
-      // maxWidth: '700px',
     },
-    // pluginIcon: {
-    //   height: '50px',
-    //   width: '100%',
-    //   maxWidth: '100%',
-    //   backgroundColor: palette.grey[300],
-    // },
   });
 });
