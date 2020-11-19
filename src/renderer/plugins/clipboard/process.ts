@@ -88,6 +88,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
       case Messages.WriteClipText:
         this.lastClip = data;
         clipboard.writeText(data);
+        // delete it from db and add it back
         cb(undefined, true);
         break;
 
