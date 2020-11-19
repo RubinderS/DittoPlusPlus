@@ -15,10 +15,12 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
   });
 
   const onClickClipItem = (e: ClipItem) => {
-    const id = clipItems.findIndex((clipItem, index) => clipItem._id === e._id);
+    const index = clipItems.findIndex(
+      (clipItem, index) => clipItem._id === e._id,
+    );
     const slicedClipItems = [
-      ...clipItems.slice(0, id),
-      ...clipItems.slice(id + 1),
+      ...clipItems.slice(0, index),
+      ...clipItems.slice(index + 1),
     ];
     updateClipItems([e, ...slicedClipItems]);
 

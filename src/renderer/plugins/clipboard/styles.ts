@@ -14,7 +14,8 @@ export const useStyles = makeStyles((theme: Theme) => {
     clipItem: {
       backgroundColor: palette.primary.main,
       color: 'white',
-      height: '60px',
+      overflow: 'auto',
+      maxHeight: '60px',
       padding: '5px',
       borderRadius: '4px',
       marginTop: '2px',
