@@ -7,7 +7,7 @@ import {Events, ClipItem, Messages} from './types';
 
 export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   db: DatastoreType;
-  lastClip = '';
+  lastClip = clipboard.readText(); // write a func to read clipboard
   clipItems: ClipItem[];
 
   constructor() {
