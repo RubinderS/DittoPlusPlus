@@ -15,6 +15,7 @@ export const useStyles = makeStyles((theme: Theme) => {
       backgroundColor: palette.primary.main,
       color: 'white',
       overflow: 'auto',
+      minHeight: '20px',
       maxHeight: '60px',
       padding: '5px',
       borderRadius: '4px',
