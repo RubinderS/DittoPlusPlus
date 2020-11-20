@@ -6,10 +6,8 @@ import * as ReactDOM from 'react-dom';
 
 // Import the styles here to process them with webpack
 import {createMuiTheme, ThemeProvider} from '@material-ui/core';
-import '../../public/style.css';
-import {loadPlugins} from './managePlugins';
-import {Home} from '@ui';
-
+import {Home} from '@engine/ui';
+import {loadPlugins} from '@engine/managePlugins';
 const {activePlugins} = loadPlugins();
 
 const theme = createMuiTheme({

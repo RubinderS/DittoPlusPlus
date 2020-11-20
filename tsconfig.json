@@ -5,11 +5,15 @@
     "baseUrl": ".",
     "paths": {
       "@main": ["src/main"],
-      "@models": ["src/models"],
+      "@main/*": ["src/main/*"],
       "@renderer": ["src/renderer"],
-      "@utils": ["src/utils"],
       "@plugins": ["src/renderer/plugins"],
-      "@ui": ["src/renderer/ui"],
+      "@plugins/*": ["src/renderer/plugins/*"],
+      "@engine": ["src/renderer/engine"],
+      "@engine/*": ["src/renderer/engine/*"],
+      "@utils": ["src/utils"],
+      "@utils/*": ["src/utils/*"],
+      "@type": ["src/type"],
       "@type/*": ["src/type/*"]
     },
     "module": "commonjs",
