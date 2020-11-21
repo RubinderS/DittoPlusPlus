@@ -1,8 +1,8 @@
 import {EventEmitter} from 'events';
-import {DatastoreType} from './dbTypes';
+import * as Datastore from 'nedb';
 
 export interface ProcessInitArgs {
-  db?: DatastoreType;
+  db?: Datastore;
 }
 
 export interface RenderProps {
@@ -12,7 +12,7 @@ export interface RenderProps {
 export class ProcessAbstract extends EventEmitter {
   sendMessage: (
     type: string,
-    data: any,
+    msgData: any,
     cb?: (error: any, response: any) => void,
   ) => void;
   initialize: (args: ProcessInitArgs) => void;

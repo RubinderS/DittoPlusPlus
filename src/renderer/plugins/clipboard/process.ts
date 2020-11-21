@@ -1,12 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {clipboard} from 'electron';
-import {DatastoreType} from '@type/dbTypes';
 import * as PluginTypes from '@type/pluginTypes';
 import {Events, ClipItem, Messages} from './types';
+import * as Datastore from 'nedb';
 
 export class ClipboardProcess extends PluginTypes.ProcessAbstract {
-  db: DatastoreType;
+  db: Datastore<ClipItem>;
   lastClip = clipboard.readText(); // write a func to read clipboard
   clipItems: ClipItem[];
 
@@ -39,6 +39,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
       const doc: ClipItem = {
         type: isImage ? 'image' : 'text',
         data: isImage ? undefined : currClipText,
+        timeStamp: Date.now(),
       };
 
       this.db.insert(doc, (err: any, savedDoc: ClipItem) => {
@@ -71,25 +72,40 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     }
 
     this.db = db;
-    this.db.find({}, (err: any, docs: ClipItem[]) => {
-      this.clipItems = docs;
-      this.emit(Events.ClipsInitialized, this.clipItems);
-    });
+    this.db
+      .find({})
+      .sort({timeStamp: -1})
+      .exec((err: Error | null, docs: ClipItem[]) => {
+        this.clipItems = docs;
+        this.emit(Events.ClipsInitialized, this.clipItems);
+      });
 
     setInterval(this.watchClipboard, 200);
   };
 
   sendMessage = (
     type: string,
-    data: any,
+    msgData: any,
     cb: (error: any, response: any) => void = () => {},
   ) => {
     switch (type) {
       case Messages.WriteClipText:
-        this.lastClip = data;
-        clipboard.writeText(data);
-        // delete it from db and add it back
-        cb(undefined, true);
+        const {_id, data, type} = msgData as ClipItem;
+        if (data) {
+          this.lastClip = data;
+          clipboard.writeText(data);
+          cb(undefined, true);
+          this.db.update(
+            {_id},
+            {$set: {timeStamp: Date.now()}},
+            {},
+            (err: Error | null, n: number) => {
+              if (err) {
+                throw err;
+              }
+            },
+          );
+        }
         break;
 
       case Messages.GetAllClipItems:

@@ -1,6 +1,7 @@
 export interface ClipItem {
   _id?: string;
   data?: string;
+  timeStamp: number;
   type: 'text' | 'image';
 }
 

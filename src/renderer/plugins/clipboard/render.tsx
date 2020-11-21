@@ -35,7 +35,7 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
     updateClipItems([e, ...slicedClipItems]);
 
     if (e.type === 'text') {
-      process.sendMessage(Messages.WriteClipText, e.data, (err, res) => {
+      process.sendMessage(Messages.WriteClipText, e, (err, res) => {
         if (err) {
           throw err;
         }
