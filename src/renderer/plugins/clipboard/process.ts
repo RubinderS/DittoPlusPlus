@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {clipboard} from 'electron';
 import * as PluginTypes from '@type/pluginTypes';
-import {Events, ClipItem, Messages} from './types';
+import {ClipItem, Events, Messages} from './types';
 import * as Datastore from 'nedb';
 
 export class ClipboardProcess extends PluginTypes.ProcessAbstract {
@@ -14,7 +14,11 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     super();
   }
 
-  saveFile = (fileName: string, data: Buffer, onFileSaved?: () => void) => {
+  saveFile = (
+    fileName: string,
+    data: Buffer,
+    onFileSaved?: () => void,
+  ): void => {
     fs.writeFile(fileName, data, (err) => {
       if (err) {
         throw err;
@@ -64,7 +68,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     }
   };
 
-  initialize = (args: PluginTypes.ProcessInitArgs) => {
+  initialize = (args: PluginTypes.ProcessInitArgs): void => {
     const {db} = args;
 
     if (!db) {
@@ -86,11 +90,13 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   sendMessage = (
     type: string,
     msgData: any,
-    cb: (error: any, response: any) => void = () => {},
+    cb: (error: any, response: any) => void = () => {
+      //
+    },
   ) => {
     switch (type) {
       case Messages.WriteClipText:
-        const {_id, data, type} = msgData as ClipItem;
+        const {_id, data} = msgData as ClipItem;
         if (data) {
           this.lastClip = data;
           clipboard.writeText(data);
@@ -99,7 +105,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
             {_id},
             {$set: {timeStamp: Date.now()}},
             {},
-            (err: Error | null, n: number) => {
+            (err: Error | null, _n: number) => {
               if (err) {
                 throw err;
               }
