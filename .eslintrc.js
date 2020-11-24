@@ -19,7 +19,6 @@ module.exports = {
     'plugin:prettier/recommended',
   ],
   rules: {
-    '@typescript-eslint/no-explicit-any': 'off',
     'sort-imports': [
       'error',
       {
@@ -40,5 +39,7 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-namespace': 'off',
   },
 };
