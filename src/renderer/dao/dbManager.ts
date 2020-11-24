@@ -16,7 +16,7 @@ export default class DBManager {
   /**
    * insert
    */
-  public async insert(doc: any): Promise<Object> {
+  public async insert(doc: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.db.insert(doc, (err, newDoc) => {
         if (err) {
@@ -31,7 +31,7 @@ export default class DBManager {
   /**
    * find
    */
-  public async find(query: any): Promise<Array<Object>> {
+  public async find(query: any): Promise<Array<any>> {
     return new Promise((resolve, reject) => {
       this.db.find(query, (err: any, docs: any) => {
         if (err) {
@@ -46,7 +46,7 @@ export default class DBManager {
   /**
    * findOne
    */
-  public async findOne(query: any): Promise<Object> {
+  public async findOne(query: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.db.findOne(query, (err: any, doc: any) => {
         if (err) {

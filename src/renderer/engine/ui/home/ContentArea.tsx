@@ -15,7 +15,7 @@ const ContentArea = (props: Props) => {
     const {process, render} = plugin;
 
     if (!render) {
-      return <div>plugin doesn't have a ui</div>;
+      return <div>plugin doesn&apos;t have a ui</div>;
     }
 
     return render({process: process || new PluginTypes.ProcessAbstract()});

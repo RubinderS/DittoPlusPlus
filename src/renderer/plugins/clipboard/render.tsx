@@ -3,7 +3,7 @@ import * as React from 'react';
 import {useStyles} from './styles';
 import {ClipItem, Events, Messages} from './types';
 import * as PluginTypes from '@type/pluginTypes';
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 
 export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();

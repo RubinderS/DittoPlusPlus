@@ -1,7 +1,7 @@
 /**
  * Entry point of the Election app.
  */
-import {app, BrowserWindow} from 'electron';
+import {BrowserWindow, app} from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as Datastore from 'nedb';

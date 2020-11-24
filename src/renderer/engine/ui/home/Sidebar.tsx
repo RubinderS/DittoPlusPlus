@@ -9,7 +9,7 @@ interface Props {
 
 const Sidebar = (props: Props) => {
   const classes = useStyles();
-  const {activePlugins, selectedIndex} = props;
+  const {activePlugins} = props;
 
   return (
     <div className={classes.sideBar}>
