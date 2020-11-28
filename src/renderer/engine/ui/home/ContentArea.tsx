@@ -1,13 +1,13 @@
 import * as PluginTypes from '@type/pluginTypes';
 import * as React from 'react';
-import {useStyles} from './styles';
+import {Theme, createStyles, makeStyles} from '@material-ui/core';
 
 interface Props {
   activePlugins: PluginTypes.ActivePlugin[];
   selectedIndex: number;
 }
 
-const ContentArea = (props: Props) => {
+export const ContentArea = (props: Props) => {
   const classes = useStyles();
   const {activePlugins, selectedIndex} = props;
 
@@ -39,4 +39,16 @@ const ContentArea = (props: Props) => {
   );
 };
 
-export default ContentArea;
+const useStyles = makeStyles((_theme: Theme) => {
+  return createStyles({
+    contentArea: {
+      margin: '5px',
+      width: '100%',
+    },
+    contentRendered: {
+      overflowY: 'scroll',
+      overflowX: 'hidden',
+      height: '100%',
+    },
+  });
+});

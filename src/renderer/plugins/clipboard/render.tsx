@@ -1,6 +1,6 @@
 import {Box} from '@material-ui/core';
 import * as React from 'react';
-import {useStyles} from './styles';
+import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {ClipItem, Events, Messages} from './types';
 import * as PluginTypes from '@type/pluginTypes';
 import {useEffect, useState} from 'react';
@@ -61,3 +61,28 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
     </Box>
   );
 };
+
+const useStyles = makeStyles((theme: Theme) => {
+  const {palette} = theme;
+
+  return createStyles({
+    container: {
+      display: 'flex',
+      height: '100%',
+      width: '100%',
+      minWidth: '200px',
+      flexDirection: 'column',
+    },
+    clipItem: {
+      backgroundColor: palette.primary.main,
+      color: 'white',
+      overflow: 'auto',
+      minHeight: '20px',
+      maxHeight: '60px',
+      padding: '5px',
+      borderRadius: '4px',
+      marginTop: '2px',
+      width: '100%',
+    },
+  });
+});

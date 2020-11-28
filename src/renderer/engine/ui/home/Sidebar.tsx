@@ -1,13 +1,13 @@
 import * as PluginTypes from '@type/pluginTypes';
 import * as React from 'react';
-import {useStyles} from './styles';
+import {Theme, createStyles, makeStyles} from '@material-ui/core';
 
 interface Props {
   activePlugins: PluginTypes.ActivePlugin[];
   selectedIndex: number;
 }
 
-const Sidebar = (props: Props) => {
+export const Sidebar = (props: Props) => {
   const classes = useStyles();
   const {activePlugins} = props;
 
@@ -25,4 +25,19 @@ const Sidebar = (props: Props) => {
   );
 };
 
-export default Sidebar;
+const useStyles = makeStyles((theme: Theme) => {
+  const {palette} = theme;
+
+  return createStyles({
+    sideBar: {
+      width: '80px',
+      backgroundColor: palette.primary.main,
+    },
+    pluginIcon: {
+      height: '50px',
+      width: '100%',
+      maxWidth: '100%',
+      backgroundColor: palette.grey[300],
+    },
+  });
+});

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import {useStyles} from './styles';
-import Sidebar from './Sidebar';
-import ContentArea from './ContentArea';
+import {Theme, createStyles, makeStyles} from '@material-ui/core';
+import {Sidebar} from './Sidebar';
+import {ContentArea} from './ContentArea';
 import * as PluginTypes from '@type/pluginTypes';
 
 interface Props {
@@ -23,3 +23,12 @@ export const Home = (props: Props) => {
     </div>
   );
 };
+
+const useStyles = makeStyles((_theme: Theme) => {
+  return createStyles({
+    container: {
+      display: 'flex',
+      height: '100%',
+    },
+  });
+});
