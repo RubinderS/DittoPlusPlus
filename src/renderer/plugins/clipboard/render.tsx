@@ -63,7 +63,7 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
   );
 };
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles((_theme: Theme) => {
   return createStyles({
     container: {
       display: 'flex',
