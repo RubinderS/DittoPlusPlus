@@ -29,7 +29,7 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
 
   const sendClipboardItemSelected = (clipItem: ClipItem) => {
     if (clipItem.type === 'text') {
-      process.sendMessage(Messages.WriteClipText, clipItem, (err, res) => {
+      process.sendMessage(Messages.ClipItemSelected, clipItem, (err, res) => {
         if (err) {
           throw err;
         }
