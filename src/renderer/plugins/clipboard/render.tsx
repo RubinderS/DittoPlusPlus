@@ -126,8 +126,8 @@ const useStyles = makeStyles((_theme: Theme) => {
     clipItem: {
       color: 'black',
       overflow: 'auto',
-      minHeight: '20px',
-      maxHeight: '60px',
+      minHeight: '40px',
+      lineHeight: '20px',
       padding: '5px',
       width: '100%',
     },
