@@ -13,6 +13,6 @@ export const Events = {
 };
 
 export const Messages = {
-  WriteClipText: 'WriteClipText',
+  ClipItemSelected: 'ClipItemSelected',
   GetAllClipItems: 'GetAllClipItems',
 };

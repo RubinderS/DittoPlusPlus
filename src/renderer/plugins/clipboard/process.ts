@@ -95,7 +95,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     },
   ) => {
     switch (type) {
-      case Messages.WriteClipText:
+      case Messages.ClipItemSelected:
         const {_id, data} = msgData as ClipItem;
         if (data) {
           this.lastClip = data;

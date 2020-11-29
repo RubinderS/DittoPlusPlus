@@ -42,7 +42,6 @@ export const ContentArea = (props: Props) => {
 const useStyles = makeStyles((_theme: Theme) => {
   return createStyles({
     contentArea: {
-      margin: '5px',
       width: '100%',
     },
     contentRendered: {
