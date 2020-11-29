@@ -1,5 +1,6 @@
 import {EventEmitter} from 'events';
 import * as Datastore from 'nedb';
+import {SvgIconComponent} from '@material-ui/icons';
 
 export interface ProcessInitArgs {
   db?: Datastore;
@@ -24,7 +25,7 @@ export class ProcessAbstract extends EventEmitter {
 export interface Manifest {
   id: number;
   name: string;
-  sideIcon?: string;
+  sideIcon?: React.ReactNode;
   requiresDb?: boolean;
   process?: typeof ProcessAbstract;
   render?: (props: RenderProps) => React.ReactNode;
@@ -33,7 +34,7 @@ export interface Manifest {
 export interface ActivePlugin {
   id: number;
   name: string;
-  sideIcon?: string;
+  sideIcon?: React.ReactNode;
   requiresDb?: boolean;
   process?: ProcessAbstract;
   render?: (props: RenderProps) => React.ReactNode;

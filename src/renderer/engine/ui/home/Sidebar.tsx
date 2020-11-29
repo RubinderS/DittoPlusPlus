@@ -1,6 +1,7 @@
 import * as PluginTypes from '@type/pluginTypes';
 import * as React from 'react';
 import {Theme, createStyles, makeStyles} from '@material-ui/core';
+import {blueGrey} from '@material-ui/core/colors';
 
 interface Props {
   activePlugins: PluginTypes.ActivePlugin[];
@@ -13,31 +14,39 @@ export const Sidebar = (props: Props) => {
 
   return (
     <div className={classes.sideBar}>
-      {activePlugins.map((plugin, index) => (
-        <div
-          key={`${index}_sidebar_${plugin.name.toLowerCase()}`}
-          className={classes.pluginIcon}
-        >
-          {plugin.name}
-        </div>
-      ))}
+      {activePlugins.map((plugin, index) => {
+        const SideIcon = (plugin.sideIcon || <></>) as React.ReactType;
+
+        return (
+          <div
+            key={`${index}_sidebar_${plugin.name.toLowerCase()}`}
+            className={classes.pluginIcon}
+          >
+            <SideIcon className={classes.sideBarIcon} />
+          </div>
+        );
+      })}
     </div>
   );
 };
 
-const useStyles = makeStyles((theme: Theme) => {
-  const {palette} = theme;
-
+const useStyles = makeStyles((_theme: Theme) => {
   return createStyles({
     sideBar: {
-      width: '80px',
-      backgroundColor: palette.primary.main,
+      minWidth: '40px',
+      width: '40px',
+      backgroundColor: blueGrey[400],
+    },
+    sideBarIcon: {
+      color: 'white',
     },
     pluginIcon: {
       height: '50px',
       width: '100%',
       maxWidth: '100%',
-      backgroundColor: palette.grey[300],
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   });
 });

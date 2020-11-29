@@ -1,12 +1,13 @@
 import {Box} from '@material-ui/core';
 import * as React from 'react';
 import {Theme, createStyles, makeStyles} from '@material-ui/core';
-import {grey} from '@material-ui/core/colors';
+import {blueGrey, grey} from '@material-ui/core/colors';
 import {ClipItem, Events, Messages} from './types';
 import * as PluginTypes from '@type/pluginTypes';
 import {useEffect, useState} from 'react';
 import useEventListener from '@use-it/event-listener';
 import * as _ from 'lodash';
+import {CSSProperties} from '@material-ui/core/styles/withStyles';
 
 export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
@@ -90,11 +91,11 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
 
   const getBackgroundColor = (index: number, selectedIndex: number) => {
     if (index === selectedIndex) {
-      return grey[400];
+      return classes.clipItemSelected;
     } else if (index % 2) {
-      return grey[50];
+      return classes.clipItemEvenRow;
     } else {
-      return grey[200];
+      return classes.clipItemOddRow;
     }
   };
 
@@ -103,8 +104,7 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
       {clipItems.map((item, index) => (
         <Box
           key={`${index}_clipItem`}
-          className={classes.clipItem}
-          style={{backgroundColor: getBackgroundColor(index, selectedIndex)}}
+          className={getBackgroundColor(index, selectedIndex)}
           onClick={() => onClickClipItem(item)}
         >
           {item.data}
@@ -115,6 +115,15 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
 };
 
 const useStyles = makeStyles((_theme: Theme) => {
+  const clipItemStyles: CSSProperties = {
+    color: 'black',
+    overflow: 'auto',
+    minHeight: '40px',
+    lineHeight: '20px',
+    padding: '5px',
+    width: '100%',
+  };
+
   return createStyles({
     container: {
       display: 'flex',
@@ -123,13 +132,17 @@ const useStyles = makeStyles((_theme: Theme) => {
       minWidth: '200px',
       flexDirection: 'column',
     },
-    clipItem: {
-      color: 'black',
-      overflow: 'auto',
-      minHeight: '40px',
-      lineHeight: '20px',
-      padding: '5px',
-      width: '100%',
+    clipItemEvenRow: {
+      ...clipItemStyles,
+      backgroundColor: blueGrey[50],
+    },
+    clipItemOddRow: {
+      ...clipItemStyles,
+      backgroundColor: blueGrey[100],
+    },
+    clipItemSelected: {
+      ...clipItemStyles,
+      backgroundColor: blueGrey[300],
     },
   });
 });
