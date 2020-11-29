@@ -71,7 +71,7 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
   useEffect(() => {
     process.sendMessage(Messages.GetAllClipItems, '', (err, res) => {
       if (!err) {
-        updateClipItems(res);
+        updateClipItems([...res]);
       }
     });
 
