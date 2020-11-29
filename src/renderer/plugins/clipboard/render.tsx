@@ -53,7 +53,7 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
         <Box
           key={`${index}_clipItem`}
           className={classes.clipItem}
-          style={{backgroundColor: index % 2 ? 'red' : 'blue'}}
+          style={{backgroundColor: index % 2 ? '#F3F3F3' : '#CCCCCC'}}
           onClick={() => onClickClipItem(item)}
         >
           {item.data}
@@ -73,7 +73,7 @@ const useStyles = makeStyles((_theme: Theme) => {
       flexDirection: 'column',
     },
     clipItem: {
-      color: 'white',
+      color: 'black',
       overflow: 'auto',
       minHeight: '20px',
       maxHeight: '60px',
