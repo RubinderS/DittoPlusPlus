@@ -58,7 +58,9 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
         break;
 
       case 'Enter':
-        //
+        reArrangeClipItems(clipItems[selectedIndex]);
+        sendClipboardItemSelected(clipItems[selectedIndex]);
+        updateSelectedIndex(0);
         break;
     }
   };
