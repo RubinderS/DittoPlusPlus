@@ -7,7 +7,7 @@ const activePlugins: PluginTypes.ActivePlugin[] = [];
 const allPlugins: PluginTypes.Manifest[] = [];
 
 export const loadPlugins = () => {
-  pluginManifests.map((pluginManifest, _index) => {
+  pluginManifests.forEach((pluginManifest, _index) => {
     const {id, name, requiresDb, process} = pluginManifest;
 
     if (isPluginActive(id)) {
