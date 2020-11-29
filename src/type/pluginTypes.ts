@@ -1,6 +1,5 @@
 import {EventEmitter} from 'events';
 import * as Datastore from 'nedb';
-import {SvgIconComponent} from '@material-ui/icons';
 
 export interface ProcessInitArgs {
   db?: Datastore;
