@@ -6,7 +6,7 @@ import {ClipItem, Events, Messages} from './types';
 import * as PluginTypes from '@type/pluginTypes';
 import {useEffect, useState} from 'react';
 import useEventListener from '@use-it/event-listener';
-import * as _ from 'lodash';
+import {clamp} from 'lodash';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
 
 export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
@@ -48,13 +48,13 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
     switch (key) {
       case 'ArrowUp':
         updateSelectedIndex((prevSelectedIndex) =>
-          _.clamp(prevSelectedIndex - 1, 0, clipItems.length - 1),
+          clamp(prevSelectedIndex - 1, 0, clipItems.length - 1),
         );
         break;
 
       case 'ArrowDown':
         updateSelectedIndex((prevSelectedIndex) =>
-          _.clamp(prevSelectedIndex + 1, 0, clipItems.length - 1),
+          clamp(prevSelectedIndex + 1, 0, clipItems.length - 1),
         );
         break;
 
