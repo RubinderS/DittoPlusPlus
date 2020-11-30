@@ -3,9 +3,6 @@ import {blueGrey} from '@material-ui/core/colors';
 
 export const SearchBar = withStyles({
   root: {
-    '& label.Mui-focused': {
-      color: blueGrey[400],
-    },
     '& .MuiInput-underline:after': {
       border: 'none',
       borderTop: `2px solid ${blueGrey[400]}`,

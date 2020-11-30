@@ -1,4 +1,4 @@
-import {Box, TextField} from '@material-ui/core';
+import {Box} from '@material-ui/core';
 import * as React from 'react';
 import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {blueGrey} from '@material-ui/core/colors';
@@ -100,6 +100,20 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     }
   };
 
+  const onSearchUpdated = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    const query = event.target.value;
+
+    process.sendMessage(Messages.SearchClips, query, (err, res) => {
+      if (err) {
+        throw err;
+      }
+
+      updateClipItems(res);
+    });
+  };
+
   return (
     <Box className={classes.container}>
       <Box className={classes.clipsContainer}>
@@ -113,7 +127,13 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
           </Box>
         ))}
       </Box>
-      <SearchBar id="standard-basic" label="Search" variant="outlined" />
+      <SearchBar
+        id="clipboard-searchbar"
+        className={classes.searchBar}
+        placeholder="search"
+        variant="outlined"
+        onChange={onSearchUpdated}
+      />
     </Box>
   );
 };
@@ -141,6 +161,8 @@ const useStyles = makeStyles((_theme: Theme) => {
       height: '100%',
       width: '100%',
       minWidth: '200px',
+      overflowX: 'hidden',
+      overflowY: 'visible',
       flexDirection: 'column',
     },
     clipItemEvenRow: {
@@ -154,6 +176,9 @@ const useStyles = makeStyles((_theme: Theme) => {
     clipItemSelected: {
       ...clipItemStyles,
       backgroundColor: blueGrey[300],
+    },
+    searchBar: {
+      height: '60px',
     },
   });
 });
