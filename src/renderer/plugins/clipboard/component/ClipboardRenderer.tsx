@@ -2,14 +2,15 @@ import {Box} from '@material-ui/core';
 import * as React from 'react';
 import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {blueGrey} from '@material-ui/core/colors';
-import {ClipItem, Events, Messages} from './types';
+import {ClipItem, Events, Messages} from '../types';
 import * as PluginTypes from '@type/pluginTypes';
 import {useEffect, useState} from 'react';
 import useEventListener from '@use-it/event-listener';
 import {clamp} from 'lodash';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
+import {SearchBar} from './SearchBar';
 
-export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
+export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
   const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
   const [selectedIndex, updateSelectedIndex] = useState(0);
@@ -99,17 +100,40 @@ export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
     }
   };
 
+  const onSearchUpdated = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    const query = event.target.value;
+
+    process.sendMessage(Messages.SearchClips, query, (err, res) => {
+      if (err) {
+        throw err;
+      }
+
+      updateClipItems(res);
+    });
+  };
+
   return (
     <Box className={classes.container}>
-      {clipItems.map((item, index) => (
-        <Box
-          key={`${index}_clipItem`}
-          className={getBackgroundColor(index, selectedIndex)}
-          onClick={() => onClickClipItem(item)}
-        >
-          {item.data}
-        </Box>
-      ))}
+      <Box className={classes.clipsContainer}>
+        {clipItems.map((item, index) => (
+          <Box
+            key={`${index}_clipItem`}
+            className={getBackgroundColor(index, selectedIndex)}
+            onClick={() => onClickClipItem(item)}
+          >
+            {item.data}
+          </Box>
+        ))}
+      </Box>
+      <SearchBar
+        id="clipboard-searchbar"
+        className={classes.searchBar}
+        placeholder="search"
+        variant="outlined"
+        onChange={onSearchUpdated}
+      />
     </Box>
   );
 };
@@ -132,6 +156,15 @@ const useStyles = makeStyles((_theme: Theme) => {
       minWidth: '200px',
       flexDirection: 'column',
     },
+    clipsContainer: {
+      display: 'flex',
+      height: '100%',
+      width: '100%',
+      minWidth: '200px',
+      overflowX: 'hidden',
+      overflowY: 'visible',
+      flexDirection: 'column',
+    },
     clipItemEvenRow: {
       ...clipItemStyles,
       backgroundColor: blueGrey[50],
@@ -143,6 +176,9 @@ const useStyles = makeStyles((_theme: Theme) => {
     clipItemSelected: {
       ...clipItemStyles,
       backgroundColor: blueGrey[300],
+    },
+    searchBar: {
+      height: '60px',
     },
   });
 });

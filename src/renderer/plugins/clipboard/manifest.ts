@@ -1,6 +1,6 @@
 import * as PluginTypes from '@type/pluginTypes';
 import {AssignmentOutlined} from '@material-ui/icons';
-import {ClipboardComponent} from './render';
+import {ClipboardRenderer} from './component/';
 import {ClipboardProcess} from './process';
 
 export const ClipBoard: PluginTypes.Manifest = {
@@ -9,5 +9,5 @@ export const ClipBoard: PluginTypes.Manifest = {
   sideIcon: AssignmentOutlined,
   requiresDb: true,
   process: ClipboardProcess,
-  render: ClipboardComponent,
+  render: ClipboardRenderer,
 };

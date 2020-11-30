@@ -15,4 +15,5 @@ export const Events = {
 export const Messages = {
   ClipItemSelected: 'ClipItemSelected',
   GetAllClipItems: 'GetAllClipItems',
+  SearchClips: 'SearchClips',
 };

@@ -122,8 +122,16 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
         }
         break;
 
+      case Messages.SearchClips:
+        const query = msgData as string;
+        const result = this.clipItems.filter((item) => {
+          return item.type === 'text' && item.data && item.data.includes(query);
+        });
+        cb(undefined, result);
+        break;
+
       default:
-        cb('not a valid message type', undefined);
+        cb('not a valid clipboard message type', undefined);
     }
   };
 }

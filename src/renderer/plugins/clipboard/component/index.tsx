@@ -1,0 +1,1 @@
+export {ClipboardRenderer} from './ClipboardRenderer';
