@@ -1,4 +1,4 @@
-import {Box} from '@material-ui/core';
+import {Box, TextField} from '@material-ui/core';
 import * as React from 'react';
 import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {blueGrey} from '@material-ui/core/colors';
@@ -8,6 +8,7 @@ import {useEffect, useState} from 'react';
 import useEventListener from '@use-it/event-listener';
 import {clamp} from 'lodash';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
+import {SearchBar} from './SearchBar';
 
 export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
@@ -101,15 +102,18 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
   return (
     <Box className={classes.container}>
-      {clipItems.map((item, index) => (
-        <Box
-          key={`${index}_clipItem`}
-          className={getBackgroundColor(index, selectedIndex)}
-          onClick={() => onClickClipItem(item)}
-        >
-          {item.data}
-        </Box>
-      ))}
+      <Box className={classes.clipsContainer}>
+        {clipItems.map((item, index) => (
+          <Box
+            key={`${index}_clipItem`}
+            className={getBackgroundColor(index, selectedIndex)}
+            onClick={() => onClickClipItem(item)}
+          >
+            {item.data}
+          </Box>
+        ))}
+      </Box>
+      <SearchBar id="standard-basic" label="Search" variant="outlined" />
     </Box>
   );
 };
@@ -126,6 +130,13 @@ const useStyles = makeStyles((_theme: Theme) => {
 
   return createStyles({
     container: {
+      display: 'flex',
+      height: '100%',
+      width: '100%',
+      minWidth: '200px',
+      flexDirection: 'column',
+    },
+    clipsContainer: {
       display: 'flex',
       height: '100%',
       width: '100%',
