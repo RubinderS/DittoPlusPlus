@@ -2,14 +2,14 @@ import {Box} from '@material-ui/core';
 import * as React from 'react';
 import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {blueGrey} from '@material-ui/core/colors';
-import {ClipItem, Events, Messages} from './types';
+import {ClipItem, Events, Messages} from '../types';
 import * as PluginTypes from '@type/pluginTypes';
 import {useEffect, useState} from 'react';
 import useEventListener from '@use-it/event-listener';
 import {clamp} from 'lodash';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
 
-export const ClipboardComponent = (props: PluginTypes.RenderProps) => {
+export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
   const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
   const [selectedIndex, updateSelectedIndex] = useState(0);
