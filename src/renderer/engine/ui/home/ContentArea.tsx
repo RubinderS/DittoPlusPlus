@@ -45,8 +45,6 @@ const useStyles = makeStyles((_theme: Theme) => {
       width: '100%',
     },
     contentRendered: {
-      overflowY: 'scroll',
-      overflowX: 'hidden',
       height: '100%',
     },
   });

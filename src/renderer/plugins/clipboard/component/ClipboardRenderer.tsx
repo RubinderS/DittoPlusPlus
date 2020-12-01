@@ -9,6 +9,8 @@ import useEventListener from '@use-it/event-listener';
 import {clamp} from 'lodash';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import {SearchBar} from './SearchBar';
+import SimpleBar from 'simplebar-react';
+import 'simplebar/dist/simplebar.min.css';
 
 export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
@@ -116,7 +118,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
   return (
     <Box className={classes.container}>
-      <Box className={classes.clipsContainer}>
+      <SimpleBar className={classes.clipsContainer}>
         {clipItems.map((item, index) => (
           <Box
             key={`${index}_clipItem`}
@@ -126,12 +128,10 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
             {item.data}
           </Box>
         ))}
-      </Box>
+      </SimpleBar>
       <SearchBar
         id="clipboard-searchbar"
-        className={classes.searchBar}
         placeholder="search"
-        variant="outlined"
         onChange={onSearchUpdated}
       />
     </Box>
@@ -145,7 +145,7 @@ const useStyles = makeStyles((_theme: Theme) => {
     minHeight: '40px',
     lineHeight: '20px',
     padding: '5px',
-    width: '100%',
+    maxWidth: '100%',
   };
 
   return createStyles({
@@ -153,15 +153,12 @@ const useStyles = makeStyles((_theme: Theme) => {
       display: 'flex',
       height: '100%',
       width: '100%',
-      minWidth: '200px',
       flexDirection: 'column',
     },
     clipsContainer: {
       display: 'flex',
       height: '100%',
       width: '100%',
-      minWidth: '200px',
-      overflowX: 'hidden',
       overflowY: 'visible',
       flexDirection: 'column',
     },
