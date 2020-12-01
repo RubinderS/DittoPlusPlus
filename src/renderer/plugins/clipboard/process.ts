@@ -125,7 +125,11 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
       case Messages.SearchClips:
         const query = msgData as string;
         const result = this.clipItems.filter((item) => {
-          return item.type === 'text' && item.data && item.data.includes(query);
+          return (
+            item.type === 'text' &&
+            item.data &&
+            item.data.toLowerCase().includes(query.toLowerCase())
+          );
         });
         cb(undefined, result);
         break;
