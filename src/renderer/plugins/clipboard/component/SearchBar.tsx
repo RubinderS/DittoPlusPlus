@@ -1,11 +1,5 @@
-import {
-  createStyles,
-  makeStyles,
-  TextField,
-  Theme,
-  withStyles,
-} from '@material-ui/core';
-import {blueGrey, grey} from '@material-ui/core/colors';
+import {Theme, createStyles, makeStyles, withStyles} from '@material-ui/core';
+import {blueGrey} from '@material-ui/core/colors';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import * as React from 'React';
 
