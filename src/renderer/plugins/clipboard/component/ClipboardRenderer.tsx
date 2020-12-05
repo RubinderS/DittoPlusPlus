@@ -4,7 +4,6 @@ import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {blueGrey} from '@material-ui/core/colors';
 import {ClipItem, Events, Messages} from '../types';
 import * as PluginTypes from '@type/pluginTypes';
-import {useEffect, useState} from 'react';
 import useEventListener from '@use-it/event-listener';
 import {clamp} from 'lodash';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
@@ -14,8 +13,8 @@ import 'simplebar/dist/simplebar.min.css';
 
 export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
-  const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
-  const [selectedIndex, updateSelectedIndex] = useState(0);
+  const [clipItems, updateClipItems] = React.useState<ClipItem[]>([]);
+  const [selectedIndex, updateSelectedIndex] = React.useState(0);
   const {process} = props;
   const searchBarRef = React.createRef<HTMLDivElement>();
   const clipsListRef = React.createRef<HTMLDivElement>();
