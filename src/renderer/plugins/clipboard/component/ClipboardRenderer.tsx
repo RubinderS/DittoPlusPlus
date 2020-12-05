@@ -1,10 +1,10 @@
-import {Box} from '@material-ui/core';
 import * as React from 'react';
+import {createRef, useEffect, useState} from 'react';
+import {Box} from '@material-ui/core';
 import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {blueGrey} from '@material-ui/core/colors';
 import {ClipItem, Events, Messages} from '../types';
 import * as PluginTypes from '@type/pluginTypes';
-import {useEffect, useState} from 'react';
 import useEventListener from '@use-it/event-listener';
 import {clamp} from 'lodash';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
@@ -17,8 +17,8 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
   const [selectedIndex, updateSelectedIndex] = useState(0);
   const {process} = props;
-  const searchBarRef = React.createRef<HTMLDivElement>();
-  const clipsListRef = React.createRef<HTMLDivElement>();
+  const searchBarRef = createRef<HTMLDivElement>();
+  const clipsListRef = createRef<HTMLDivElement>();
 
   const reArrangeClipItems = (selectedClipItem: ClipItem) => {
     const index = clipItems.findIndex(
