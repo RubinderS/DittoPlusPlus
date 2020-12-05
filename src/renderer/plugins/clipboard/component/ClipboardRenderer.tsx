@@ -72,7 +72,6 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
   const onKeyPress = (event: KeyboardEvent) => {
     const {keyCode} = event;
-    console.log(keyCode);
 
     /* up key */
     if (keyCode === 38) {
