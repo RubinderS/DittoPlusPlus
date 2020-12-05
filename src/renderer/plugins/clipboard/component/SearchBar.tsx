@@ -52,7 +52,10 @@ const CustomTextField = withStyles((_theme: Theme) => {
   };
 })(TextField);
 
-export const SearchBar = (props: Props) => {
+const SearchBarComponent = (
+  props: Props,
+  ref: React.RefObject<HTMLDivElement>,
+) => {
   const classes = useStyles();
 
   return (
@@ -61,10 +64,14 @@ export const SearchBar = (props: Props) => {
         {...props}
         variant="outlined"
         className={classes.searchBar}
+        inputRef={ref}
       />
     </div>
   );
 };
+
+SearchBarComponent.displayName = 'SearchBar';
+export const SearchBar = React.forwardRef(SearchBarComponent);
 
 const useStyles = makeStyles((_theme: Theme) => {
   return createStyles({
