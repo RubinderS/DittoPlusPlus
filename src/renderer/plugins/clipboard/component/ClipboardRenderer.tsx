@@ -17,6 +17,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
   const [selectedIndex, updateSelectedIndex] = useState(0);
   const {process} = props;
+  const searchBarRef = React.createRef<HTMLDivElement>();
 
   const reArrangeClipItems = (selectedClipItem: ClipItem) => {
     const index = clipItems.findIndex(
@@ -45,27 +46,58 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     }
   };
 
+  const isAlphanumeric = (keyCode: number): boolean => {
+    /* A-Z */
+    if (keyCode >= 65 && keyCode <= 90) {
+      return true;
+    }
+
+    /* numeric pad */
+    if (keyCode >= 96 && keyCode <= 105) {
+      return true;
+    }
+
+    /* numbers */
+    if (keyCode >= 48 && keyCode <= 57) {
+      return true;
+    }
+
+    /* ~ */
+    if (keyCode === 192) {
+      return true;
+    }
+
+    return false;
+  };
+
   const onKeyPress = (event: KeyboardEvent) => {
-    const {key} = event;
+    const {keyCode} = event;
+    console.log(keyCode);
 
-    switch (key) {
-      case 'ArrowUp':
-        updateSelectedIndex((prevSelectedIndex) =>
-          clamp(prevSelectedIndex - 1, 0, clipItems.length - 1),
-        );
-        break;
+    /* up key */
+    if (keyCode === 38) {
+      updateSelectedIndex((prevSelectedIndex) =>
+        clamp(prevSelectedIndex - 1, 0, clipItems.length - 1),
+      );
+    }
 
-      case 'ArrowDown':
-        updateSelectedIndex((prevSelectedIndex) =>
-          clamp(prevSelectedIndex + 1, 0, clipItems.length - 1),
-        );
-        break;
+    /* down key */
+    if (keyCode === 40) {
+      updateSelectedIndex((prevSelectedIndex) =>
+        clamp(prevSelectedIndex + 1, 0, clipItems.length - 1),
+      );
+    }
 
-      case 'Enter':
-        reArrangeClipItems(clipItems[selectedIndex]);
-        sendClipboardItemSelected(clipItems[selectedIndex]);
-        updateSelectedIndex(0);
-        break;
+    /* enter key */
+    if (keyCode === 13) {
+      reArrangeClipItems(clipItems[selectedIndex]);
+      sendClipboardItemSelected(clipItems[selectedIndex]);
+      updateSelectedIndex(0);
+    }
+
+    /* key is alphanumeric */
+    if (isAlphanumeric(keyCode)) {
+      searchBarRef.current && searchBarRef.current.focus();
     }
   };
 
@@ -102,7 +134,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     }
   };
 
-  const onSearchUpdated = (
+  const onSearchBarTextChanged = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
     const query = event.target.value;
@@ -110,6 +142,11 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     process.sendMessage(Messages.SearchClips, query, (err, res) => {
       if (err) {
         throw err;
+      }
+
+      if (query === '') {
+        updateSelectedIndex(0);
+        searchBarRef.current && searchBarRef.current.blur();
       }
 
       updateClipItems(res);
@@ -132,7 +169,8 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       <SearchBar
         id="clipboard-searchbar"
         placeholder="search"
-        onChange={onSearchUpdated}
+        onChange={onSearchBarTextChanged}
+        ref={searchBarRef}
       />
     </Box>
   );
