@@ -18,6 +18,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const [selectedIndex, updateSelectedIndex] = useState(0);
   const {process} = props;
   const searchBarRef = React.createRef<HTMLDivElement>();
+  const clipsListRef = React.createRef<HTMLDivElement>();
 
   const reArrangeClipItems = (selectedClipItem: ClipItem) => {
     const index = clipItems.findIndex(
@@ -145,7 +146,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
       if (query === '') {
         updateSelectedIndex(0);
-        searchBarRef.current && searchBarRef.current.blur();
+        clipsListRef.current && clipsListRef.current.focus();
       }
 
       updateClipItems(res);
@@ -156,13 +157,17 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     <Box className={classes.container}>
       <SimpleBar className={classes.clipsContainer}>
         {clipItems.map((item, index) => (
-          <Box
+          <div
             key={`${index}_clipItem`}
             className={getBackgroundColor(index, selectedIndex)}
             onClick={() => onClickClipItem(item)}
+            {...(index === 0 && {
+              ref: clipsListRef,
+              tabIndex: 1,
+            })}
           >
             {item.data}
-          </Box>
+          </div>
         ))}
       </SimpleBar>
       <SearchBar
@@ -183,6 +188,9 @@ const useStyles = makeStyles((_theme: Theme) => {
     lineHeight: '20px',
     padding: '5px',
     maxWidth: '100%',
+    '&:focus': {
+      outline: '0px solid transparent',
+    },
   };
 
   return createStyles({
