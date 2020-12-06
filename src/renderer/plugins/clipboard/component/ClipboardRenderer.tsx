@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {createRef, useEffect, useState} from 'react';
+import {createRef, useEffect, useRef, useState} from 'react';
 import {Box} from '@material-ui/core';
 import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {blueGrey} from '@material-ui/core/colors';
@@ -11,14 +11,16 @@ import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import {SearchBar} from './SearchBar';
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
+import {dimensions, isAlphanumeric} from './utils';
 
 export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
   const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
   const [selectedIndex, updateSelectedIndex] = useState(0);
   const {process} = props;
-  const searchBarRef = createRef<HTMLDivElement>();
-  const clipsListRef = createRef<HTMLDivElement>();
+  const searchBarRef = useRef<HTMLDivElement>(null);
+  const clipsListRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   const reArrangeClipItems = (selectedClipItem: ClipItem) => {
     const index = clipItems.findIndex(
@@ -47,45 +49,47 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     }
   };
 
-  const isAlphanumeric = (keyCode: number): boolean => {
-    /* A-Z */
-    if (keyCode >= 65 && keyCode <= 90) {
-      return true;
-    }
-
-    /* numeric pad */
-    if (keyCode >= 96 && keyCode <= 105) {
-      return true;
-    }
-
-    /* numbers */
-    if (keyCode >= 48 && keyCode <= 57) {
-      return true;
-    }
-
-    /* ~ */
-    if (keyCode === 192) {
-      return true;
-    }
-
-    return false;
-  };
-
   const onKeyPress = (event: KeyboardEvent) => {
     const {keyCode} = event;
 
-    /* up key */
-    if (keyCode === 38) {
-      updateSelectedIndex((prevSelectedIndex) =>
-        clamp(prevSelectedIndex - 1, 0, clipItems.length - 1),
-      );
+    /* disable scrolling by arrow keys */
+    if ([32, 37, 38, 39, 40].includes(keyCode)) {
+      event.preventDefault();
     }
 
-    /* down key */
-    if (keyCode === 40) {
-      updateSelectedIndex((prevSelectedIndex) =>
-        clamp(prevSelectedIndex + 1, 0, clipItems.length - 1),
-      );
+    if (listRef.current) {
+      const {clipItem, searchBar} = dimensions;
+      const clipItemHeight =
+        clipItem.height + clipItem.paddingTop + clipItem.paddingBottom;
+
+      const searchBarHeight =
+        searchBar.height + searchBar.paddingTop + searchBar.paddingBottom;
+
+      /* up key */
+      if (keyCode === 38) {
+        listRef.current.scrollBy({
+          top: -clipItemHeight,
+        });
+
+        updateSelectedIndex((prevSelectedIndex) =>
+          clamp(prevSelectedIndex - 1, 0, clipItems.length - 1),
+        );
+      }
+
+      /* down key */
+      if (keyCode === 40) {
+        const lastEl = Math.floor(
+          (listRef.current.offsetHeight - searchBarHeight) / clipItemHeight,
+        );
+
+        if (selectedIndex >= lastEl - 1) {
+          listRef.current.scrollBy({top: clipItemHeight});
+        }
+
+        updateSelectedIndex((prevSelectedIndex) =>
+          clamp(prevSelectedIndex + 1, 0, clipItems.length - 1),
+        );
+      }
     }
 
     /* enter key */
@@ -155,7 +159,10 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
   return (
     <Box className={classes.container}>
-      <SimpleBar className={classes.clipsContainer}>
+      <SimpleBar
+        className={classes.clipsContainer}
+        scrollableNodeProps={{ref: listRef}}
+      >
         {clipItems.map((item, index) => (
           <div
             key={`${index}_clipItem`}
@@ -181,12 +188,19 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 };
 
 const useStyles = makeStyles((_theme: Theme) => {
+  const {
+    clipItem: {height, paddingTop, paddingBottom, paddingLeft, paddingRight},
+  } = dimensions;
+
   const clipItemStyles: CSSProperties = {
     color: 'black',
     overflow: 'auto',
-    minHeight: '40px',
+    minHeight: `${height}px`,
+    paddingTop: `${paddingTop}px`,
+    paddingBottom: `${paddingBottom}px`,
+    paddingLeft: `${paddingLeft}px`,
+    paddingRight: `${paddingRight}px`,
     lineHeight: '20px',
-    padding: '5px',
     maxWidth: '100%',
     '&:focus': {
       outline: '0px solid transparent',
@@ -204,7 +218,8 @@ const useStyles = makeStyles((_theme: Theme) => {
       display: 'flex',
       height: '100%',
       width: '100%',
-      overflowY: 'visible',
+      overflowY: 'auto',
+      scrollBehavior: 'unset',
       flexDirection: 'column',
     },
     clipItemEvenRow: {
@@ -218,9 +233,6 @@ const useStyles = makeStyles((_theme: Theme) => {
     clipItemSelected: {
       ...clipItemStyles,
       backgroundColor: blueGrey[300],
-    },
-    searchBar: {
-      height: '60px',
     },
   });
 });
