@@ -8,6 +8,7 @@ import {
 import {blueGrey} from '@material-ui/core/colors';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import * as React from 'React';
+import {dimensions} from './utils';
 
 interface Props {
   id: string;
@@ -74,12 +75,18 @@ SearchBarComponent.displayName = 'SearchBar';
 export const SearchBar = React.forwardRef(SearchBarComponent);
 
 const useStyles = makeStyles((_theme: Theme) => {
+  const {
+    searchBar: {height, paddingTop, paddingBottom, paddingLeft, paddingRight},
+  } = dimensions;
+
   return createStyles({
     searchBarContainer: {
       backgroundColor: blueGrey[400],
-      height: '30px',
-      padding: '5px',
-      paddingBottom: '0px',
+      height: `${height}px`,
+      paddingTop: `${paddingTop}px`,
+      paddingBottom: `${paddingBottom}px`,
+      paddingLeft: `${paddingLeft}px`,
+      paddingRight: `${paddingRight}px`,
     },
     searchBar: {
       width: '100%',

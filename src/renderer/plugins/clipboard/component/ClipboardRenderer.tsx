@@ -11,6 +11,7 @@ import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import {SearchBar} from './SearchBar';
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
+import {dimensions, isAlphanumeric} from './utils';
 
 export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
@@ -48,30 +49,6 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     }
   };
 
-  const isAlphanumeric = (keyCode: number): boolean => {
-    /* A-Z */
-    if (keyCode >= 65 && keyCode <= 90) {
-      return true;
-    }
-
-    /* numeric pad */
-    if (keyCode >= 96 && keyCode <= 105) {
-      return true;
-    }
-
-    /* numbers */
-    if (keyCode >= 48 && keyCode <= 57) {
-      return true;
-    }
-
-    /* ~ */
-    if (keyCode === 192) {
-      return true;
-    }
-
-    return false;
-  };
-
   const onKeyPress = (event: KeyboardEvent) => {
     const {keyCode} = event;
 
@@ -81,9 +58,18 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     }
 
     if (listRef.current) {
+      const {clipItem, searchBar} = dimensions;
+      const clipItemHeight =
+        clipItem.height + clipItem.paddingTop + clipItem.paddingBottom;
+
+      const searchBarHeight =
+        searchBar.height + searchBar.paddingTop + searchBar.paddingBottom;
+
       /* up key */
       if (keyCode === 38) {
-        listRef.current.scrollBy({top: -50});
+        listRef.current.scrollBy({
+          top: -clipItemHeight,
+        });
 
         updateSelectedIndex((prevSelectedIndex) =>
           clamp(prevSelectedIndex - 1, 0, clipItems.length - 1),
@@ -92,10 +78,12 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
       /* down key */
       if (keyCode === 40) {
-        const lastEl = Math.floor((listRef.current.offsetHeight - 35) / 50);
+        const lastEl = Math.floor(
+          (listRef.current.offsetHeight - searchBarHeight) / clipItemHeight,
+        );
 
         if (selectedIndex >= lastEl - 1) {
-          listRef.current.scrollBy({top: 50});
+          listRef.current.scrollBy({top: clipItemHeight});
         }
 
         updateSelectedIndex((prevSelectedIndex) =>
@@ -200,12 +188,19 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 };
 
 const useStyles = makeStyles((_theme: Theme) => {
+  const {
+    clipItem: {height, paddingTop, paddingBottom, paddingLeft, paddingRight},
+  } = dimensions;
+
   const clipItemStyles: CSSProperties = {
     color: 'black',
     overflow: 'auto',
-    minHeight: '40px',
+    minHeight: `${height}px`,
+    paddingTop: `${paddingTop}px`,
+    paddingBottom: `${paddingBottom}px`,
+    paddingLeft: `${paddingLeft}px`,
+    paddingRight: `${paddingRight}px`,
     lineHeight: '20px',
-    padding: '5px',
     maxWidth: '100%',
     '&:focus': {
       outline: '0px solid transparent',
