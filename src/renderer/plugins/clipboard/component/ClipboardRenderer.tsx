@@ -223,7 +223,8 @@ const useStyles = makeStyles((_theme: Theme) => {
 
   const clipItemStyles: CSSProperties = {
     color: 'black',
-    overflow: 'auto',
+    overflow: 'hidden',
+    maxHeight: `${height}px`,
     minHeight: `${height}px`,
     paddingTop: `${paddingTop}px`,
     paddingBottom: `${paddingBottom}px`,
