@@ -17,6 +17,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
   const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
   const [selectedIndex, updateSelectedIndex] = useState(0);
+  const [searchText, updateSearchText] = useState('');
   const {process} = props;
   const searchBarRef = useRef<HTMLDivElement>(null);
   const clipsListRef = useRef<HTMLDivElement>(null);
@@ -108,6 +109,11 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       }
     }
 
+    /* escape */
+    if (keyCode === 27) {
+      handleSearchUpdate('');
+    }
+
     /* enter key */
     if (keyCode === 13) {
       reArrangeClipItems(clipItems[selectedIndex]);
@@ -154,23 +160,27 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     }
   };
 
-  const onSearchTextChanged = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ) => {
-    const query = event.target.value;
-
-    if (query === '') {
+  const handleSearchUpdate = (text: string) => {
+    updateSearchText(text);
+    if (text === '') {
       updateSelectedIndex(0);
       searchBarRef.current && searchBarRef.current.blur();
     }
 
-    process.sendMessage(Messages.SearchClips, query, (err, res) => {
+    process.sendMessage(Messages.SearchClips, text, (err, res) => {
       if (err) {
         throw err;
       }
 
       updateClipItems(res);
     });
+  };
+
+  const onSearchTextChanged = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    const query = event.target.value;
+    handleSearchUpdate(query);
   };
 
   return (
@@ -197,6 +207,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
         id="clipboard-searchbar"
         placeholder="search"
         onChange={onSearchTextChanged}
+        value={searchText}
         ref={searchBarRef}
       />
     </Box>

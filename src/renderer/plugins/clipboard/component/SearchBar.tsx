@@ -14,6 +14,7 @@ interface Props {
   id: string;
   className?: string;
   placeholder?: string;
+  value?: string;
   onChange?: (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => void;
