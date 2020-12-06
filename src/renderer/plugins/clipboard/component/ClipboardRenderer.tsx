@@ -80,25 +80,27 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       event.preventDefault();
     }
 
-    /* up key */
-    if (keyCode === 38) {
-      updateSelectedIndex((prevSelectedIndex) =>
-        clamp(prevSelectedIndex - 1, 0, clipItems.length - 1),
-      );
-    }
+    if (listRef.current) {
+      /* up key */
+      if (keyCode === 38) {
+        listRef.current.scrollBy({top: -50});
 
-    /* down key */
-    if (keyCode === 40) {
-      updateSelectedIndex((prevSelectedIndex) =>
-        clamp(prevSelectedIndex + 1, 0, clipItems.length - 1),
-      );
+        updateSelectedIndex((prevSelectedIndex) =>
+          clamp(prevSelectedIndex - 1, 0, clipItems.length - 1),
+        );
+      }
 
-      if (listRef.current) {
+      /* down key */
+      if (keyCode === 40) {
         const lastEl = Math.floor((listRef.current.offsetHeight - 35) / 50);
 
         if (selectedIndex >= lastEl - 1) {
           listRef.current.scrollBy({top: 50});
         }
+
+        updateSelectedIndex((prevSelectedIndex) =>
+          clamp(prevSelectedIndex + 1, 0, clipItems.length - 1),
+        );
       }
     }
 
