@@ -17,7 +17,7 @@ export const dimensions = {
 
 export const isAlphanumeric = (keyCode: number): boolean => {
   console.log(keyCode);
-  /* A-Z */
+  /* A-Z | a-z */
   if (keyCode >= 65 && keyCode <= 90) {
     return true;
   }
