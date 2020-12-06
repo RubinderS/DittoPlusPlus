@@ -93,8 +93,12 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
         clamp(prevSelectedIndex + 1, 0, clipItems.length - 1),
       );
 
-      if (selectedIndex !== 0 && listRef.current) {
-        listRef.current.scrollBy({top: 50});
+      if (listRef.current) {
+        const lastEl = Math.floor((listRef.current.offsetHeight - 35) / 50);
+
+        if (selectedIndex >= lastEl - 1) {
+          listRef.current.scrollBy({top: 50});
+        }
       }
     }
 
@@ -232,9 +236,6 @@ const useStyles = makeStyles((_theme: Theme) => {
     clipItemSelected: {
       ...clipItemStyles,
       backgroundColor: blueGrey[300],
-    },
-    searchBar: {
-      height: '60px',
     },
   });
 });
