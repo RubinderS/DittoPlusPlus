@@ -21,7 +21,6 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const {process} = props;
   const searchBarRef = useRef<HTMLDivElement>(null);
   const clipsListRef = useRef<HTMLDivElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
 
   const reArrangeClipItems = (selectedClipItem: ClipItem) => {
     const index = clipItems.findIndex(
@@ -58,7 +57,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       event.preventDefault();
     }
 
-    if (listRef.current) {
+    if (clipsListRef.current) {
       const {clipItem, searchBar} = dimensions;
 
       const clipItemHeight =
@@ -67,11 +66,11 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       const searchBarHeight =
         searchBar.height + searchBar.paddingTop + searchBar.paddingBottom;
 
-      const viewHeight = listRef.current.offsetHeight - searchBarHeight;
+      const viewHeight = clipsListRef.current.offsetHeight - searchBarHeight;
       const itemsVisibleN = Math.floor(viewHeight / clipItemHeight);
 
       const itemsScrolled = Math.floor(
-        listRef.current.scrollTop / clipItemHeight,
+        clipsListRef.current.scrollTop / clipItemHeight,
       );
 
       const isItemInViewPort = inRange(
@@ -83,11 +82,11 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       /* up key */
       if (keyCode === 38) {
         if (isItemInViewPort) {
-          listRef.current.scrollBy({
+          clipsListRef.current.scrollBy({
             top: -clipItemHeight,
           });
         } else {
-          listRef.current.scrollTop = (selectedIndex - 2) * clipItemHeight;
+          clipsListRef.current.scrollTop = (selectedIndex - 2) * clipItemHeight;
         }
 
         updateSelectedIndex((prevSelectedIndex) =>
@@ -98,9 +97,9 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       /* down key */
       if (keyCode === 40) {
         if (selectedIndex >= itemsVisibleN - 1 && isItemInViewPort) {
-          listRef.current.scrollBy({top: clipItemHeight});
-        } else if (listRef.current.scrollTop) {
-          listRef.current.scrollTop = selectedIndex * clipItemHeight;
+          clipsListRef.current.scrollBy({top: clipItemHeight});
+        } else if (clipsListRef.current.scrollTop) {
+          clipsListRef.current.scrollTop = selectedIndex * clipItemHeight;
         }
 
         updateSelectedIndex((prevSelectedIndex) =>
@@ -148,6 +147,8 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const onClickClipItem = (e: ClipItem) => {
     reArrangeClipItems(e);
     sendClipboardItemSelected(e);
+    updateSelectedIndex(0);
+    clipsListRef.current && (clipsListRef.current.scrollTop = 0);
   };
 
   const getBackgroundColor = (index: number, selectedIndex: number) => {
@@ -187,17 +188,13 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     <Box className={classes.container}>
       <SimpleBar
         className={classes.clipsContainer}
-        scrollableNodeProps={{ref: listRef}}
+        scrollableNodeProps={{ref: clipsListRef}}
       >
         {clipItems.map((item, index) => (
           <div
             key={`${index}_clipItem`}
             className={getBackgroundColor(index, selectedIndex)}
             onClick={() => onClickClipItem(item)}
-            {...(index === 0 && {
-              ref: clipsListRef,
-              tabIndex: 1,
-            })}
           >
             {item.data}
           </div>
