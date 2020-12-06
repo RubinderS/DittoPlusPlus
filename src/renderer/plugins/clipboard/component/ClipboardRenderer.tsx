@@ -43,7 +43,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
         }
 
         if (res) {
-          // console.log(res);
+          //
         }
       });
     }
@@ -138,19 +138,19 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     }
   };
 
-  const onSearchBarTextChanged = (
+  const onSearchTextChanged = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
     const query = event.target.value;
 
+    if (query === '') {
+      updateSelectedIndex(0);
+      searchBarRef.current && searchBarRef.current.blur();
+    }
+
     process.sendMessage(Messages.SearchClips, query, (err, res) => {
       if (err) {
         throw err;
-      }
-
-      if (query === '') {
-        updateSelectedIndex(0);
-        clipsListRef.current && clipsListRef.current.focus();
       }
 
       updateClipItems(res);
@@ -180,7 +180,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       <SearchBar
         id="clipboard-searchbar"
         placeholder="search"
-        onChange={onSearchBarTextChanged}
+        onChange={onSearchTextChanged}
         ref={searchBarRef}
       />
     </Box>
