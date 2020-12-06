@@ -115,9 +115,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
     /* enter key */
     if (keyCode === 13) {
-      reArrangeClipItems(clipItems[selectedIndex]);
-      sendClipboardItemSelected(clipItems[selectedIndex]);
-      updateSelectedIndex(0);
+      handleClipItemSelected(clipItems[selectedIndex]);
     }
 
     /* key is alphanumeric */
@@ -144,11 +142,15 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     });
   }, []);
 
-  const onClickClipItem = (e: ClipItem) => {
-    reArrangeClipItems(e);
-    sendClipboardItemSelected(e);
+  const handleClipItemSelected = (item: ClipItem) => {
+    reArrangeClipItems(item);
+    sendClipboardItemSelected(item);
     updateSelectedIndex(0);
     clipsListRef.current && (clipsListRef.current.scrollTop = 0);
+  };
+
+  const onClickClipItem = (item: ClipItem) => {
+    handleClipItemSelected(item);
   };
 
   const getBackgroundColor = (index: number, selectedIndex: number) => {
