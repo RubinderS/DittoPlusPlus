@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {createRef, useEffect, useState} from 'react';
+import {createRef, useEffect, useRef, useState} from 'react';
 import {Box} from '@material-ui/core';
 import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {blueGrey} from '@material-ui/core/colors';
@@ -17,8 +17,9 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
   const [selectedIndex, updateSelectedIndex] = useState(0);
   const {process} = props;
-  const searchBarRef = createRef<HTMLDivElement>();
-  const clipsListRef = createRef<HTMLDivElement>();
+  const searchBarRef = useRef<HTMLDivElement>(null);
+  const clipsListRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   const reArrangeClipItems = (selectedClipItem: ClipItem) => {
     const index = clipItems.findIndex(
@@ -74,6 +75,11 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const onKeyPress = (event: KeyboardEvent) => {
     const {keyCode} = event;
 
+    /* disable scrolling by arrow keys */
+    if ([32, 37, 38, 39, 40].includes(keyCode)) {
+      event.preventDefault();
+    }
+
     /* up key */
     if (keyCode === 38) {
       updateSelectedIndex((prevSelectedIndex) =>
@@ -86,6 +92,10 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       updateSelectedIndex((prevSelectedIndex) =>
         clamp(prevSelectedIndex + 1, 0, clipItems.length - 1),
       );
+
+      if (selectedIndex !== 0 && listRef.current) {
+        listRef.current.scrollBy({top: 50});
+      }
     }
 
     /* enter key */
@@ -155,7 +165,10 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
   return (
     <Box className={classes.container}>
-      <SimpleBar className={classes.clipsContainer}>
+      <SimpleBar
+        className={classes.clipsContainer}
+        scrollableNodeProps={{ref: listRef}}
+      >
         {clipItems.map((item, index) => (
           <div
             key={`${index}_clipItem`}
@@ -204,7 +217,8 @@ const useStyles = makeStyles((_theme: Theme) => {
       display: 'flex',
       height: '100%',
       width: '100%',
-      overflowY: 'visible',
+      overflowY: 'auto',
+      scrollBehavior: 'unset',
       flexDirection: 'column',
     },
     clipItemEvenRow: {
