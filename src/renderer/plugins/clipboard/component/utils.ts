@@ -41,7 +41,6 @@ export const isAlphanumeric = (keyCode: number): boolean => {
    * 187: +
    * 189 : -
    * 192: ~
-   *
    */
   if ([32, 106, 107, 109, 111, 187, 189, 192].includes(keyCode)) {
     return true;
