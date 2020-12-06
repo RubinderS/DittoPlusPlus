@@ -53,7 +53,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     const {keyCode} = event;
 
     /* disable scrolling by arrow keys */
-    if ([32, 37, 38, 39, 40].includes(keyCode)) {
+    if ([38, 40].includes(keyCode)) {
       event.preventDefault();
     }
 
