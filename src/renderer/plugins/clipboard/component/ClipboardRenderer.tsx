@@ -167,9 +167,11 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const handleSearchUpdate = (text: string) => {
     updateSearchText(text);
     if (text === '') {
-      updateSelectedIndex(0);
       searchBarRef.current && searchBarRef.current.blur();
     }
+
+    updateSelectedIndex(0);
+    clipsListRef.current && (clipsListRef.current.scrollTop = 0);
 
     process.sendMessage(Messages.SearchClips, text, (err, res) => {
       if (err) {
