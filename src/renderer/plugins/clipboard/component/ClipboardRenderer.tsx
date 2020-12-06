@@ -120,6 +120,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
     /* key is alphanumeric */
     if (isAlphanumeric(keyCode)) {
+      updateSelectedIndex(0);
       searchBarRef.current && searchBarRef.current.focus();
     }
   };
