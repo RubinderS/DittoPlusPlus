@@ -1,12 +1,12 @@
 import * as React from 'react';
-import {createRef, useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {Box} from '@material-ui/core';
 import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {blueGrey} from '@material-ui/core/colors';
 import {ClipItem, Events, Messages} from '../types';
 import * as PluginTypes from '@type/pluginTypes';
 import useEventListener from '@use-it/event-listener';
-import {clamp} from 'lodash';
+import {clamp, inRange} from 'lodash';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import {SearchBar} from './SearchBar';
 import SimpleBar from 'simplebar-react';
@@ -59,17 +59,35 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
     if (listRef.current) {
       const {clipItem, searchBar} = dimensions;
+
       const clipItemHeight =
         clipItem.height + clipItem.paddingTop + clipItem.paddingBottom;
 
       const searchBarHeight =
         searchBar.height + searchBar.paddingTop + searchBar.paddingBottom;
 
+      const viewHeight = listRef.current.offsetHeight - searchBarHeight;
+      const itemsVisibleN = Math.floor(viewHeight / clipItemHeight);
+
+      const itemsScrolled = Math.floor(
+        listRef.current.scrollTop / clipItemHeight,
+      );
+
+      const isItemInViewPort = inRange(
+        selectedIndex,
+        itemsScrolled,
+        itemsVisibleN + itemsScrolled + 1,
+      );
+
       /* up key */
       if (keyCode === 38) {
-        listRef.current.scrollBy({
-          top: -clipItemHeight,
-        });
+        if (isItemInViewPort) {
+          listRef.current.scrollBy({
+            top: -clipItemHeight,
+          });
+        } else {
+          listRef.current.scrollTop = (selectedIndex - 2) * clipItemHeight;
+        }
 
         updateSelectedIndex((prevSelectedIndex) =>
           clamp(prevSelectedIndex - 1, 0, clipItems.length - 1),
@@ -78,12 +96,10 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
       /* down key */
       if (keyCode === 40) {
-        const lastEl = Math.floor(
-          (listRef.current.offsetHeight - searchBarHeight) / clipItemHeight,
-        );
-
-        if (selectedIndex >= lastEl - 1) {
+        if (selectedIndex >= itemsVisibleN - 1 && isItemInViewPort) {
           listRef.current.scrollBy({top: clipItemHeight});
+        } else if (listRef.current.scrollTop) {
+          listRef.current.scrollTop = selectedIndex * clipItemHeight;
         }
 
         updateSelectedIndex((prevSelectedIndex) =>
