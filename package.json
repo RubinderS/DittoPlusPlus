@@ -10,8 +10,8 @@
     "build:prod": "cross-env NODE_ENV=production npm run build",
     "build:remote:main": "nodemon -e ts,tsx -w ./src --exec \"npm run build:dev && npm start\"",
     "build:remote:renderer": "cross-env NODE_ENV=devserver npm run build && webpack-dev-server",
-    "build:win": "electron-builder build --win --x64",
-    "build:mac": "electron-builder build --mac --x64",
+    "pkg:win": "electron-builder build --win --x64",
+    "pkg:mac": "electron-builder build --mac --x64",
     "test": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.ts\""
   },
   "build": {
