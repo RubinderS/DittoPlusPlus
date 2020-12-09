@@ -8,9 +8,9 @@ export interface ClipItem {
 export type ClipListener = (clipItem: ClipItem) => void;
 
 export const Events = {
-  NewClip: 'NewClip',
+  NewClipCopied: 'NewClipCopied',
   ClipsInitialized: 'ClipItemsInitialized',
-  ExistingClipSelected: 'ExistingClipSelected',
+  ExistingClipCopied: 'ExistingClipCopied',
 };
 
 export const Messages = {

@@ -57,12 +57,12 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
             currClipImageBuffer,
             () => {
               this.clipItems.push(savedDoc);
-              this.emit(Events.NewClip, savedDoc);
+              this.emit(Events.NewClipCopied, savedDoc);
             },
           );
         } else {
           this.clipItems.push(savedDoc);
-          this.emit(Events.NewClip, savedDoc);
+          this.emit(Events.NewClipCopied, savedDoc);
         }
       });
     }

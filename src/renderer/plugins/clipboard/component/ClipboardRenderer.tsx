@@ -134,11 +134,15 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       }
     });
 
-    process.on(Events.NewClip, (doc: ClipItem) => {
+    process.on(Events.NewClipCopied, (doc: ClipItem) => {
       updateClipItems((prevClipItems) => [doc, ...prevClipItems]);
     });
 
     process.on(Events.ClipsInitialized, (clips: ClipItem[]) => {
+      updateClipItems(clips);
+    });
+
+    process.on(Events.ExistingClipCopied, (clips: ClipItem[]) => {
       updateClipItems(clips);
     });
   }, []);
