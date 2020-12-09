@@ -10,6 +10,7 @@ export type ClipListener = (clipItem: ClipItem) => void;
 export const Events = {
   NewClip: 'NewClip',
   ClipsInitialized: 'ClipItemsInitialized',
+  ExistingClipSelected: 'ExistingClipSelected',
 };
 
 export const Messages = {
