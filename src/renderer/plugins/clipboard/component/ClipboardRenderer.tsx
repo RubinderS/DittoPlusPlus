@@ -2,16 +2,15 @@ import * as React from 'react';
 import {useEffect, useRef, useState} from 'react';
 import {Box} from '@material-ui/core';
 import {Theme, createStyles, makeStyles} from '@material-ui/core';
-import {blueGrey} from '@material-ui/core/colors';
 import {ClipItem, Events, Messages} from '../types';
 import * as PluginTypes from '@type/pluginTypes';
 import useEventListener from '@use-it/event-listener';
 import {clamp, inRange} from 'lodash';
-import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import {SearchBar} from './SearchBar';
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import {dimensions, isAlphanumeric} from './utils';
+import {ClipItemRow, ClipItemVariants} from './ClipItemRow';
 
 export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
@@ -154,16 +153,6 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     handleClipItemSelected(item);
   };
 
-  const getBackgroundColor = (index: number, selectedIndex: number) => {
-    if (index === selectedIndex) {
-      return classes.clipItemSelected;
-    } else if (index % 2) {
-      return classes.clipItemEvenRow;
-    } else {
-      return classes.clipItemOddRow;
-    }
-  };
-
   const handleSearchUpdate = (text: string) => {
     updateSearchText(text);
     if (text === '') {
@@ -189,6 +178,18 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     handleSearchUpdate(query);
   };
 
+  const getClipItemVariant = (index: number): ClipItemVariants => {
+    if (index === selectedIndex) {
+      return 'selected';
+    }
+
+    if (index % 2 === 0) {
+      return 'dark';
+    } else {
+      return 'light';
+    }
+  };
+
   return (
     <Box className={classes.container}>
       <SimpleBar
@@ -196,13 +197,12 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
         scrollableNodeProps={{ref: clipsListRef}}
       >
         {clipItems.map((item, index) => (
-          <div
+          <ClipItemRow
             key={`${index}_clipItem`}
-            className={getBackgroundColor(index, selectedIndex)}
+            clipItem={item}
+            variant={getClipItemVariant(index)}
             onClick={() => onClickClipItem(item)}
-          >
-            {item.data}
-          </div>
+          />
         ))}
       </SimpleBar>
       <SearchBar
@@ -217,26 +217,6 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 };
 
 const useStyles = makeStyles((_theme: Theme) => {
-  const {
-    clipItem: {height, paddingTop, paddingBottom, paddingLeft, paddingRight},
-  } = dimensions;
-
-  const clipItemStyles: CSSProperties = {
-    color: 'black',
-    overflow: 'hidden',
-    maxHeight: `${height}px`,
-    minHeight: `${height}px`,
-    paddingTop: `${paddingTop}px`,
-    paddingBottom: `${paddingBottom}px`,
-    paddingLeft: `${paddingLeft}px`,
-    paddingRight: `${paddingRight}px`,
-    lineHeight: '20px',
-    maxWidth: '100%',
-    '&:focus': {
-      outline: '0px solid transparent',
-    },
-  };
-
   return createStyles({
     container: {
       display: 'flex',
@@ -251,18 +231,6 @@ const useStyles = makeStyles((_theme: Theme) => {
       overflowY: 'auto',
       scrollBehavior: 'unset',
       flexDirection: 'column',
-    },
-    clipItemEvenRow: {
-      ...clipItemStyles,
-      backgroundColor: blueGrey[50],
-    },
-    clipItemOddRow: {
-      ...clipItemStyles,
-      backgroundColor: blueGrey[100],
-    },
-    clipItemSelected: {
-      ...clipItemStyles,
-      backgroundColor: blueGrey[300],
     },
   });
 });
