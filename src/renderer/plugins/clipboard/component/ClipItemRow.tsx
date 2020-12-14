@@ -3,7 +3,8 @@ import {blueGrey} from '@material-ui/core/colors';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import * as React from 'React';
 import {ClipItem} from '../types';
-import {dimensions} from './utils';
+import {dimensions, imagesDir} from './utils';
+import * as path from 'path';
 
 export type ClipItemVariants = 'light' | 'dark' | 'selected';
 
@@ -48,6 +49,9 @@ const useStyles = makeStyles((_theme: Theme) => {
       ...clipItemStyles,
       backgroundColor: blueGrey[300],
     },
+    image: {
+      height: `${height}px`,
+    },
   });
 });
 
@@ -55,7 +59,7 @@ export const ClipItemRow = (props: Props) => {
   const {key, clipItem, variant, onClick} = props;
   const classes = useStyles();
 
-  const getBackgroundColor = (variant: ClipItemVariants) => {
+  const getVariantClass = (variant: ClipItemVariants) => {
     switch (variant) {
       case 'light':
         return classes.clipItemLight;
@@ -68,9 +72,29 @@ export const ClipItemRow = (props: Props) => {
     }
   };
 
+  const renderClipItem = (clipItem: ClipItem): React.ReactNode => {
+    const {data, type, _id} = clipItem;
+
+    switch (type) {
+      case 'text':
+        return data;
+
+      case 'image':
+        return (
+          <img
+            className={classes.image}
+            src={path.join(imagesDir, `${_id}.png`)}
+          />
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div key={key} className={getBackgroundColor(variant)} onClick={onClick}>
-      {clipItem.data}
+    <div key={key} className={getVariantClass(variant)} onClick={onClick}>
+      {renderClipItem(clipItem)}
     </div>
   );
 };

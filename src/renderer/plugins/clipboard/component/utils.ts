@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 export const dimensions = {
   clipItem: {
     height: 40,
@@ -75,3 +77,5 @@ export const isAlphanumeric = (keyCode: number): boolean => {
 
   return false;
 };
+
+export const imagesDir = path.join('db', 'clipboardImages');

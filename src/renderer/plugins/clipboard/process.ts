@@ -4,6 +4,7 @@ import {clipboard} from 'electron';
 import * as PluginTypes from '@type/pluginTypes';
 import {ClipItem, Events, Messages} from './types';
 import * as Datastore from 'nedb';
+import {imagesDir} from './component/utils';
 
 export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   db: Datastore<ClipItem>;
@@ -12,6 +13,14 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
   constructor() {
     super();
+
+    if (!fs.existsSync(imagesDir)) {
+      fs.mkdir(imagesDir, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+    }
   }
 
   saveFile = (
@@ -53,7 +62,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
         if (isImage) {
           this.saveFile(
-            path.join('db', 'clipboardImages', `${savedDoc._id}.png`),
+            path.join(imagesDir, `${savedDoc._id}.png`),
             currClipImageBuffer,
             () => {
               this.clipItems.push(savedDoc);
