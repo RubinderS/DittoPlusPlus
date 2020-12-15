@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useEffect, useRef, useState} from 'react';
 import {Box} from '@material-ui/core';
 import {Theme, createStyles, makeStyles} from '@material-ui/core';
-import {ClipItem, Events, Messages} from '../types';
+import {ClipItemDoc, Events, Messages} from '../types';
 import * as PluginTypes from '@type/pluginTypes';
 import useEventListener from '@use-it/event-listener';
 import {clamp, inRange} from 'lodash';
@@ -14,14 +14,14 @@ import {ClipItemRow, ClipItemVariants} from './ClipItemRow';
 
 export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
-  const [clipItems, updateClipItems] = useState<ClipItem[]>([]);
+  const [clipItems, updateClipItems] = useState<ClipItemDoc[]>([]);
   const [selectedIndex, updateSelectedIndex] = useState(0);
   const [searchText, updateSearchText] = useState('');
   const {process} = props;
   const searchBarRef = useRef<HTMLDivElement>(null);
   const clipsListRef = useRef<HTMLDivElement>(null);
 
-  const reArrangeClipItems = (selectedClipItem: ClipItem) => {
+  const reArrangeClipItems = (selectedClipItem: ClipItemDoc) => {
     const index = clipItems.findIndex(
       (clipItem) => clipItem._id === selectedClipItem._id,
     );
@@ -34,7 +34,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     updateClipItems([selectedClipItem, ...slicedClipItems]);
   };
 
-  const sendClipboardItemSelected = (clipItem: ClipItem) => {
+  const sendClipboardItemSelected = (clipItem: ClipItemDoc) => {
     if (clipItem.type === 'text') {
       process.sendMessage(Messages.ClipItemSelected, clipItem, (err, res) => {
         if (err) {
@@ -133,23 +133,23 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       }
     });
 
-    process.on(Events.NewClip, (doc: ClipItem) => {
+    process.on(Events.NewClip, (doc: ClipItemDoc) => {
       updateClipItems((prevClipItems) => [doc, ...prevClipItems]);
     });
 
-    process.on(Events.ClipsInitialized, (clips: ClipItem[]) => {
+    process.on(Events.ClipsInitialized, (clips: ClipItemDoc[]) => {
       updateClipItems(clips);
     });
   }, []);
 
-  const handleClipItemSelected = (item: ClipItem) => {
+  const handleClipItemSelected = (item: ClipItemDoc) => {
     reArrangeClipItems(item);
     sendClipboardItemSelected(item);
     updateSelectedIndex(0);
     clipsListRef.current && (clipsListRef.current.scrollTop = 0);
   };
 
-  const onClickClipItem = (item: ClipItem) => {
+  const onClickClipItem = (item: ClipItemDoc) => {
     handleClipItemSelected(item);
   };
 

@@ -1,11 +1,20 @@
-export interface ClipItem {
-  _id?: string;
+export type ClipType = 'text' | 'image';
+
+export interface ClipItemDoc {
+  _id: string;
   data?: string;
   timeStamp: number;
-  type: 'text' | 'image';
+  type: ClipType;
 }
 
-export type ClipListener = (clipItem: ClipItem) => void;
+export interface ReadClipboardData {
+  text?: string;
+  imageBuffer?: Buffer;
+  imageString?: string;
+  type: ClipType;
+}
+
+export type ClipListener = (clipItem: ClipItemDoc) => void;
 
 export const Events = {
   NewClip: 'NewClip',

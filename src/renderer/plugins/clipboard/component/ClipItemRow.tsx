@@ -2,7 +2,7 @@ import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {blueGrey} from '@material-ui/core/colors';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import * as React from 'React';
-import {ClipItem} from '../types';
+import {ClipItemDoc} from '../types';
 import {dimensions, imagesDir} from './utils';
 import * as path from 'path';
 
@@ -10,7 +10,7 @@ export type ClipItemVariants = 'light' | 'dark' | 'selected';
 
 interface Props {
   key: string | number | null | undefined;
-  clipItem: ClipItem;
+  clipItem: ClipItemDoc;
   variant: ClipItemVariants;
   onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
@@ -72,7 +72,7 @@ export const ClipItemRow = (props: Props) => {
     }
   };
 
-  const renderClipItem = (clipItem: ClipItem): React.ReactNode => {
+  const renderClipItem = (clipItem: ClipItemDoc): React.ReactNode => {
     const {data, type, _id} = clipItem;
 
     switch (type) {

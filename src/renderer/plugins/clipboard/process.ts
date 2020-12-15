@@ -2,14 +2,14 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {clipboard} from 'electron';
 import * as PluginTypes from '@type/pluginTypes';
-import {ClipItem, Events, Messages} from './types';
+import {ClipItemDoc, Events, Messages, ReadClipboardData} from './types';
 import * as Datastore from 'nedb';
 import {imagesDir} from './component/utils';
 
 export class ClipboardProcess extends PluginTypes.ProcessAbstract {
-  db: Datastore<ClipItem>;
+  db: Datastore<Partial<ClipItemDoc>>;
   lastClip = clipboard.readText(); // write a func to read clipboard
-  clipItems: ClipItem[];
+  clipItems: ClipItemDoc[];
 
   constructor() {
     super();
@@ -23,57 +23,89 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     }
   }
 
-  saveFile = (
-    fileName: string,
-    data: Buffer,
-    onFileSaved?: () => void,
-  ): void => {
-    fs.writeFile(fileName, data, (err) => {
-      if (err) {
-        throw err;
-      }
+  saveFile = async (fileName: string, data: Buffer): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      fs.writeFile(fileName, data, (err) => {
+        if (err) {
+          reject(err);
+        }
 
-      onFileSaved && onFileSaved();
+        resolve();
+      });
     });
   };
 
-  watchClipboard = () => {
-    const currClipText = clipboard.readText();
-    const currClipImageBuffer = clipboard.readImage().toPNG();
-    const currClipImageString = currClipImageBuffer.toString();
-    const isImage = currClipImageBuffer.length !== 0;
+  insertClipDb = async (doc: Partial<ClipItemDoc>): Promise<ClipItemDoc> => {
+    return new Promise((resolve, reject) => {
+      doc.timeStamp = Date.now();
 
-    if (
-      (currClipText && currClipText !== this.lastClip) ||
-      (currClipImageString && currClipImageString !== this.lastClip)
-    ) {
-      this.lastClip = isImage ? currClipImageString : currClipText;
-
-      const doc: ClipItem = {
-        type: isImage ? 'image' : 'text',
-        data: isImage ? undefined : currClipText,
-        timeStamp: Date.now(),
-      };
-
-      this.db.insert(doc, (err: any, savedDoc: ClipItem) => {
+      this.db.insert(doc, (err: any, savedDoc: ClipItemDoc) => {
         if (err) {
-          throw err;
+          reject(err);
         }
 
-        if (isImage) {
-          this.saveFile(
-            path.join(imagesDir, `${savedDoc._id}.png`),
-            currClipImageBuffer,
-            () => {
-              this.clipItems.push(savedDoc);
-              this.emit(Events.NewClip, savedDoc);
-            },
-          );
-        } else {
+        resolve(savedDoc);
+      });
+    });
+  };
+
+  readClipboard = (): ReadClipboardData => {
+    const clipText = clipboard.readText();
+    const clipImageBuffer = clipboard.readImage().toPNG();
+
+    const clipData: ReadClipboardData = {
+      type: clipImageBuffer.length !== 0 ? 'image' : 'text',
+    };
+
+    switch (clipData.type) {
+      case 'text':
+        clipData.text = clipText;
+        break;
+
+      case 'image':
+        clipData.imageBuffer = clipImageBuffer;
+        clipData.imageString = clipImageBuffer.toString();
+        break;
+    }
+
+    return clipData;
+  };
+
+  watchClipboard = async () => {
+    const clipData = this.readClipboard();
+
+    switch (clipData.type) {
+      case 'text':
+        if (clipData.text !== this.lastClip) {
+          this.lastClip = clipData.text as string;
+
+          const savedDoc = await this.insertClipDb({
+            type: 'text',
+            data: clipData.text,
+          });
+
           this.clipItems.push(savedDoc);
           this.emit(Events.NewClip, savedDoc);
         }
-      });
+        break;
+
+      case 'image':
+        if (clipData.imageString !== this.lastClip) {
+          this.lastClip = clipData.imageString as string;
+
+          const savedDoc = await this.insertClipDb({
+            type: 'image',
+          });
+
+          await this.saveFile(
+            path.join(imagesDir, `${savedDoc._id}.png`),
+            clipData.imageBuffer as Buffer,
+          );
+
+          this.clipItems.push(savedDoc);
+          this.emit(Events.NewClip, savedDoc);
+        }
+        break;
     }
   };
 
@@ -88,7 +120,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     this.db
       .find({})
       .sort({timeStamp: -1})
-      .exec((err: Error | null, docs: ClipItem[]) => {
+      .exec((err: Error | null, docs: ClipItemDoc[]) => {
         this.clipItems = docs;
         this.emit(Events.ClipsInitialized, this.clipItems);
       });
@@ -105,7 +137,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   ) => {
     switch (type) {
       case Messages.ClipItemSelected:
-        const {_id, data} = msgData as ClipItem;
+        const {_id, data} = msgData as ClipItemDoc;
         if (data) {
           this.lastClip = data;
           clipboard.writeText(data);
