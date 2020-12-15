@@ -125,18 +125,18 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   useEventListener('keydown', onKeyPress);
 
   useEffect(() => {
-    process.sendMessage(Messages.GetAllClipItems, '', (err, res) => {
+    process.sendMessage(Messages.GetAllClipItems, '', (err, clips) => {
       if (!err) {
-        updateClipItems([...res]);
+        updateClipItems([...clips]);
       }
     });
 
-    process.on(Events.NewClip, (doc: ClipItemDoc) => {
-      updateClipItems((prevClipItems) => [doc, ...prevClipItems]);
+    process.on(Events.NewClip, (clip: ClipItemDoc) => {
+      updateClipItems((prevClipItems) => [clip, ...prevClipItems]);
     });
 
     process.on(Events.ClipsInitialized, (clips: ClipItemDoc[]) => {
-      updateClipItems(clips);
+      updateClipItems([...clips]);
     });
   }, []);
 
