@@ -9,7 +9,6 @@ import * as path from 'path';
 export type ClipItemVariants = 'light' | 'dark' | 'selected';
 
 interface Props {
-  key: string | number | null | undefined;
   clipItem: ClipItemDoc;
   variant: ClipItemVariants;
   onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
@@ -56,7 +55,7 @@ const useStyles = makeStyles((_theme: Theme) => {
 });
 
 export const ClipItemRow = (props: Props) => {
-  const {key, clipItem, variant, onClick} = props;
+  const {clipItem, variant, onClick} = props;
   const classes = useStyles();
 
   const getVariantClass = (variant: ClipItemVariants) => {
@@ -73,17 +72,15 @@ export const ClipItemRow = (props: Props) => {
   };
 
   const renderClipItem = (clipItem: ClipItemDoc): React.ReactNode => {
-    const {data, type, _id} = clipItem;
-
-    switch (type) {
+    switch (clipItem.type) {
       case 'text':
-        return data;
+        return clipItem.text;
 
       case 'image':
         return (
           <img
             className={classes.image}
-            src={path.join(imagesDir, `${_id}.png`)}
+            src={path.join(imagesDir, `${clipItem._id}.png`)}
           />
         );
 
@@ -93,7 +90,7 @@ export const ClipItemRow = (props: Props) => {
   };
 
   return (
-    <div key={key} className={getVariantClass(variant)} onClick={onClick}>
+    <div className={getVariantClass(variant)} onClick={onClick}>
       {renderClipItem(clipItem)}
     </div>
   );

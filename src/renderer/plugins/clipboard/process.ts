@@ -1,14 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {clipboard} from 'electron';
+import {clipboard, nativeImage} from 'electron';
 import * as PluginTypes from '@type/pluginTypes';
-import {ClipItemDoc, Events, Messages, ReadClipboardData} from './types';
+import {ClipData, ClipItemDoc, Events, Messages} from './types';
 import * as Datastore from 'nedb';
 import {imagesDir} from './component/utils';
 
 export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   db: Datastore<Partial<ClipItemDoc>>;
-  lastClip = clipboard.readText(); // write a func to read clipboard
+  lastClip: string;
   clipItems: ClipItemDoc[];
 
   constructor() {
@@ -21,6 +21,9 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
         }
       });
     }
+
+    const clipData = this.readClipboard();
+    this.lastClip = this.clipDataToString(clipData);
   }
 
   saveFile = async (fileName: string, data: Buffer): Promise<void> => {
@@ -49,63 +52,88 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     });
   };
 
-  readClipboard = (): ReadClipboardData => {
-    const clipText = clipboard.readText();
-    const clipImageBuffer = clipboard.readImage().toPNG();
-
-    const clipData: ReadClipboardData = {
-      type: clipImageBuffer.length !== 0 ? 'image' : 'text',
-    };
-
+  clipDataToString = (clipData: ClipData): string => {
     switch (clipData.type) {
       case 'text':
-        clipData.text = clipText;
-        break;
+        return clipData.data;
 
       case 'image':
-        clipData.imageBuffer = clipImageBuffer;
-        clipData.imageString = clipImageBuffer.toString();
-        break;
+        return clipData.data.getBitmap().toString();
+    }
+  };
+
+  readClipboard = (): ClipData => {
+    const clipText = clipboard.readText();
+    const clipImageBuffer = clipboard.readImage();
+    let clipData: ClipData;
+
+    if (clipImageBuffer.getBitmap().length !== 0) {
+      clipData = {
+        type: 'image',
+        data: clipImageBuffer,
+      };
+    } else {
+      clipData = {
+        type: 'text',
+        data: clipText,
+      };
     }
 
     return clipData;
   };
 
-  watchClipboard = async () => {
-    const clipData = this.readClipboard();
-
-    switch (clipData.type) {
+  writeClipboard = (clipItem: ClipItemDoc) => {
+    switch (clipItem.type) {
       case 'text':
-        if (clipData.text !== this.lastClip) {
-          this.lastClip = clipData.text as string;
-
-          const savedDoc = await this.insertClipDb({
-            type: 'text',
-            data: clipData.text,
-          });
-
-          this.clipItems.push(savedDoc);
-          this.emit(Events.NewClip, savedDoc);
-        }
+        this.lastClip = clipItem.text;
+        clipboard.writeText(clipItem.text);
         break;
 
       case 'image':
-        if (clipData.imageString !== this.lastClip) {
-          this.lastClip = clipData.imageString as string;
+        const image = nativeImage.createFromPath(
+          path.join(imagesDir, `${clipItem._id}.png`),
+        );
 
-          const savedDoc = await this.insertClipDb({
+        this.lastClip = image.getBitmap().toString();
+        clipboard.writeImage(image);
+        break;
+    }
+  };
+
+  watchClipboard = async () => {
+    const clipData = this.readClipboard();
+    const clipString = this.clipDataToString(clipData);
+
+    if (clipString !== this.lastClip) {
+      switch (clipData.type) {
+        case 'text':
+          this.lastClip = clipData.data;
+
+          const savedDocText = await this.insertClipDb({
+            type: 'text',
+            text: clipData.data,
+          });
+
+          this.clipItems.push(savedDocText);
+          this.emit(Events.NewClip, savedDocText);
+          break;
+
+        case 'image':
+          this.lastClip = clipData.data.toString();
+
+          const savedDocImage = await this.insertClipDb({
             type: 'image',
           });
 
           await this.saveFile(
-            path.join(imagesDir, `${savedDoc._id}.png`),
-            clipData.imageBuffer as Buffer,
+            path.join(imagesDir, `${savedDocImage._id}.png`),
+            clipData.data.toPNG(),
           );
 
-          this.clipItems.push(savedDoc);
-          this.emit(Events.NewClip, savedDoc);
-        }
-        break;
+          this.clipItems.push(savedDocImage);
+          this.emit(Events.NewClip, savedDocImage);
+          break;
+      }
     }
   };
 
@@ -137,22 +165,20 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   ) => {
     switch (type) {
       case Messages.ClipItemSelected:
-        const {_id, data} = msgData as ClipItemDoc;
-        if (data) {
-          this.lastClip = data;
-          clipboard.writeText(data);
-          cb(undefined, true);
-          this.db.update(
-            {_id},
-            {$set: {timeStamp: Date.now()}},
-            {},
-            (err: Error | null, _n: number) => {
-              if (err) {
-                throw err;
-              }
-            },
-          );
-        }
+        const {_id} = msgData as ClipItemDoc;
+        const clipItem = msgData as ClipItemDoc;
+        this.writeClipboard(clipItem);
+        cb(undefined, true);
+        this.db.update(
+          {_id},
+          {$set: {timeStamp: Date.now()}},
+          {},
+          (err: Error | null, _n: number) => {
+            if (err) {
+              throw err;
+            }
+          },
+        );
         break;
 
       case Messages.GetAllClipItems:
@@ -168,8 +194,8 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
         const result = this.clipItems.filter((item) => {
           return (
             item.type === 'text' &&
-            item.data &&
-            item.data.toLowerCase().includes(query.toLowerCase())
+            item.text &&
+            item.text.toLowerCase().includes(query.toLowerCase())
           );
         });
         cb(undefined, result);

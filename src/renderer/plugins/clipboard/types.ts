@@ -1,18 +1,19 @@
 export type ClipType = 'text' | 'image';
 
-export interface ClipItemDoc {
+export type ClipItemDoc = {
   _id: string;
-  data?: string;
   timeStamp: number;
-  type: ClipType;
-}
+} & ({text: string; type: 'text'} | {type: 'image'});
 
-export interface ReadClipboardData {
-  text?: string;
-  imageBuffer?: Buffer;
-  imageString?: string;
-  type: ClipType;
-}
+export type ClipData =
+  | {
+      type: 'image';
+      data: Electron.NativeImage;
+    }
+  | {
+      type: 'text';
+      data: string;
+    };
 
 export type ClipListener = (clipItem: ClipItemDoc) => void;
 

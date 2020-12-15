@@ -35,17 +35,15 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   };
 
   const sendClipboardItemSelected = (clipItem: ClipItemDoc) => {
-    if (clipItem.type === 'text') {
-      process.sendMessage(Messages.ClipItemSelected, clipItem, (err, res) => {
-        if (err) {
-          throw err;
-        }
+    process.sendMessage(Messages.ClipItemSelected, clipItem, (err, res) => {
+      if (err) {
+        throw err;
+      }
 
-        if (res) {
-          //
-        }
-      });
-    }
+      if (res) {
+        //
+      }
+    });
   };
 
   const onKeyPress = (event: KeyboardEvent) => {
