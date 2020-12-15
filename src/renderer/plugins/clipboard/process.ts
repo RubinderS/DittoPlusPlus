@@ -197,7 +197,6 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
           result = this.clipItems.filter((item) => {
             return (
               item.type === 'text' &&
-              item.text &&
               item.text.toLowerCase().includes(query.toLowerCase())
             );
           });
