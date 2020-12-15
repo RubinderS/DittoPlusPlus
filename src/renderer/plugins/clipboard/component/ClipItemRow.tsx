@@ -2,15 +2,14 @@ import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {blueGrey} from '@material-ui/core/colors';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import * as React from 'React';
-import {ClipItem} from '../types';
+import {ClipItemDoc} from '../types';
 import {dimensions, imagesDir} from './utils';
 import * as path from 'path';
 
 export type ClipItemVariants = 'light' | 'dark' | 'selected';
 
 interface Props {
-  key: string | number | null | undefined;
-  clipItem: ClipItem;
+  clipItem: ClipItemDoc;
   variant: ClipItemVariants;
   onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
@@ -56,7 +55,7 @@ const useStyles = makeStyles((_theme: Theme) => {
 });
 
 export const ClipItemRow = (props: Props) => {
-  const {key, clipItem, variant, onClick} = props;
+  const {clipItem, variant, onClick} = props;
   const classes = useStyles();
 
   const getVariantClass = (variant: ClipItemVariants) => {
@@ -72,18 +71,16 @@ export const ClipItemRow = (props: Props) => {
     }
   };
 
-  const renderClipItem = (clipItem: ClipItem): React.ReactNode => {
-    const {data, type, _id} = clipItem;
-
-    switch (type) {
+  const renderClipItem = (clipItem: ClipItemDoc): React.ReactNode => {
+    switch (clipItem.type) {
       case 'text':
-        return data;
+        return clipItem.text;
 
       case 'image':
         return (
           <img
             className={classes.image}
-            src={path.join(imagesDir, `${_id}.png`)}
+            src={path.join(imagesDir, `${clipItem._id}.png`)}
           />
         );
 
@@ -93,7 +90,7 @@ export const ClipItemRow = (props: Props) => {
   };
 
   return (
-    <div key={key} className={getVariantClass(variant)} onClick={onClick}>
+    <div className={getVariantClass(variant)} onClick={onClick}>
       {renderClipItem(clipItem)}
     </div>
   );

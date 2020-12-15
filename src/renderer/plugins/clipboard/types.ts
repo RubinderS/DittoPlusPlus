@@ -1,11 +1,21 @@
-export interface ClipItem {
-  _id?: string;
-  data?: string;
-  timeStamp: number;
-  type: 'text' | 'image';
-}
+export type ClipType = 'text' | 'image';
 
-export type ClipListener = (clipItem: ClipItem) => void;
+export type ClipItemDoc = {
+  _id: string;
+  timeStamp: number;
+} & ({text: string; type: 'text'} | {type: 'image'});
+
+export type ClipData =
+  | {
+      type: 'image';
+      data: Electron.NativeImage;
+    }
+  | {
+      type: 'text';
+      data: string;
+    };
+
+export type ClipListener = (clipItem: ClipItemDoc) => void;
 
 export const Events = {
   NewClip: 'NewClip',
