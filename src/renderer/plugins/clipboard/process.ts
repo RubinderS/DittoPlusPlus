@@ -202,6 +202,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
             );
           });
         }
+
         cb(undefined, result);
         break;
 
