@@ -160,12 +160,12 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     updateSelectedIndex(0);
     clipsListRef.current && (clipsListRef.current.scrollTop = 0);
 
-    process.sendMessage(Messages.SearchClips, text, (err, res) => {
+    process.sendMessage(Messages.SearchClips, text, (err, clips) => {
       if (err) {
         throw err;
       }
 
-      updateClipItems(res);
+      updateClipItems([...clips]);
     });
   };
 
