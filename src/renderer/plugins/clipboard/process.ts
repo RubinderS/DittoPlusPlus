@@ -105,10 +105,10 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     const clipString = this.clipDataToString(clipData);
 
     if (clipString !== this.lastClip) {
+      this.lastClip = clipString;
+
       switch (clipData.type) {
         case 'text':
-          this.lastClip = clipData.data;
-
           const savedDocText = await this.insertClipDb({
             type: 'text',
             text: clipData.data,
@@ -119,8 +119,6 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
           break;
 
         case 'image':
-          this.lastClip = clipData.data.toString();
-
           const savedDocImage = await this.insertClipDb({
             type: 'image',
           });
