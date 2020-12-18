@@ -30,7 +30,7 @@ function createWindow(): void {
 
   // and load the index.html of the app.
   if (isDevserver) {
-    mainWindow.loadURL('http://localhost:8080/');
+    mainWindow.loadURL('http://localhost:5555/');
   } else {
     mainWindow.loadURL(
       url.format({

@@ -20,6 +20,10 @@ const commonConfig = {
   mode: isEnvProduction ? 'production' : 'development',
   output: {path: srcPaths('dist')},
   node: {__dirname: false, __filename: false},
+  devServer: {
+    inline: true,
+    port: 5555,
+  },
   resolve: {
     plugins: [
       new TsconfigPathsPlugin({
