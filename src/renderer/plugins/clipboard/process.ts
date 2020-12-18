@@ -4,7 +4,7 @@ import {clipboard, nativeImage} from 'electron';
 import * as PluginTypes from '@type/pluginTypes';
 import {ClipData, ClipItemDoc, Events, Messages} from './types';
 import * as Datastore from 'nedb';
-import {imagesDir} from './component/utils';
+import {imagesDir, shiftItemToFront} from './component/utils';
 
 export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   db: Datastore<Partial<ClipItemDoc>>;
@@ -163,12 +163,12 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   ) => {
     switch (type) {
       case Messages.ClipItemSelected:
-        const {_id} = msgData as ClipItemDoc;
         const clipItem = msgData as ClipItemDoc;
         this.writeClipboard(clipItem);
         cb(undefined, true);
+        this.clipItems = shiftItemToFront(this.clipItems, clipItem);
         this.db.update(
-          {_id},
+          {_id: clipItem._id},
           {$set: {timeStamp: Date.now()}},
           {},
           (err: Error | null, _n: number) => {

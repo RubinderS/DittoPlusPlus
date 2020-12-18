@@ -1,4 +1,5 @@
 import * as path from 'path';
+import {ClipItemDoc} from '../types';
 
 export const dimensions = {
   clipItem: {
@@ -79,3 +80,16 @@ export const isAlphanumeric = (keyCode: number): boolean => {
 };
 
 export const imagesDir = path.join('db', 'clipboardImages');
+
+export const shiftItemToFront = (
+  clipItems: ClipItemDoc[],
+  selectedItem: ClipItemDoc,
+) => {
+  const shiftedItems = clipItems.filter(
+    (item) => item._id !== selectedItem._id,
+  );
+
+  shiftedItems.unshift(selectedItem);
+
+  return shiftedItems;
+};

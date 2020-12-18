@@ -9,7 +9,7 @@ import {clamp, inRange} from 'lodash';
 import {SearchBar} from './SearchBar';
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
-import {dimensions, isAlphanumeric} from './utils';
+import {dimensions, isAlphanumeric, shiftItemToFront} from './utils';
 import {ClipItemRow, ClipItemVariants} from './ClipItemRow';
 
 export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
@@ -20,19 +20,6 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const {process} = props;
   const searchBarRef = useRef<HTMLDivElement>(null);
   const clipsListRef = useRef<HTMLDivElement>(null);
-
-  const reArrangeClipItems = (selectedClipItem: ClipItemDoc) => {
-    const index = clipItems.findIndex(
-      (clipItem) => clipItem._id === selectedClipItem._id,
-    );
-
-    const slicedClipItems = [
-      ...clipItems.slice(0, index),
-      ...clipItems.slice(index + 1),
-    ];
-
-    updateClipItems([selectedClipItem, ...slicedClipItems]);
-  };
 
   const sendClipboardItemSelected = (clipItem: ClipItemDoc) => {
     process.sendMessage(Messages.ClipItemSelected, clipItem, (err, res) => {
@@ -141,7 +128,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   }, []);
 
   const handleClipItemSelected = (item: ClipItemDoc) => {
-    reArrangeClipItems(item);
+    updateClipItems(shiftItemToFront(clipItems, item));
     sendClipboardItemSelected(item);
     updateSelectedIndex(0);
     clipsListRef.current && (clipsListRef.current.scrollTop = 0);
