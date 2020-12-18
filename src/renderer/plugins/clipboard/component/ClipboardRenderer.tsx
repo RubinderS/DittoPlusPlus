@@ -130,6 +130,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const handleClipItemSelected = (item: ClipItemDoc) => {
     updateClipItems(shiftItemToFront(clipItems, item));
     sendClipboardItemSelected(item);
+    handleSearchUpdate('');
     updateSelectedIndex(0);
     clipsListRef.current && (clipsListRef.current.scrollTop = 0);
   };
