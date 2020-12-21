@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useEffect, useRef, useState} from 'react';
 import {Box} from '@material-ui/core';
 import {Theme, createStyles, makeStyles} from '@material-ui/core';
-import {ClipItemDoc, Events, Messages} from '../types';
+import {ClipDoc, Events, Messages} from '../types';
 import * as PluginTypes from '@type/pluginTypes';
 import useEventListener from '@use-it/event-listener';
 import {clamp, inRange} from 'lodash';
@@ -10,19 +10,19 @@ import {SearchBar} from './SearchBar';
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import {dimensions, isAlphanumeric, shiftItemToFront} from './utils';
-import {ClipItemRow, ClipItemVariants} from './ClipItemRow';
+import {ClipRow, ClipRowVariants} from './ClipRow';
 
 export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const classes = useStyles();
-  const [clipItems, updateClipItems] = useState<ClipItemDoc[]>([]);
+  const [clipDoc, updateClipDocs] = useState<ClipDoc[]>([]);
   const [selectedIndex, updateSelectedIndex] = useState(0);
   const [searchText, updateSearchText] = useState('');
   const {process} = props;
   const searchBarRef = useRef<HTMLDivElement>(null);
   const clipsListRef = useRef<HTMLDivElement>(null);
 
-  const sendClipboardItemSelected = (clipItem: ClipItemDoc) => {
-    process.sendMessage(Messages.ClipItemSelected, clipItem, (err, res) => {
+  const sendClipDocSelected = (clipDoc: ClipDoc) => {
+    process.sendMessage(Messages.ClipDocSelected, clipDoc, (err, res) => {
       if (err) {
         throw err;
       }
@@ -42,19 +42,19 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     }
 
     if (clipsListRef.current) {
-      const {clipItem, searchBar} = dimensions;
+      const {clipRow, searchBar} = dimensions;
 
-      const clipItemHeight =
-        clipItem.height + clipItem.paddingTop + clipItem.paddingBottom;
+      const clipRowHeight =
+        clipRow.height + clipRow.paddingTop + clipRow.paddingBottom;
 
       const searchBarHeight =
         searchBar.height + searchBar.paddingTop + searchBar.paddingBottom;
 
       const viewHeight = clipsListRef.current.offsetHeight - searchBarHeight;
-      const itemsVisibleN = Math.floor(viewHeight / clipItemHeight);
+      const itemsVisibleN = Math.floor(viewHeight / clipRowHeight);
 
       const itemsScrolled = Math.floor(
-        clipsListRef.current.scrollTop / clipItemHeight,
+        clipsListRef.current.scrollTop / clipRowHeight,
       );
 
       const isItemInViewPort = inRange(
@@ -67,27 +67,27 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       if (keyCode === 38) {
         if (isItemInViewPort) {
           clipsListRef.current.scrollBy({
-            top: -clipItemHeight,
+            top: -clipRowHeight,
           });
         } else {
-          clipsListRef.current.scrollTop = (selectedIndex - 2) * clipItemHeight;
+          clipsListRef.current.scrollTop = (selectedIndex - 2) * clipRowHeight;
         }
 
         updateSelectedIndex((prevSelectedIndex) =>
-          clamp(prevSelectedIndex - 1, 0, clipItems.length - 1),
+          clamp(prevSelectedIndex - 1, 0, clipDoc.length - 1),
         );
       }
 
       /* down key */
       if (keyCode === 40) {
         if (selectedIndex >= itemsVisibleN - 1 && isItemInViewPort) {
-          clipsListRef.current.scrollBy({top: clipItemHeight});
+          clipsListRef.current.scrollBy({top: clipRowHeight});
         } else if (clipsListRef.current.scrollTop) {
-          clipsListRef.current.scrollTop = selectedIndex * clipItemHeight;
+          clipsListRef.current.scrollTop = selectedIndex * clipRowHeight;
         }
 
         updateSelectedIndex((prevSelectedIndex) =>
-          clamp(prevSelectedIndex + 1, 0, clipItems.length - 1),
+          clamp(prevSelectedIndex + 1, 0, clipDoc.length - 1),
         );
       }
     }
@@ -99,7 +99,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
     /* enter key */
     if (keyCode === 13) {
-      handleClipItemSelected(clipItems[selectedIndex]);
+      handleClipDocSelected(clipDoc[selectedIndex]);
     }
 
     /* key is alphanumeric */
@@ -112,31 +112,31 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   useEventListener('keydown', onKeyPress);
 
   useEffect(() => {
-    process.sendMessage(Messages.GetAllClipItems, '', (err, clips) => {
+    process.sendMessage(Messages.GetAllClipDocs, '', (err, clips) => {
       if (!err) {
-        updateClipItems([...clips]);
+        updateClipDocs([...clips]);
       }
     });
 
-    process.on(Events.NewClip, (clip: ClipItemDoc) => {
-      updateClipItems((prevClipItems) => [clip, ...prevClipItems]);
+    process.on(Events.NewClip, (clip: ClipDoc) => {
+      updateClipDocs((prevClipDocs) => [clip, ...prevClipDocs]);
     });
 
-    process.on(Events.ClipsInitialized, (clips: ClipItemDoc[]) => {
-      updateClipItems([...clips]);
+    process.on(Events.ClipsInitialized, (clips: ClipDoc[]) => {
+      updateClipDocs([...clips]);
     });
   }, []);
 
-  const handleClipItemSelected = (item: ClipItemDoc) => {
-    updateClipItems(shiftItemToFront(clipItems, item));
-    sendClipboardItemSelected(item);
+  const handleClipDocSelected = (item: ClipDoc) => {
+    updateClipDocs(shiftItemToFront(clipDoc, item));
+    sendClipDocSelected(item);
     handleSearchUpdate('');
     updateSelectedIndex(0);
     clipsListRef.current && (clipsListRef.current.scrollTop = 0);
   };
 
-  const onClickClipItem = (item: ClipItemDoc) => {
-    handleClipItemSelected(item);
+  const onClickClipRow = (item: ClipDoc) => {
+    handleClipDocSelected(item);
   };
 
   const handleSearchUpdate = (text: string) => {
@@ -153,7 +153,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
         throw err;
       }
 
-      updateClipItems([...clips]);
+      updateClipDocs([...clips]);
     });
   };
 
@@ -164,7 +164,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     handleSearchUpdate(query);
   };
 
-  const getClipItemVariant = (index: number): ClipItemVariants => {
+  const getClipRowVariant = (index: number): ClipRowVariants => {
     if (index === selectedIndex) {
       return 'selected';
     }
@@ -182,12 +182,12 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
         className={classes.clipsContainer}
         scrollableNodeProps={{ref: clipsListRef}}
       >
-        {clipItems.map((item, index) => (
-          <ClipItemRow
-            key={`${index}_clipItem`}
-            clipItem={item}
-            variant={getClipItemVariant(index)}
-            onClick={() => onClickClipItem(item)}
+        {clipDoc.map((item, index) => (
+          <ClipRow
+            key={`${index}_clipRow`}
+            clipDoc={item}
+            variant={getClipRowVariant(index)}
+            onClick={() => onClickClipRow(item)}
           />
         ))}
       </SimpleBar>

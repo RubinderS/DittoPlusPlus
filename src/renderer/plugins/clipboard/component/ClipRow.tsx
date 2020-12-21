@@ -2,24 +2,24 @@ import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {blueGrey} from '@material-ui/core/colors';
 import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import * as React from 'React';
-import {ClipItemDoc} from '../types';
+import {ClipDoc} from '../types';
 import {dimensions, imagesDir} from './utils';
 import * as path from 'path';
 
-export type ClipItemVariants = 'light' | 'dark' | 'selected';
+export type ClipRowVariants = 'light' | 'dark' | 'selected';
 
 interface Props {
-  clipItem: ClipItemDoc;
-  variant: ClipItemVariants;
+  clipDoc: ClipDoc;
+  variant: ClipRowVariants;
   onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 const useStyles = makeStyles((_theme: Theme) => {
   const {
-    clipItem: {height, paddingTop, paddingBottom, paddingLeft, paddingRight},
+    clipRow: {height, paddingTop, paddingBottom, paddingLeft, paddingRight},
   } = dimensions;
 
-  const clipItemStyles: CSSProperties = {
+  const clipRowStyles: CSSProperties = {
     color: 'black',
     overflow: 'hidden',
     maxHeight: `${height}px`,
@@ -36,16 +36,16 @@ const useStyles = makeStyles((_theme: Theme) => {
   };
 
   return createStyles({
-    clipItemLight: {
-      ...clipItemStyles,
+    clipRowLight: {
+      ...clipRowStyles,
       backgroundColor: blueGrey[50],
     },
-    clipItemDark: {
-      ...clipItemStyles,
+    clipRowDark: {
+      ...clipRowStyles,
       backgroundColor: blueGrey[100],
     },
-    clipItemSelected: {
-      ...clipItemStyles,
+    clipRowSelected: {
+      ...clipRowStyles,
       backgroundColor: blueGrey[300],
     },
     image: {
@@ -54,33 +54,36 @@ const useStyles = makeStyles((_theme: Theme) => {
   });
 });
 
-export const ClipItemRow = (props: Props) => {
-  const {clipItem, variant, onClick} = props;
+export const ClipRow = (props: Props) => {
+  const {clipDoc, variant, onClick} = props;
   const classes = useStyles();
 
-  const getVariantClass = (variant: ClipItemVariants) => {
+  const getVariantClass = (variant: ClipRowVariants) => {
     switch (variant) {
       case 'light':
-        return classes.clipItemLight;
+        return classes.clipRowLight;
 
       case 'dark':
-        return classes.clipItemDark;
+        return classes.clipRowDark;
 
       case 'selected':
-        return classes.clipItemSelected;
+        return classes.clipRowSelected;
     }
   };
 
-  const renderClipItem = (clipItem: ClipItemDoc): React.ReactNode => {
-    switch (clipItem.type) {
+  const renderClipRow = (clipDoc: ClipDoc): React.ReactNode => {
+    switch (clipDoc.type) {
       case 'text':
-        return clipItem.text;
+        return clipDoc.text;
+
+      case 'file':
+        return clipDoc.path;
 
       case 'image':
         return (
           <img
             className={classes.image}
-            src={path.join(imagesDir, `${clipItem._id}.png`)}
+            src={path.join(imagesDir, `${clipDoc._id}.png`)}
           />
         );
 
@@ -91,7 +94,7 @@ export const ClipItemRow = (props: Props) => {
 
   return (
     <div className={getVariantClass(variant)} onClick={onClick}>
-      {renderClipItem(clipItem)}
+      {renderClipRow(clipDoc)}
     </div>
   );
 };

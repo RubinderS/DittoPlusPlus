@@ -1,9 +1,13 @@
-export type ClipType = 'text' | 'image';
+export type ClipType = 'text' | 'image' | 'file';
 
-export type ClipItemDoc = {
+export type ClipDoc = {
   _id: string;
   timeStamp: number;
-} & ({text: string; type: 'text'} | {type: 'image'});
+} & (
+  | {text: string; type: 'text'}
+  | {path: string; type: 'file'}
+  | {type: 'image'}
+);
 
 export type ClipData =
   | {
@@ -13,17 +17,19 @@ export type ClipData =
   | {
       type: 'text';
       data: string;
+    }
+  | {
+      type: 'file';
+      data: string;
     };
-
-export type ClipListener = (clipItem: ClipItemDoc) => void;
 
 export const Events = {
   NewClip: 'NewClip',
-  ClipsInitialized: 'ClipItemsInitialized',
+  ClipsInitialized: 'ClipsInitialized',
 };
 
 export const Messages = {
-  ClipItemSelected: 'ClipItemSelected',
-  GetAllClipItems: 'GetAllClipItems',
+  ClipDocSelected: 'ClipDocSelected',
+  GetAllClipDocs: 'GetAllClipDocs',
   SearchClips: 'SearchClips',
 };
