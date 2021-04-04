@@ -8,7 +8,7 @@ import {imagesDir, shiftItemToFront} from './component/utils';
 
 export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   db: Datastore<Partial<ClipItemDoc>>;
-  lastClip: string;
+  lastClipId: string;
   clipItems: ClipItemDoc[];
 
   constructor() {
@@ -23,7 +23,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     }
 
     const clipData = this.readClipboard();
-    this.lastClip = this.clipDataToString(clipData);
+    this.lastClipId = this.convertClipDataToId(clipData);
   }
 
   saveFile = async (fileName: string, data: Buffer): Promise<void> => {
@@ -52,7 +52,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     });
   };
 
-  clipDataToString = (clipData: ClipData): string => {
+  convertClipDataToId = (clipData: ClipData): string => {
     switch (clipData.type) {
       case 'text':
         return clipData.data;
@@ -85,7 +85,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   writeClipboard = (clipItem: ClipItemDoc) => {
     switch (clipItem.type) {
       case 'text':
-        this.lastClip = clipItem.text;
+        this.lastClipId = clipItem.text;
         clipboard.writeText(clipItem.text);
         break;
 
@@ -94,7 +94,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
           path.join(imagesDir, `${clipItem._id}.png`),
         );
 
-        this.lastClip = image.getBitmap().toString();
+        this.lastClipId = image.getBitmap().toString();
         clipboard.writeImage(image);
         break;
     }
@@ -102,10 +102,10 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
   watchClipboard = async () => {
     const clipData = this.readClipboard();
-    const clipString = this.clipDataToString(clipData);
+    const clipId = this.convertClipDataToId(clipData);
 
-    if (clipString !== this.lastClip) {
-      this.lastClip = clipString;
+    if (clipId !== this.lastClipId) {
+      this.lastClipId = clipId;
 
       switch (clipData.type) {
         case 'text':
