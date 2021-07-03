@@ -2,8 +2,7 @@ import * as React from 'React';
 import {ClipItemDoc} from '../types';
 import {dimensions, imagesDir} from './utils';
 import * as path from 'path';
-import {blueGrey} from 'material-colors-ts';
-import styled from 'styled-components';
+import styled, {DefaultTheme} from 'styled-components';
 
 interface Props {
   clipItem: ClipItemDoc;
@@ -14,16 +13,16 @@ interface Props {
 export type ClipItemVariants = 'light' | 'dark' | 'selected';
 const {clipItemDimensions} = dimensions;
 
-const getBackgroundColor = (variant: ClipItemVariants) => {
+const getBackgroundColor = (variant: ClipItemVariants, theme: DefaultTheme) => {
   switch (variant) {
     case 'light':
-      return blueGrey[50];
+      return theme.themeColor[50];
 
     case 'dark':
-      return blueGrey[100];
+      return theme.themeColor[100];
 
     case 'selected':
-      return blueGrey[300];
+      return theme.themeColor[300];
   }
 };
 
@@ -38,7 +37,8 @@ const StyledClipItem = styled.div<Pick<Props, 'variant'>>`
   padding-right: ${clipItemDimensions.paddingRight}px;
   line-height: 20px;
   max-width: 100%;
-  background-color: ${(props) => getBackgroundColor(props.variant)};
+  background-color: ${(props) =>
+    getBackgroundColor(props.variant, props.theme)};
   &:focus {
     outline: '0px solid transparent';
   }

@@ -1,6 +1,5 @@
 import * as PluginTypes from '@type/pluginTypes';
 import * as React from 'react';
-import {blueGrey} from 'material-colors-ts';
 import styled from 'styled-components';
 
 interface Props {
@@ -11,7 +10,7 @@ interface Props {
 const StyledSideBar = styled.div`
   min-width: 40px;
   width: 40px;
-  background-color: ${blueGrey[400]};
+  background-color: ${(props) => props.theme.themeColor[400]};
 `;
 
 const StyledPluginIcon = styled.div`

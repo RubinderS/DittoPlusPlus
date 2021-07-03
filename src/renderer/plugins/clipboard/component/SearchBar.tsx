@@ -1,4 +1,3 @@
-import {blueGrey} from 'material-colors-ts';
 import * as React from 'React';
 import {dimensions} from './utils';
 import styled from 'styled-components';
@@ -16,7 +15,7 @@ interface Props {
 const {searchBarDimensions} = dimensions;
 
 const StyledContainer = styled.div`
-  background-color: ${blueGrey[400]};
+  background-color: ${(props) => props.theme.themeColor[400]};
   height: ${searchBarDimensions.height}px;
   padding-top: ${searchBarDimensions.paddingTop}px;
   padding-bottom: ${searchBarDimensions.paddingBottom}px;
@@ -46,9 +45,9 @@ const StyledSearchBar = styled.input`
   margin-left: ${searchBarDimensions.paddingLeft}px;
   margin-right: ${searchBarDimensions.paddingRight}px;
   border-radius: 5px;
-  background-color: ${blueGrey[300]};
+  background-color: ${(props) => props.theme.themeColor[300]};
   &:focus {
-    background-color: ${blueGrey[200]};
+    background-color: ${(props) => props.theme.themeColor[200]};
     outline: none;
   }
 `;
