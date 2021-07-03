@@ -1,6 +1,14 @@
 import * as PluginTypes from '@type/pluginTypes';
 import * as React from 'react';
-import {Theme, createStyles, makeStyles} from '@material-ui/core';
+import styled from 'styled-components';
+
+const StyledContentArea = styled.div`
+  width: '100%';
+`;
+
+const StyledContentRendered = styled.div`
+  height: '100%';
+`;
 
 interface Props {
   activePlugins: PluginTypes.ActivePlugin[];
@@ -8,7 +16,6 @@ interface Props {
 }
 
 export const ContentArea = (props: Props) => {
-  const classes = useStyles();
   const {activePlugins, selectedIndex} = props;
 
   const getContent = (plugin: PluginTypes.ActivePlugin) => {
@@ -22,30 +29,18 @@ export const ContentArea = (props: Props) => {
   };
 
   return (
-    <div className={classes.contentArea}>
+    <StyledContentArea>
       {activePlugins
         .filter((_plugin, index) => index === selectedIndex)
         .map((plugin, index) => {
           return (
-            <div
+            <StyledContentRendered
               key={`${index}_content_selected_${plugin.name.toLowerCase()}`}
-              className={classes.contentRendered}
             >
               {getContent(plugin)}
-            </div>
+            </StyledContentRendered>
           );
         })}
-    </div>
+    </StyledContentArea>
   );
 };
-
-const useStyles = makeStyles((_theme: Theme) => {
-  return createStyles({
-    contentArea: {
-      width: '100%',
-    },
-    contentRendered: {
-      height: '100%',
-    },
-  });
-});

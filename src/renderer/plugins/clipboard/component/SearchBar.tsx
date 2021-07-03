@@ -1,12 +1,12 @@
 import {
-  TextField,
+  // TextField,
   Theme,
   createStyles,
   makeStyles,
-  withStyles,
+  // withStyles,
 } from '@material-ui/core';
-import {blueGrey} from '@material-ui/core/colors';
-import {CSSProperties} from '@material-ui/core/styles/withStyles';
+// import {blueGrey} from '@material-ui/core/colors';
+// import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import * as React from 'React';
 import {dimensions} from './utils';
 
@@ -20,39 +20,39 @@ interface Props {
   ) => void;
 }
 
-const CustomTextField = withStyles((_theme: Theme) => {
-  const fieldSetStyles: CSSProperties = {
-    border: '0px',
-    height: '30px',
-    borderRadius: '5px',
-  };
+// const CustomTextField = withStyles((_theme: Theme) => {
+//   const fieldSetStyles: CSSProperties = {
+//     border: '0px',
+//     height: '30px',
+//     borderRadius: '5px',
+//   };
 
-  return {
-    root: {
-      '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-          ...fieldSetStyles,
-          backgroundColor: blueGrey[300],
-        },
-        '&:hover fieldset': {
-          ...fieldSetStyles,
-          backgroundColor: blueGrey[300],
-        },
-        '&.Mui-focused fieldset': {
-          ...fieldSetStyles,
-          backgroundColor: blueGrey[200],
-        },
-        '& input': {
-          padding: '0px',
-          paddingTop: '3px',
-          paddingLeft: '5px',
-          color: blueGrey[700],
-          zIndex: 2,
-        },
-      },
-    },
-  };
-})(TextField);
+//   return {
+//     root: {
+//       '& .MuiOutlinedInput-root': {
+//         '& fieldset': {
+//           ...fieldSetStyles,
+//           backgroundColor: blueGrey[300],
+//         },
+//         '&:hover fieldset': {
+//           ...fieldSetStyles,
+//           backgroundColor: blueGrey[300],
+//         },
+//         '&.Mui-focused fieldset': {
+//           ...fieldSetStyles,
+//           backgroundColor: blueGrey[200],
+//         },
+//         '& input': {
+//           padding: '0px',
+//           paddingTop: '3px',
+//           paddingLeft: '5px',
+//           color: blueGrey[700],
+//           zIndex: 2,
+//         },
+//       },
+//     },
+//   };
+// })(TextField);
 
 const SearchBarComponent = (
   props: Props,
@@ -62,11 +62,11 @@ const SearchBarComponent = (
 
   return (
     <div className={classes.searchBarContainer}>
-      <CustomTextField
-        {...props}
-        variant="outlined"
+      <div
+        // {...props}
+        // variant="outlined"
         className={classes.searchBar}
-        inputRef={ref}
+        ref={ref}
       />
     </div>
   );
@@ -77,12 +77,18 @@ export const SearchBar = React.forwardRef(SearchBarComponent);
 
 const useStyles = makeStyles((_theme: Theme) => {
   const {
-    searchBar: {height, paddingTop, paddingBottom, paddingLeft, paddingRight},
+    searchBarDimensions: {
+      height,
+      paddingTop,
+      paddingBottom,
+      paddingLeft,
+      paddingRight,
+    },
   } = dimensions;
 
   return createStyles({
     searchBarContainer: {
-      backgroundColor: blueGrey[400],
+      // backgroundColor: blueGrey[400],
       height: `${height}px`,
       paddingTop: `${paddingTop}px`,
       paddingBottom: `${paddingBottom}px`,

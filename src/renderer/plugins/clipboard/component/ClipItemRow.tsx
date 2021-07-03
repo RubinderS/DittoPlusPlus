@@ -1,12 +1,9 @@
-import {Theme, createStyles, makeStyles} from '@material-ui/core';
-import {blueGrey} from '@material-ui/core/colors';
-import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import * as React from 'React';
 import {ClipItemDoc} from '../types';
 import {dimensions, imagesDir} from './utils';
 import * as path from 'path';
-
-export type ClipItemVariants = 'light' | 'dark' | 'selected';
+import {blueGrey} from 'material-colors-ts';
+import styled from 'styled-components';
 
 interface Props {
   clipItem: ClipItemDoc;
@@ -14,62 +11,45 @@ interface Props {
   onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
-const useStyles = makeStyles((_theme: Theme) => {
-  const {
-    clipItem: {height, paddingTop, paddingBottom, paddingLeft, paddingRight},
-  } = dimensions;
+export type ClipItemVariants = 'light' | 'dark' | 'selected';
+const {clipItemDimensions} = dimensions;
 
-  const clipItemStyles: CSSProperties = {
-    color: 'black',
-    overflow: 'hidden',
-    maxHeight: `${height}px`,
-    minHeight: `${height}px`,
-    paddingTop: `${paddingTop}px`,
-    paddingBottom: `${paddingBottom}px`,
-    paddingLeft: `${paddingLeft}px`,
-    paddingRight: `${paddingRight}px`,
-    lineHeight: '20px',
-    maxWidth: '100%',
-    '&:focus': {
-      outline: '0px solid transparent',
-    },
-  };
+const getBackgroundColor = (variant: ClipItemVariants) => {
+  switch (variant) {
+    case 'light':
+      return blueGrey[50];
 
-  return createStyles({
-    clipItemLight: {
-      ...clipItemStyles,
-      backgroundColor: blueGrey[50],
-    },
-    clipItemDark: {
-      ...clipItemStyles,
-      backgroundColor: blueGrey[100],
-    },
-    clipItemSelected: {
-      ...clipItemStyles,
-      backgroundColor: blueGrey[300],
-    },
-    image: {
-      height: `${height}px`,
-    },
-  });
-});
+    case 'dark':
+      return blueGrey[100];
+
+    case 'selected':
+      return blueGrey[300];
+  }
+};
+
+const StyledClipItem = styled.div<Pick<Props, 'variant'>>`
+  color: 'black';
+  overflow: 'hidden';
+  max-height: ${clipItemDimensions.height}px;
+  min-height: ${clipItemDimensions.height}px;
+  padding-top: ${clipItemDimensions.paddingTop}px;
+  padding-bottom: ${clipItemDimensions.paddingBottom}px;
+  padding-left: ${clipItemDimensions.paddingLeft}px;
+  padding-right: ${clipItemDimensions.paddingRight}px;
+  line-height: '20px';
+  max-width: '100%';
+  background-color: ${(props) => getBackgroundColor(props.variant)};
+  &:focus {
+    outline: '0px solid transparent';
+  }
+`;
+
+const StyledImage = styled.img`
+  height: ${clipItemDimensions.height}px;
+`;
 
 export const ClipItemRow = (props: Props) => {
-  const {clipItem, variant, onClick} = props;
-  const classes = useStyles();
-
-  const getVariantClass = (variant: ClipItemVariants) => {
-    switch (variant) {
-      case 'light':
-        return classes.clipItemLight;
-
-      case 'dark':
-        return classes.clipItemDark;
-
-      case 'selected':
-        return classes.clipItemSelected;
-    }
-  };
+  const {clipItem, onClick} = props;
 
   const renderClipItem = (clipItem: ClipItemDoc): React.ReactNode => {
     switch (clipItem.type) {
@@ -78,10 +58,7 @@ export const ClipItemRow = (props: Props) => {
 
       case 'image':
         return (
-          <img
-            className={classes.image}
-            src={path.join(imagesDir, `${clipItem._id}.png`)}
-          />
+          <StyledImage src={path.join(imagesDir, `${clipItem._id}.png`)} />
         );
 
       default:
@@ -90,8 +67,8 @@ export const ClipItemRow = (props: Props) => {
   };
 
   return (
-    <div className={getVariantClass(variant)} onClick={onClick}>
+    <StyledClipItem onClick={onClick} variant={props.variant}>
       {renderClipItem(clipItem)}
-    </div>
+    </StyledClipItem>
   );
 };

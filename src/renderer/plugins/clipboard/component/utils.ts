@@ -2,14 +2,14 @@ import * as path from 'path';
 import {ClipItemDoc} from '../types';
 
 export const dimensions = {
-  clipItem: {
+  clipItemDimensions: {
     height: 40,
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 5,
     paddingRight: 5,
   },
-  searchBar: {
+  searchBarDimensions: {
     height: 30,
     paddingTop: 5,
     paddingBottom: 0,
@@ -18,6 +18,7 @@ export const dimensions = {
   },
 };
 
+// todo rename as is printable character
 export const isAlphanumeric = (keyCode: number): boolean => {
   console.log(keyCode);
   /* A-Z | a-z */
