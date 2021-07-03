@@ -55,6 +55,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   convertClipDataToId = (clipData: ClipData): string => {
     switch (clipData.type) {
       case 'text':
+      case 'file':
         return clipData.data;
 
       case 'image':
@@ -62,15 +63,39 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     }
   };
 
+  readClipboardFiles = () => {
+    if (process.platform === 'darwin') {
+      console.log(clipboard.readBuffer('public.file-url').toString());
+      return clipboard.readBuffer('public.file-url').toString();
+    }
+  };
+
+  writeClipboardFiles = (clipItem: ClipItemDoc) => {
+    if (clipItem.type === 'file') {
+      if (process.platform === 'darwin') {
+        return clipboard.writeBuffer(
+          'public.file-url',
+          Buffer.from(clipItem.path, 'utf-8'),
+        );
+      }
+    }
+  };
+
   readClipboard = (): ClipData => {
     const clipText = clipboard.readText();
     const clipImageBuffer = clipboard.readImage();
+    const clipFile = this.readClipboardFiles();
     let clipData: ClipData;
 
     if (clipImageBuffer.getBitmap().length !== 0) {
       clipData = {
         type: 'image',
         data: clipImageBuffer,
+      };
+    } else if (clipFile) {
+      clipData = {
+        type: 'file',
+        data: clipFile,
       };
     } else {
       clipData = {
@@ -87,6 +112,11 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
       case 'text':
         this.lastClipId = clipItem.text;
         clipboard.writeText(clipItem.text);
+        break;
+
+      case 'file':
+        this.lastClipId = clipItem.path;
+        this.writeClipboardFiles(clipItem);
         break;
 
       case 'image':
@@ -116,6 +146,16 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
           this.clipItems.push(savedDocText);
           this.emit(Events.NewClip, savedDocText);
+          break;
+
+        case 'file':
+          const savedDocFile = await this.insertClipDb({
+            type: 'file',
+            path: clipData.data,
+          });
+
+          this.clipItems.push(savedDocFile);
+          this.emit(Events.NewClip, savedDocFile);
           break;
 
         case 'image':
