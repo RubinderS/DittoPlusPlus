@@ -161,6 +161,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     updateSearchText(text);
     if (text === '') {
       searchBarRef.current && searchBarRef.current.blur();
+      return;
     }
 
     updateSelectedIndex(0);
