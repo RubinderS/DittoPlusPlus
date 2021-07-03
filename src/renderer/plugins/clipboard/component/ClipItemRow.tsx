@@ -28,8 +28,8 @@ const getBackgroundColor = (variant: ClipItemVariants) => {
 };
 
 const StyledClipItem = styled.div<Pick<Props, 'variant'>>`
-  color: 'black';
-  overflow: 'hidden';
+  color: black;
+  overflow: hidden;
   max-height: ${clipItemDimensions.height}px;
   min-height: ${clipItemDimensions.height}px;
   padding-top: ${clipItemDimensions.paddingTop}px;
