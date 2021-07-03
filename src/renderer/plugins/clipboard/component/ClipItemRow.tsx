@@ -36,8 +36,8 @@ const StyledClipItem = styled.div<Pick<Props, 'variant'>>`
   padding-bottom: ${clipItemDimensions.paddingBottom}px;
   padding-left: ${clipItemDimensions.paddingLeft}px;
   padding-right: ${clipItemDimensions.paddingRight}px;
-  line-height: '20px';
-  max-width: '100%';
+  line-height: 20px;
+  max-width: 100%;
   background-color: ${(props) => getBackgroundColor(props.variant)};
   &:focus {
     outline: '0px solid transparent';

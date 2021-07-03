@@ -3,11 +3,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 const StyledContentArea = styled.div`
-  width: '100%';
+  width: 100%;
 `;
 
 const StyledContentRendered = styled.div`
-  height: '100%';
+  height: 100%;
 `;
 
 interface Props {
