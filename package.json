@@ -33,13 +33,16 @@
   "author": "Rubinder Singh",
   "license": "MIT",
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
+    "@types/react-icons": "^3.0.0",
     "@use-it/event-listener": "^0.1.6",
+    "electron": "^12.0.8",
+    "material-colors-ts": "^1.0.4",
     "nedb": "^1.8.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "simplebar-react": "^2.3.0"
+    "react-icons": "^4.2.0",
+    "simplebar-react": "^2.3.0",
+    "styled-components": "^5.3.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.165",
@@ -49,6 +52,7 @@
     "@types/react-dom": "^16.9.4",
     "@types/react-router": "^4.4.5",
     "@types/react-router-dom": "^4.3.5",
+    "@types/styled-components": "^5.1.10",
     "@typescript-eslint/eslint-plugin": "^4.8.2",
     "@typescript-eslint/parser": "^4.8.2",
     "acorn": "^6.4.1",
@@ -56,8 +60,7 @@
     "copy-pkg-json-webpack-plugin": "0.0.38",
     "cross-env": "^5.2.1",
     "css-loader": "^1.0.1",
-    "electron": "^3.1.13",
-    "electron-builder": "^20.44.4",
+    "electron-builder": "^22.10.5",
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -91,5 +94,8 @@
   "bugs": {
     "url": "https://github.com/Rubinder25/DittoPlusPlus/issues"
   },
-  "homepage": "https://github.com/Rubinder25/DittoPlusPlus#readme"
+  "homepage": "https://github.com/Rubinder25/DittoPlusPlus#readme",
+  "resolutions": {
+    "styled-components": "^5"
+  }
 }

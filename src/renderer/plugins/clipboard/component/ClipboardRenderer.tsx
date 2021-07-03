@@ -1,7 +1,5 @@
 import * as React from 'react';
 import {useEffect, useRef, useState} from 'react';
-import {Box} from '@material-ui/core';
-import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {ClipItemDoc, Events, Messages} from '../types';
 import * as PluginTypes from '@type/pluginTypes';
 import useEventListener from '@use-it/event-listener';
@@ -11,14 +9,30 @@ import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import {dimensions, isAlphanumeric, shiftItemToFront} from './utils';
 import {ClipItemRow, ClipItemVariants} from './ClipItemRow';
+import styled from 'styled-components';
+
+const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+`;
+
+const SimpleBarStyles: React.CSSProperties = {
+  display: 'flex',
+  height: '100%',
+  width: '100%',
+  overflowY: 'auto',
+  scrollBehavior: 'unset',
+  flexDirection: 'column',
+};
 
 export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
-  const classes = useStyles();
   const [clipItems, updateClipItems] = useState<ClipItemDoc[]>([]);
   const [selectedIndex, updateSelectedIndex] = useState(0);
   const [searchText, updateSearchText] = useState('');
   const {process} = props;
-  const searchBarRef = useRef<HTMLDivElement>(null);
+  const searchBarRef = useRef<HTMLInputElement>(null);
   const clipsListRef = useRef<HTMLDivElement>(null);
 
   const sendClipboardItemSelected = (clipItem: ClipItemDoc) => {
@@ -42,13 +56,17 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     }
 
     if (clipsListRef.current) {
-      const {clipItem, searchBar} = dimensions;
+      const {clipItemDimensions, searchBarDimensions} = dimensions;
 
       const clipItemHeight =
-        clipItem.height + clipItem.paddingTop + clipItem.paddingBottom;
+        clipItemDimensions.height +
+        clipItemDimensions.paddingTop +
+        clipItemDimensions.paddingBottom;
 
       const searchBarHeight =
-        searchBar.height + searchBar.paddingTop + searchBar.paddingBottom;
+        searchBarDimensions.height +
+        searchBarDimensions.paddingTop +
+        searchBarDimensions.paddingBottom;
 
       const viewHeight = clipsListRef.current.offsetHeight - searchBarHeight;
       const itemsVisibleN = Math.floor(viewHeight / clipItemHeight);
@@ -177,9 +195,9 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   };
 
   return (
-    <Box className={classes.container}>
+    <StyledContainer>
       <SimpleBar
-        className={classes.clipsContainer}
+        style={SimpleBarStyles}
         scrollableNodeProps={{ref: clipsListRef}}
       >
         {clipItems.map((item, index) => (
@@ -198,25 +216,6 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
         value={searchText}
         ref={searchBarRef}
       />
-    </Box>
+    </StyledContainer>
   );
 };
-
-const useStyles = makeStyles((_theme: Theme) => {
-  return createStyles({
-    container: {
-      display: 'flex',
-      height: '100%',
-      width: '100%',
-      flexDirection: 'column',
-    },
-    clipsContainer: {
-      display: 'flex',
-      height: '100%',
-      width: '100%',
-      overflowY: 'auto',
-      scrollBehavior: 'unset',
-      flexDirection: 'column',
-    },
-  });
-});

@@ -25,6 +25,8 @@ function createWindow(): void {
       webSecurity: false,
       devTools: process.env.NODE_ENV === 'production' ? false : true,
       nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
     },
   });
 

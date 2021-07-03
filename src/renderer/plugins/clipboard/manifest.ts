@@ -1,12 +1,12 @@
 import * as PluginTypes from '@type/pluginTypes';
-import {AssignmentOutlined} from '@material-ui/icons';
+import {MdAssignment} from 'react-icons/md';
 import {ClipboardRenderer} from './component/';
 import {ClipboardProcess} from './process';
 
 export const ClipBoard: PluginTypes.Manifest = {
   id: 1,
   name: 'Clipboard',
-  sideIcon: AssignmentOutlined,
+  sideIcon: MdAssignment,
   requiresDb: true,
   process: ClipboardProcess,
   render: ClipboardRenderer,

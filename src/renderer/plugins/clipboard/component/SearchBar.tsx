@@ -1,14 +1,7 @@
-import {
-  TextField,
-  Theme,
-  createStyles,
-  makeStyles,
-  withStyles,
-} from '@material-ui/core';
-import {blueGrey} from '@material-ui/core/colors';
-import {CSSProperties} from '@material-ui/core/styles/withStyles';
+import {blueGrey} from 'material-colors-ts';
 import * as React from 'React';
 import {dimensions} from './utils';
+import styled from 'styled-components';
 
 interface Props {
   id: string;
@@ -20,78 +13,56 @@ interface Props {
   ) => void;
 }
 
-const CustomTextField = withStyles((_theme: Theme) => {
-  const fieldSetStyles: CSSProperties = {
-    border: '0px',
-    height: '30px',
-    borderRadius: '5px',
-  };
+const {searchBarDimensions} = dimensions;
 
-  return {
-    root: {
-      '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-          ...fieldSetStyles,
-          backgroundColor: blueGrey[300],
-        },
-        '&:hover fieldset': {
-          ...fieldSetStyles,
-          backgroundColor: blueGrey[300],
-        },
-        '&.Mui-focused fieldset': {
-          ...fieldSetStyles,
-          backgroundColor: blueGrey[200],
-        },
-        '& input': {
-          padding: '0px',
-          paddingTop: '3px',
-          paddingLeft: '5px',
-          color: blueGrey[700],
-          zIndex: 2,
-        },
-      },
-    },
-  };
-})(TextField);
+const StyledContainer = styled.div`
+  background-color: ${blueGrey[400]};
+  height: ${searchBarDimensions.height}px;
+  padding-top: ${searchBarDimensions.paddingTop}px;
+  padding-bottom: ${searchBarDimensions.paddingBottom}px;
+  padding-left: ${searchBarDimensions.paddingLeft}px;
+  padding-right: ${searchBarDimensions.paddingRight}px;
+  z-index: 2;
+`;
+
+const StyledSearchBar = styled.input`
+  border: 0px;
+  padding-top: ${searchBarDimensions.paddingTop}px;
+  padding-bottom: ${searchBarDimensions.paddingBottom}px;
+  padding-left: ${searchBarDimensions.paddingLeft}px;
+  padding-right: ${searchBarDimensions.paddingRight}px;
+  height: calc(
+    100% -
+      ${searchBarDimensions.paddingTop * 2 +
+      searchBarDimensions.paddingBottom * 2}px
+  );
+  width: calc(
+    100% -
+      ${searchBarDimensions.paddingRight * 2 +
+      searchBarDimensions.paddingLeft * 2}px
+  );
+  margin-top: ${searchBarDimensions.paddingTop}px;
+  margin-bottom: ${searchBarDimensions.paddingBottom}px;
+  margin-left: ${searchBarDimensions.paddingLeft}px;
+  margin-right: ${searchBarDimensions.paddingRight}px;
+  border-radius: 5px;
+  background-color: ${blueGrey[300]};
+  &:focus {
+    background-color: ${blueGrey[200]};
+    outline: none;
+  }
+`;
 
 const SearchBarComponent = (
   props: Props,
-  ref: React.RefObject<HTMLDivElement>,
+  ref: React.RefObject<HTMLInputElement>,
 ) => {
-  const classes = useStyles();
-
   return (
-    <div className={classes.searchBarContainer}>
-      <CustomTextField
-        {...props}
-        variant="outlined"
-        className={classes.searchBar}
-        inputRef={ref}
-      />
-    </div>
+    <StyledContainer>
+      <StyledSearchBar {...props} ref={ref} />
+    </StyledContainer>
   );
 };
 
 SearchBarComponent.displayName = 'SearchBar';
 export const SearchBar = React.forwardRef(SearchBarComponent);
-
-const useStyles = makeStyles((_theme: Theme) => {
-  const {
-    searchBar: {height, paddingTop, paddingBottom, paddingLeft, paddingRight},
-  } = dimensions;
-
-  return createStyles({
-    searchBarContainer: {
-      backgroundColor: blueGrey[400],
-      height: `${height}px`,
-      paddingTop: `${paddingTop}px`,
-      paddingBottom: `${paddingBottom}px`,
-      paddingLeft: `${paddingLeft}px`,
-      paddingRight: `${paddingRight}px`,
-    },
-    searchBar: {
-      width: '100%',
-      height: '30px',
-    },
-  });
-});

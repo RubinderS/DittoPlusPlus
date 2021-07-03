@@ -1,8 +1,13 @@
 import * as React from 'react';
-import {Theme, createStyles, makeStyles} from '@material-ui/core';
 import {Sidebar} from './Sidebar';
 import {ContentArea} from './ContentArea';
 import * as PluginTypes from '@type/pluginTypes';
+import styled from 'styled-components';
+
+const StyledContainer = styled.div`
+  display: flex;
+  height: 100%;
+`;
 
 interface Props {
   activePlugins: PluginTypes.ActivePlugin[];
@@ -11,24 +16,14 @@ interface Props {
 
 export const Home = (props: Props) => {
   const {activePlugins, selectedIndex} = props;
-  const classes = useStyles();
 
   return (
-    <div className={classes.container}>
+    <StyledContainer>
       <Sidebar activePlugins={activePlugins} selectedIndex={selectedIndex} />
       <ContentArea
         activePlugins={activePlugins}
         selectedIndex={selectedIndex}
       />
-    </div>
+    </StyledContainer>
   );
 };
-
-const useStyles = makeStyles((_theme: Theme) => {
-  return createStyles({
-    container: {
-      display: 'flex',
-      height: '100%',
-    },
-  });
-});
