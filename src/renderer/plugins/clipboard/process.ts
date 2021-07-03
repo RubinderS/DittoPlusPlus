@@ -54,8 +54,8 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
   convertClipDataToId = (clipData: ClipData): string => {
     switch (clipData.type) {
-      case 'text':
       case 'file':
+      case 'text':
         return clipData.data;
 
       case 'image':
@@ -65,7 +65,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
   readClipboardFiles = () => {
     if (process.platform === 'darwin') {
-      console.log(clipboard.readBuffer('public.file-url').toString());
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       return clipboard.readBuffer('public.file-url').toString();
     }
   };
@@ -87,15 +87,15 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     const clipFile = this.readClipboardFiles();
     let clipData: ClipData;
 
-    if (clipImageBuffer.getBitmap().length !== 0) {
-      clipData = {
-        type: 'image',
-        data: clipImageBuffer,
-      };
-    } else if (clipFile) {
+    if (clipFile) {
       clipData = {
         type: 'file',
         data: clipFile,
+      };
+    } else if (clipImageBuffer.getBitmap().length !== 0) {
+      clipData = {
+        type: 'image',
+        data: clipImageBuffer,
       };
     } else {
       clipData = {
@@ -109,14 +109,14 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
   writeClipboard = (clipItem: ClipItemDoc) => {
     switch (clipItem.type) {
-      case 'text':
-        this.lastClipId = clipItem.text;
-        clipboard.writeText(clipItem.text);
-        break;
-
       case 'file':
         this.lastClipId = clipItem.path;
         this.writeClipboardFiles(clipItem);
+        break;
+
+      case 'text':
+        this.lastClipId = clipItem.text;
+        clipboard.writeText(clipItem.text);
         break;
 
       case 'image':
@@ -138,16 +138,6 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
       this.lastClipId = clipId;
 
       switch (clipData.type) {
-        case 'text':
-          const savedDocText = await this.insertClipDb({
-            type: 'text',
-            text: clipData.data,
-          });
-
-          this.clipItems.push(savedDocText);
-          this.emit(Events.NewClip, savedDocText);
-          break;
-
         case 'file':
           const savedDocFile = await this.insertClipDb({
             type: 'file',
@@ -156,6 +146,16 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
           this.clipItems.push(savedDocFile);
           this.emit(Events.NewClip, savedDocFile);
+          break;
+
+        case 'text':
+          const savedDocText = await this.insertClipDb({
+            type: 'text',
+            text: clipData.data,
+          });
+
+          this.clipItems.push(savedDocText);
+          this.emit(Events.NewClip, savedDocText);
           break;
 
         case 'image':
