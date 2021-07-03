@@ -7,7 +7,7 @@ import {clamp, inRange} from 'lodash';
 import {SearchBar} from './SearchBar';
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
-import {dimensions, isAlphanumeric, shiftItemToFront} from './utils';
+import {dimensions, isAlphanumeric} from './utils';
 import {ClipItem, ClipItemVariants} from './ClipItemRow';
 import styled from 'styled-components';
 
