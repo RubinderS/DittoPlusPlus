@@ -136,42 +136,40 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
     if (clipId !== this.lastClipId) {
       this.lastClipId = clipId;
+      let savedDoc: ClipItemDoc;
 
       switch (clipData.type) {
         case 'file':
-          const savedDocFile = await this.insertClipDb({
+          savedDoc = await this.insertClipDb({
             type: 'file',
             path: clipData.data,
           });
 
-          this.clipItems.push(savedDocFile);
-          this.emit(Events.NewClip, savedDocFile);
           break;
 
         case 'text':
-          const savedDocText = await this.insertClipDb({
+          savedDoc = await this.insertClipDb({
             type: 'text',
             text: clipData.data,
           });
 
-          this.clipItems.push(savedDocText);
-          this.emit(Events.NewClip, savedDocText);
           break;
 
         case 'image':
-          const savedDocImage = await this.insertClipDb({
+          savedDoc = await this.insertClipDb({
             type: 'image',
           });
 
           await this.saveFile(
-            path.join(imagesDir, `${savedDocImage._id}.png`),
+            path.join(imagesDir, `${savedDoc._id}.png`),
             clipData.data.toPNG(),
           );
 
-          this.clipItems.push(savedDocImage);
-          this.emit(Events.NewClip, savedDocImage);
           break;
       }
+
+      this.clipItems.unshift(savedDoc);
+      this.emit(Events.NewClip, savedDoc);
     }
   };
 
@@ -204,9 +202,11 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     switch (type) {
       case Messages.ClipItemSelected:
         const clipItem = msgData as ClipItemDoc;
+        console.log(this.clipItems);
         this.writeClipboard(clipItem);
-        cb(undefined, true);
         this.clipItems = shiftItemToFront(this.clipItems, clipItem);
+        cb(undefined, this.clipItems);
+
         this.db.update(
           {_id: clipItem._id},
           {$set: {timeStamp: Date.now()}},

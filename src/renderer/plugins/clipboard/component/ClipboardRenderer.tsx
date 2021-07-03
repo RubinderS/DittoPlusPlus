@@ -35,14 +35,10 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const searchBarRef = useRef<HTMLInputElement>(null);
   const clipsListRef = useRef<HTMLDivElement>(null);
 
-  const sendClipboardItemSelected = (clipItem: ClipItemDoc) => {
-    process.sendMessage(Messages.ClipItemSelected, clipItem, (err, res) => {
-      if (err) {
-        throw err;
-      }
-
-      if (res) {
-        //
+  const resetClips = () => {
+    process.sendMessage(Messages.GetAllClipItems, '', (err, clips) => {
+      if (!err) {
+        updateClipItems([...clips]);
       }
     });
   };
@@ -112,6 +108,10 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
     /* escape */
     if (keyCode === 27) {
+      if (searchText) {
+        resetClips();
+      }
+
       handleSearchUpdate('');
     }
 
@@ -130,11 +130,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   useEventListener('keydown', onKeyPress);
 
   useEffect(() => {
-    process.sendMessage(Messages.GetAllClipItems, '', (err, clips) => {
-      if (!err) {
-        updateClipItems([...clips]);
-      }
-    });
+    resetClips();
 
     process.on(Events.NewClip, (clip: ClipItemDoc) => {
       updateClipItems((prevClipItems) => [clip, ...prevClipItems]);
@@ -146,11 +142,17 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   }, []);
 
   const handleClipItemSelected = (item: ClipItemDoc) => {
-    updateClipItems(shiftItemToFront(clipItems, item));
-    sendClipboardItemSelected(item);
+    process.sendMessage(Messages.ClipItemSelected, item, (err, res) => {
+      if (err) {
+        throw err;
+      }
+
+      if (res) {
+        updateClipItems([...res]);
+      }
+    });
+
     handleSearchUpdate('');
-    updateSelectedIndex(0);
-    clipsListRef.current && (clipsListRef.current.scrollTop = 0);
   };
 
   const onClickClipItem = (item: ClipItemDoc) => {
@@ -159,21 +161,20 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
   const handleSearchUpdate = (text: string) => {
     updateSearchText(text);
-    if (text === '') {
-      searchBarRef.current && searchBarRef.current.blur();
-      return;
-    }
-
     updateSelectedIndex(0);
     clipsListRef.current && (clipsListRef.current.scrollTop = 0);
 
-    process.sendMessage(Messages.SearchClips, text, (err, clips) => {
-      if (err) {
-        throw err;
-      }
+    if (text === '') {
+      searchBarRef.current && searchBarRef.current.blur();
+    } else {
+      process.sendMessage(Messages.SearchClips, text, (err, clips) => {
+        if (err) {
+          throw err;
+        }
 
-      updateClipItems([...clips]);
-    });
+        updateClipItems([...clips]);
+      });
+    }
   };
 
   const onSearchTextChanged = (
