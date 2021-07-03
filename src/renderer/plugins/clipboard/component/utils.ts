@@ -4,17 +4,17 @@ import {ClipItemDoc} from '../types';
 export const dimensions = {
   clipItemDimensions: {
     height: 40,
-    paddingTop: 5,
+    paddingTop: 2,
     paddingBottom: 5,
     paddingLeft: 5,
     paddingRight: 5,
   },
   searchBarDimensions: {
-    height: 30,
-    paddingTop: 5,
-    paddingBottom: 0,
-    paddingLeft: 5,
-    paddingRight: 5,
+    height: 35,
+    paddingTop: 3,
+    paddingBottom: 3,
+    paddingLeft: 3,
+    paddingRight: 3,
   },
 };
 

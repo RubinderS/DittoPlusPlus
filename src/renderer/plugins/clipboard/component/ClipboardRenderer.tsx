@@ -32,7 +32,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const [selectedIndex, updateSelectedIndex] = useState(0);
   const [searchText, updateSearchText] = useState('');
   const {process} = props;
-  const searchBarRef = useRef<HTMLDivElement>(null);
+  const searchBarRef = useRef<HTMLInputElement>(null);
   const clipsListRef = useRef<HTMLDivElement>(null);
 
   const sendClipboardItemSelected = (clipItem: ClipItemDoc) => {
