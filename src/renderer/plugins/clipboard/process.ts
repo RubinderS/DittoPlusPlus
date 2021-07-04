@@ -2,7 +2,13 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {clipboard, nativeImage} from 'electron';
 import * as PluginTypes from '@type/pluginTypes';
-import {ClipData, ClipItemDoc, Events, Messages} from './types';
+import {
+  ClipData,
+  ClipItemDoc,
+  ClipItemDocFile,
+  Events,
+  Messages,
+} from './types';
 import * as Datastore from 'nedb';
 import {imagesDir, shiftItemToFront} from './component/utils';
 
@@ -23,7 +29,11 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     }
 
     const clipData = this.readClipboard();
-    this.lastClipId = this.convertClipDataToId(clipData);
+    if (clipData) {
+      this.lastClipId = this.convertClipDataToId(clipData);
+    } else {
+      this.lastClipId = '';
+    }
   }
 
   saveFile = async (fileName: string, data: Buffer): Promise<void> => {
@@ -65,27 +75,38 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
   readClipboardFiles = () => {
     if (process.platform === 'darwin') {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
       return clipboard.readBuffer('public.file-url').toString();
+    } else if (process.platform === 'win32') {
+      return;
+      // reading files from clipboard for windows is not supported at the moment
+      //
+      // const rawFilePath = clipboard.read('FileNameW');
+      // return rawFilePath.replace(new RegExp(String.fromCharCode(0), 'g'), '');
     }
   };
 
-  writeClipboardFiles = (clipItem: ClipItemDoc) => {
-    if (clipItem.type === 'file') {
-      if (process.platform === 'darwin') {
-        return clipboard.writeBuffer(
-          'public.file-url',
-          Buffer.from(clipItem.path, 'utf-8'),
-        );
-      }
+  writeClipboardFiles = (clipItem: ClipItemDocFile) => {
+    if (process.platform === 'darwin') {
+      clipboard.writeBuffer(
+        'public.file-url',
+        Buffer.from(clipItem.path, 'utf-8'),
+      );
+    } else if (process.platform === 'win32') {
+      // writing files to clipboard for windows is not supported at the moment
+      //
+      // clipboard.writeBuffer(
+      //   'FileNameW',
+      //   Buffer.from(clipItem.path.split('').join(String.fromCharCode(0))),
+      //   'clipboard',
+      // );
     }
   };
 
-  readClipboard = (): ClipData => {
+  readClipboard = (): ClipData | undefined => {
     const clipText = clipboard.readText();
     const clipImageBuffer = clipboard.readImage();
     const clipFile = this.readClipboardFiles();
-    let clipData: ClipData;
+    let clipData: ClipData | undefined = undefined;
 
     if (clipFile) {
       clipData = {
@@ -97,7 +118,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
         type: 'image',
         data: clipImageBuffer,
       };
-    } else {
+    } else if (clipText) {
       clipData = {
         type: 'text',
         data: clipText,
@@ -132,6 +153,11 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
   watchClipboard = async () => {
     const clipData = this.readClipboard();
+
+    if (!clipData) {
+      return;
+    }
+
     const clipId = this.convertClipDataToId(clipData);
 
     if (clipId !== this.lastClipId) {
