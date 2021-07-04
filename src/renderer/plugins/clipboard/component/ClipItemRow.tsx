@@ -58,7 +58,9 @@ export const ClipItem = (props: Props) => {
 
       case 'image':
         return (
-          <StyledImage src={path.join(imagesDir, `${clipItem._id}.png`)} />
+          <StyledImage
+            src={'file://' + path.join(imagesDir, `${clipItem._id}.png`)}
+          />
         );
 
       case 'file':
