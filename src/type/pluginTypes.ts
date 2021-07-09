@@ -7,7 +7,7 @@ export interface ProcessInitArgs {
 }
 
 export interface RenderProps {
-  process: ProcessAbstract;
+  pluginProcess: ProcessAbstract;
 }
 
 export class ProcessAbstract extends EventEmitter {
@@ -27,7 +27,7 @@ export interface Manifest {
   name: string;
   sideIcon?: IconType;
   requiresDb?: boolean;
-  process?: typeof ProcessAbstract;
+  pluginProcess?: typeof ProcessAbstract;
   render?: (props: RenderProps) => React.ReactNode;
 }
 
@@ -36,6 +36,6 @@ export interface ActivePlugin {
   name: string;
   sideIcon?: IconType;
   requiresDb?: boolean;
-  process?: ProcessAbstract;
+  pluginProcess?: ProcessAbstract;
   render?: (props: RenderProps) => React.ReactNode;
 }
