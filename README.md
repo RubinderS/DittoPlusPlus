@@ -24,5 +24,4 @@ when any file is changed including the main process and renderer process, the wh
 
 ## Package
 
-- Run `npm run build:prod` to build the application
 - Run`npm run pkd:win` and `npm run pkg:mac` to build package for respective platforms
