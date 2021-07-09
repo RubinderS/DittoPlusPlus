@@ -8,6 +8,6 @@ export const ClipBoard: PluginTypes.Manifest = {
   name: 'Clipboard',
   sideIcon: MdAssignment,
   requiresDb: true,
-  process: ClipboardProcess,
+  pluginProcess: ClipboardProcess,
   render: ClipboardRenderer,
 };

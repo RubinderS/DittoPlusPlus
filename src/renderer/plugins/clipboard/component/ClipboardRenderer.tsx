@@ -31,12 +31,12 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const [clipItems, updateClipItems] = useState<ClipItemDoc[]>([]);
   const [selectedIndex, updateSelectedIndex] = useState(0);
   const [searchText, updateSearchText] = useState('');
-  const {process} = props;
+  const {pluginProcess} = props;
   const searchBarRef = useRef<HTMLInputElement>(null);
   const clipsListRef = useRef<HTMLDivElement>(null);
 
   const resetClips = () => {
-    process.sendMessage(Messages.GetAllClipItems, '', (err, clips) => {
+    pluginProcess.sendMessage(Messages.GetAllClipItems, '', (err, clips) => {
       if (!err) {
         updateClipItems([...clips]);
       }
@@ -132,17 +132,17 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   useEffect(() => {
     resetClips();
 
-    process.on(Events.NewClip, (clip: ClipItemDoc) => {
+    pluginProcess.on(Events.NewClip, (clip: ClipItemDoc) => {
       updateClipItems((prevClipItems) => [clip, ...prevClipItems]);
     });
 
-    process.on(Events.ClipsInitialized, (clips: ClipItemDoc[]) => {
+    pluginProcess.on(Events.ClipsInitialized, (clips: ClipItemDoc[]) => {
       updateClipItems([...clips]);
     });
   }, []);
 
   const handleClipItemSelected = (item: ClipItemDoc) => {
-    process.sendMessage(Messages.ClipItemSelected, item, (err, res) => {
+    pluginProcess.sendMessage(Messages.ClipItemSelected, item, (err, res) => {
       if (err) {
         throw err;
       }
@@ -167,7 +167,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     if (text === '') {
       searchBarRef.current && searchBarRef.current.blur();
     } else {
-      process.sendMessage(Messages.SearchClips, text, (err, clips) => {
+      pluginProcess.sendMessage(Messages.SearchClips, text, (err, clips) => {
         if (err) {
           throw err;
         }

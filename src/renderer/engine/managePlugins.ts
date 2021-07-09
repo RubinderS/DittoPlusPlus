@@ -15,13 +15,13 @@ export const loadPlugins = () => {
   }
 
   pluginManifests.forEach((pluginManifest, _index) => {
-    const {id, name, requiresDb, process} = pluginManifest;
+    const {id, name, requiresDb, pluginProcess} = pluginManifest;
 
     if (isPluginActive(id)) {
       let activeProcess;
 
-      if (process) {
-        activeProcess = new process();
+      if (pluginProcess) {
+        activeProcess = new pluginProcess();
         const initArgs: PluginTypes.ProcessInitArgs = {};
 
         if (requiresDb) {
@@ -38,7 +38,7 @@ export const loadPlugins = () => {
 
       const activePlugin: PluginTypes.ActivePlugin = {
         ...pluginManifest,
-        process: activeProcess,
+        pluginProcess: activeProcess,
       };
       activePlugins.push(activePlugin);
     }

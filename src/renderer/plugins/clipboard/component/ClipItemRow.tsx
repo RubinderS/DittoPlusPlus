@@ -54,7 +54,7 @@ export const ClipItem = (props: Props) => {
   const renderClipItem = (clipItem: ClipItemDoc): React.ReactNode => {
     switch (clipItem.type) {
       case 'text':
-        return clipItem.text;
+        return `env: ${process.env.NODE_ENV} ` + path.resolve(imagesDir);
 
       case 'image':
         return (

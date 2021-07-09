@@ -19,13 +19,15 @@ export const ContentArea = (props: Props) => {
   const {activePlugins, selectedIndex} = props;
 
   const getContent = (plugin: PluginTypes.ActivePlugin) => {
-    const {process, render} = plugin;
+    const {pluginProcess, render} = plugin;
 
     if (!render) {
       return <div>plugin doesn&apos;t have a ui</div>;
     }
 
-    return render({process: process || new PluginTypes.ProcessAbstract()});
+    return render({
+      pluginProcess: pluginProcess || new PluginTypes.ProcessAbstract(),
+    });
   };
 
   return (
