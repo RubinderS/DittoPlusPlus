@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const os = require('os');
 
 function srcPaths(src) {
   return path.join(__dirname, src);
@@ -13,6 +14,8 @@ const isEnvProduction = process.env.NODE_ENV === 'production';
 const isEnvDevelopment =
   process.env.NODE_ENV === 'development' ||
   process.env.NODE_ENV === 'devserver';
+
+const dbPath = isEnvProduction ? path.join(os.homedir(), 'db') : 'db';
 
 // #region Common settings
 const commonConfig = {
@@ -72,6 +75,7 @@ mainConfig.plugins = [
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      DB_PATH: JSON.stringify(dbPath),
     },
   }),
 ];
@@ -87,6 +91,7 @@ rendererConfig.plugins = [
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      DB_PATH: JSON.stringify(dbPath),
     },
   }),
 ];

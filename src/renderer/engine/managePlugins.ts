@@ -1,5 +1,6 @@
 import {pluginManifests} from '@plugins';
 import * as path from 'path';
+import * as fs from 'fs';
 import {remote} from 'electron';
 import * as PluginTypes from '@type/pluginTypes';
 
@@ -7,6 +8,12 @@ const activePlugins: PluginTypes.ActivePlugin[] = [];
 const allPlugins: PluginTypes.Manifest[] = [];
 
 export const loadPlugins = () => {
+  const dbPath = process.env.DB_PATH;
+
+  if (!fs.existsSync(dbPath)) {
+    fs.mkdirSync(dbPath);
+  }
+
   pluginManifests.forEach((pluginManifest, _index) => {
     const {id, name, requiresDb, process} = pluginManifest;
 
@@ -21,7 +28,7 @@ export const loadPlugins = () => {
           const Datastore = remote.getGlobal('Datastore');
 
           initArgs.db = new Datastore({
-            filename: path.join('db', `${name.toLowerCase()}.db`),
+            filename: path.join(dbPath, `${name.toLowerCase()}.db`),
             autoload: true,
           });
         }

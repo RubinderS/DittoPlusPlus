@@ -65,7 +65,9 @@ export const isAlphanumeric = (keyCode: number): boolean => {
   return false;
 };
 
-export const imagesDir = path.resolve(path.join('db', 'clipboardImages'));
+export const imagesDir = path.resolve(
+  path.join(process.env.DB_PATH, 'clipboardImages'),
+);
 
 export const shiftItemToFront = (
   clipItems: ClipItemDoc[],
