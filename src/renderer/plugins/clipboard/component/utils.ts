@@ -20,7 +20,6 @@ export const dimensions = {
 
 // todo rename as is printable character
 export const isAlphanumeric = (keyCode: number): boolean => {
-  console.log(keyCode);
   /* A-Z | a-z */
   if (keyCode >= 65 && keyCode <= 90) {
     return true;

@@ -228,7 +228,6 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     switch (type) {
       case Messages.ClipItemSelected:
         const clipItem = msgData as ClipItemDoc;
-        console.log(this.clipItems);
         this.writeClipboard(clipItem);
         this.clipItems = shiftItemToFront(this.clipItems, clipItem);
         cb(undefined, this.clipItems);
