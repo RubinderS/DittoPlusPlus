@@ -2,7 +2,13 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {clipboard, nativeImage} from 'electron';
 import * as PluginTypes from '@type/pluginTypes';
-import {ClipData, ClipItemDoc, Events, Messages} from './types';
+import {
+  ClipData,
+  ClipItemDoc,
+  ClipItemDocFile,
+  Events,
+  Messages,
+} from './types';
 import * as Datastore from 'nedb';
 import {imagesDir, shiftItemToFront} from './component/utils';
 
@@ -23,7 +29,11 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     }
 
     const clipData = this.readClipboard();
-    this.lastClipId = this.convertClipDataToId(clipData);
+    if (clipData) {
+      this.lastClipId = this.convertClipDataToId(clipData);
+    } else {
+      this.lastClipId = '';
+    }
   }
 
   saveFile = async (fileName: string, data: Buffer): Promise<void> => {
@@ -54,6 +64,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
   convertClipDataToId = (clipData: ClipData): string => {
     switch (clipData.type) {
+      case 'file':
       case 'text':
         return clipData.data;
 
@@ -62,17 +73,52 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     }
   };
 
-  readClipboard = (): ClipData => {
+  readClipboardFiles = () => {
+    if (process.platform === 'darwin') {
+      return clipboard.readBuffer('public.file-url').toString();
+    } else if (process.platform === 'win32') {
+      return;
+      // reading files from clipboard for windows is not supported at the moment
+      //
+      // const rawFilePath = clipboard.read('FileNameW');
+      // return rawFilePath.replace(new RegExp(String.fromCharCode(0), 'g'), '');
+    }
+  };
+
+  writeClipboardFiles = (clipItem: ClipItemDocFile) => {
+    if (process.platform === 'darwin') {
+      clipboard.writeBuffer(
+        'public.file-url',
+        Buffer.from(clipItem.path, 'utf-8'),
+      );
+    } else if (process.platform === 'win32') {
+      // writing files to clipboard for windows is not supported at the moment
+      //
+      // clipboard.writeBuffer(
+      //   'FileNameW',
+      //   Buffer.from(clipItem.path.split('').join(String.fromCharCode(0))),
+      //   'clipboard',
+      // );
+    }
+  };
+
+  readClipboard = (): ClipData | undefined => {
     const clipText = clipboard.readText();
     const clipImageBuffer = clipboard.readImage();
-    let clipData: ClipData;
+    const clipFile = this.readClipboardFiles();
+    let clipData: ClipData | undefined = undefined;
 
-    if (clipImageBuffer.getBitmap().length !== 0) {
+    if (clipFile) {
+      clipData = {
+        type: 'file',
+        data: clipFile,
+      };
+    } else if (clipImageBuffer.getBitmap().length !== 0) {
       clipData = {
         type: 'image',
         data: clipImageBuffer,
       };
-    } else {
+    } else if (clipText) {
       clipData = {
         type: 'text',
         data: clipText,
@@ -84,6 +130,11 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
   writeClipboard = (clipItem: ClipItemDoc) => {
     switch (clipItem.type) {
+      case 'file':
+        this.lastClipId = clipItem.path;
+        this.writeClipboardFiles(clipItem);
+        break;
+
       case 'text':
         this.lastClipId = clipItem.text;
         clipboard.writeText(clipItem.text);
@@ -102,36 +153,49 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
   watchClipboard = async () => {
     const clipData = this.readClipboard();
+
+    if (!clipData) {
+      return;
+    }
+
     const clipId = this.convertClipDataToId(clipData);
 
     if (clipId !== this.lastClipId) {
       this.lastClipId = clipId;
+      let savedDoc: ClipItemDoc;
 
       switch (clipData.type) {
+        case 'file':
+          savedDoc = await this.insertClipDb({
+            type: 'file',
+            path: clipData.data,
+          });
+
+          break;
+
         case 'text':
-          const savedDocText = await this.insertClipDb({
+          savedDoc = await this.insertClipDb({
             type: 'text',
             text: clipData.data,
           });
 
-          this.clipItems.push(savedDocText);
-          this.emit(Events.NewClip, savedDocText);
           break;
 
         case 'image':
-          const savedDocImage = await this.insertClipDb({
+          savedDoc = await this.insertClipDb({
             type: 'image',
           });
 
           await this.saveFile(
-            path.join(imagesDir, `${savedDocImage._id}.png`),
+            path.join(imagesDir, `${savedDoc._id}.png`),
             clipData.data.toPNG(),
           );
 
-          this.clipItems.push(savedDocImage);
-          this.emit(Events.NewClip, savedDocImage);
           break;
       }
+
+      this.clipItems.unshift(savedDoc);
+      this.emit(Events.NewClip, savedDoc);
     }
   };
 
@@ -164,9 +228,11 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     switch (type) {
       case Messages.ClipItemSelected:
         const clipItem = msgData as ClipItemDoc;
+        console.log(this.clipItems);
         this.writeClipboard(clipItem);
-        cb(undefined, true);
         this.clipItems = shiftItemToFront(this.clipItems, clipItem);
+        cb(undefined, this.clipItems);
+
         this.db.update(
           {_id: clipItem._id},
           {$set: {timeStamp: Date.now()}},

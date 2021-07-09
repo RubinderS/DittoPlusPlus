@@ -7,8 +7,8 @@ import {clamp, inRange} from 'lodash';
 import {SearchBar} from './SearchBar';
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
-import {dimensions, isAlphanumeric, shiftItemToFront} from './utils';
-import {ClipItemRow, ClipItemVariants} from './ClipItemRow';
+import {dimensions, isAlphanumeric} from './utils';
+import {ClipItem, ClipItemVariants} from './ClipItemRow';
 import styled from 'styled-components';
 
 const StyledContainer = styled.div`
@@ -35,14 +35,10 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const searchBarRef = useRef<HTMLInputElement>(null);
   const clipsListRef = useRef<HTMLDivElement>(null);
 
-  const sendClipboardItemSelected = (clipItem: ClipItemDoc) => {
-    process.sendMessage(Messages.ClipItemSelected, clipItem, (err, res) => {
-      if (err) {
-        throw err;
-      }
-
-      if (res) {
-        //
+  const resetClips = () => {
+    process.sendMessage(Messages.GetAllClipItems, '', (err, clips) => {
+      if (!err) {
+        updateClipItems([...clips]);
       }
     });
   };
@@ -58,7 +54,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     if (clipsListRef.current) {
       const {clipItemDimensions, searchBarDimensions} = dimensions;
 
-      const clipItemHeight =
+      const clipRowHeight =
         clipItemDimensions.height +
         clipItemDimensions.paddingTop +
         clipItemDimensions.paddingBottom;
@@ -69,10 +65,10 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
         searchBarDimensions.paddingBottom;
 
       const viewHeight = clipsListRef.current.offsetHeight - searchBarHeight;
-      const itemsVisibleN = Math.floor(viewHeight / clipItemHeight);
+      const itemsVisibleN = Math.floor(viewHeight / clipRowHeight);
 
       const itemsScrolled = Math.floor(
-        clipsListRef.current.scrollTop / clipItemHeight,
+        clipsListRef.current.scrollTop / clipRowHeight,
       );
 
       const isItemInViewPort = inRange(
@@ -85,10 +81,10 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       if (keyCode === 38) {
         if (isItemInViewPort) {
           clipsListRef.current.scrollBy({
-            top: -clipItemHeight,
+            top: -clipRowHeight,
           });
         } else {
-          clipsListRef.current.scrollTop = (selectedIndex - 2) * clipItemHeight;
+          clipsListRef.current.scrollTop = (selectedIndex - 2) * clipRowHeight;
         }
 
         updateSelectedIndex((prevSelectedIndex) =>
@@ -99,9 +95,9 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       /* down key */
       if (keyCode === 40) {
         if (selectedIndex >= itemsVisibleN - 1 && isItemInViewPort) {
-          clipsListRef.current.scrollBy({top: clipItemHeight});
+          clipsListRef.current.scrollBy({top: clipRowHeight});
         } else if (clipsListRef.current.scrollTop) {
-          clipsListRef.current.scrollTop = selectedIndex * clipItemHeight;
+          clipsListRef.current.scrollTop = selectedIndex * clipRowHeight;
         }
 
         updateSelectedIndex((prevSelectedIndex) =>
@@ -112,6 +108,10 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
     /* escape */
     if (keyCode === 27) {
+      if (searchText) {
+        resetClips();
+      }
+
       handleSearchUpdate('');
     }
 
@@ -130,11 +130,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   useEventListener('keydown', onKeyPress);
 
   useEffect(() => {
-    process.sendMessage(Messages.GetAllClipItems, '', (err, clips) => {
-      if (!err) {
-        updateClipItems([...clips]);
-      }
-    });
+    resetClips();
 
     process.on(Events.NewClip, (clip: ClipItemDoc) => {
       updateClipItems((prevClipItems) => [clip, ...prevClipItems]);
@@ -146,11 +142,17 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   }, []);
 
   const handleClipItemSelected = (item: ClipItemDoc) => {
-    updateClipItems(shiftItemToFront(clipItems, item));
-    sendClipboardItemSelected(item);
+    process.sendMessage(Messages.ClipItemSelected, item, (err, res) => {
+      if (err) {
+        throw err;
+      }
+
+      if (res) {
+        updateClipItems([...res]);
+      }
+    });
+
     handleSearchUpdate('');
-    updateSelectedIndex(0);
-    clipsListRef.current && (clipsListRef.current.scrollTop = 0);
   };
 
   const onClickClipItem = (item: ClipItemDoc) => {
@@ -159,21 +161,20 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
   const handleSearchUpdate = (text: string) => {
     updateSearchText(text);
-    if (text === '') {
-      searchBarRef.current && searchBarRef.current.blur();
-      return;
-    }
-
     updateSelectedIndex(0);
     clipsListRef.current && (clipsListRef.current.scrollTop = 0);
 
-    process.sendMessage(Messages.SearchClips, text, (err, clips) => {
-      if (err) {
-        throw err;
-      }
+    if (text === '') {
+      searchBarRef.current && searchBarRef.current.blur();
+    } else {
+      process.sendMessage(Messages.SearchClips, text, (err, clips) => {
+        if (err) {
+          throw err;
+        }
 
-      updateClipItems([...clips]);
-    });
+        updateClipItems([...clips]);
+      });
+    }
   };
 
   const onSearchTextChanged = (
@@ -202,7 +203,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
         scrollableNodeProps={{ref: clipsListRef}}
       >
         {clipItems.map((item, index) => (
-          <ClipItemRow
+          <ClipItem
             key={`${index}_clipItem`}
             clipItem={item}
             variant={getClipItemVariant(index)}

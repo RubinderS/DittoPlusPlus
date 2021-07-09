@@ -56,21 +56,7 @@ export const isAlphanumeric = (keyCode: number): boolean => {
    */
   if (
     [
-      32,
-      106,
-      107,
-      109,
-      111,
-      186,
-      187,
-      188,
-      189,
-      190,
-      191,
-      192,
-      219,
-      220,
-      221,
+      32, 106, 107, 109, 111, 186, 187, 188, 189, 190, 191, 192, 219, 220, 221,
       222,
     ].includes(keyCode)
   ) {
@@ -80,7 +66,7 @@ export const isAlphanumeric = (keyCode: number): boolean => {
   return false;
 };
 
-export const imagesDir = path.join('db', 'clipboardImages');
+export const imagesDir = path.resolve(path.join('db', 'clipboardImages'));
 
 export const shiftItemToFront = (
   clipItems: ClipItemDoc[],

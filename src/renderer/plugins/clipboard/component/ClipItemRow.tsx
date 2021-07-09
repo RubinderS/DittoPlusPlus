@@ -48,7 +48,7 @@ const StyledImage = styled.img`
   height: ${clipItemDimensions.height}px;
 `;
 
-export const ClipItemRow = (props: Props) => {
+export const ClipItem = (props: Props) => {
   const {clipItem, onClick} = props;
 
   const renderClipItem = (clipItem: ClipItemDoc): React.ReactNode => {
@@ -58,8 +58,13 @@ export const ClipItemRow = (props: Props) => {
 
       case 'image':
         return (
-          <StyledImage src={path.join(imagesDir, `${clipItem._id}.png`)} />
+          <StyledImage
+            src={'file://' + path.join(imagesDir, `${clipItem._id}.png`)}
+          />
         );
+
+      case 'file':
+        return clipItem.path;
 
       default:
         return null;

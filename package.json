@@ -35,7 +35,6 @@
   "dependencies": {
     "@types/react-icons": "^3.0.0",
     "@use-it/event-listener": "^0.1.6",
-    "electron": "^12.0.8",
     "material-colors-ts": "^1.0.4",
     "nedb": "^1.8.0",
     "react": "^16.12.0",
@@ -60,7 +59,8 @@
     "copy-pkg-json-webpack-plugin": "0.0.38",
     "cross-env": "^5.2.1",
     "css-loader": "^1.0.1",
-    "electron-builder": "^22.10.5",
+    "electron": "^12.0.8",
+    "electron-builder": "^22.11.7",
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.1.4",
