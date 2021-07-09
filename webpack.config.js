@@ -12,6 +12,7 @@ function srcPaths(src) {
 }
 
 const isEnvProduction = process.env.NODE_ENV === 'production';
+
 const isEnvDevelopment =
   process.env.NODE_ENV === 'development' ||
   process.env.NODE_ENV === 'devserver';
