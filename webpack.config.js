@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const lodash = require('lodash');
 const CopyPkgJsonPlugin = require('copy-pkg-json-webpack-plugin');
 const webpack = require('webpack');
