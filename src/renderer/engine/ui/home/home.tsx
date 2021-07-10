@@ -23,7 +23,7 @@ const StyledBody = styled.div`
 const StyledHeader = styled.div`
   padding-top: 3px;
   padding-left: 5px;
-  width: calc(100% -5px);
+  width: calc(100% - 5px);
   height: calc(${HeaderHeightPx}px - 3px);
   color: ${(props) => props.theme.themeColor[100]};
   background-color: ${(props) => props.theme.themeColor[400]};
