@@ -20,11 +20,8 @@ const StyledPluginIcon = styled.div`
   max-width: 100%;
   height: 50px;
   width: 100%;
+  color: ${(props) => props.theme.themeColor[100]};
 `;
-
-const SideBarIconStyles: React.CSSProperties = {
-  color: 'white',
-};
 
 export const Sidebar = (props: Props) => {
   const {activePlugins} = props;
@@ -38,7 +35,7 @@ export const Sidebar = (props: Props) => {
           <StyledPluginIcon
             key={`${index}_sidebar_${plugin.name.toLowerCase()}`}
           >
-            <SideIcon style={SideBarIconStyles} />
+            <SideIcon />
           </StyledPluginIcon>
         );
       })}
