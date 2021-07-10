@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const lodash = require('lodash');
 const CopyPkgJsonPlugin = require('copy-pkg-json-webpack-plugin');
 const webpack = require('webpack');
@@ -11,6 +12,7 @@ function srcPaths(src) {
 }
 
 const isEnvProduction = process.env.NODE_ENV === 'production';
+
 const isEnvDevelopment =
   process.env.NODE_ENV === 'development' ||
   process.env.NODE_ENV === 'devserver';
