@@ -29,12 +29,12 @@ const getBackgroundColor = (variant: ClipItemVariants, theme: DefaultTheme) => {
 const StyledClipItem = styled.div<Pick<Props, 'variant'>>`
   color: black;
   overflow: hidden;
-  max-height: ${clipItemDimensions.height}px;
-  min-height: ${clipItemDimensions.height}px;
-  padding-top: ${clipItemDimensions.paddingTop}px;
-  padding-bottom: ${clipItemDimensions.paddingBottom}px;
-  padding-left: ${clipItemDimensions.paddingLeft}px;
-  padding-right: ${clipItemDimensions.paddingRight}px;
+  max-height: ${clipItemDimensions.heightPx}px;
+  min-height: ${clipItemDimensions.heightPx}px;
+  padding-top: ${clipItemDimensions.paddingTopPx}px;
+  padding-bottom: ${clipItemDimensions.paddingBottomPx}px;
+  padding-left: ${clipItemDimensions.paddingLeftPx}px;
+  padding-right: ${clipItemDimensions.paddingRightPx}px;
   line-height: 20px;
   max-width: 100%;
   background-color: ${(props) =>
@@ -45,7 +45,7 @@ const StyledClipItem = styled.div<Pick<Props, 'variant'>>`
 `;
 
 const StyledImage = styled.img`
-  height: ${clipItemDimensions.height}px;
+  height: ${clipItemDimensions.heightPx}px;
 `;
 
 export const ClipItem = (props: Props) => {

@@ -55,14 +55,14 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       const {clipItemDimensions, searchBarDimensions} = dimensions;
 
       const clipRowHeight =
-        clipItemDimensions.height +
-        clipItemDimensions.paddingTop +
-        clipItemDimensions.paddingBottom;
+        clipItemDimensions.heightPx +
+        clipItemDimensions.paddingTopPx +
+        clipItemDimensions.paddingBottomPx;
 
       const searchBarHeight =
-        searchBarDimensions.height +
-        searchBarDimensions.paddingTop +
-        searchBarDimensions.paddingBottom;
+        searchBarDimensions.heightPx +
+        searchBarDimensions.paddingTopPx +
+        searchBarDimensions.paddingBottomPx;
 
       const viewHeight = clipsListRef.current.offsetHeight - searchBarHeight;
       const itemsVisibleN = Math.floor(viewHeight / clipRowHeight);
