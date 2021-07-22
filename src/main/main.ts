@@ -1,7 +1,7 @@
 /**
  * Entry point of the Election app.
  */
-import {BrowserWindow, app} from 'electron';
+import {BrowserWindow, app, globalShortcut} from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as Datastore from 'nedb';
@@ -12,6 +12,7 @@ let mainWindow: Electron.BrowserWindow | null;
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isDevserver = process.env.NODE_ENV === 'devserver';
+let isWindowShowing = true;
 
 function createWindow(): void {
   // Create the browser window.
@@ -54,15 +55,38 @@ function createWindow(): void {
   });
 }
 
+function registerKeyboardShortcuts() {
+  const res = globalShortcut.register('CommandOrControl+Shift+V', () => {
+    if (mainWindow) {
+      isWindowShowing ? mainWindow.hide() : mainWindow.show();
+      isWindowShowing = !isWindowShowing;
+    }
+  });
+
+  if (!res) {
+    //
+  }
+}
+
+function unRegisterKeyboardShortcuts() {
+  globalShortcut.unregisterAll();
+}
+
+function onReady() {
+  createWindow();
+  registerKeyboardShortcuts();
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', onReady);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
+  unRegisterKeyboardShortcuts();
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -73,6 +97,7 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
     createWindow();
+    registerKeyboardShortcuts();
   }
 });
 
