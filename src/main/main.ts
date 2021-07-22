@@ -81,6 +81,19 @@ function onReady() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', onReady);
+app.dock.hide();
+
+/**
+ * win.setSkipTaskbar (true);
+ *
+ * {
+ * // ...
+ * skipTaskbar: true,
+ * // ...
+ * }
+ *
+ * https://stackoverflow.com/questions/59668664/how-to-avoid-showing-a-dock-icon-while-my-electron-app-is-launching-on-macos
+ */
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
