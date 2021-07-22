@@ -166,6 +166,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
 
     if (text === '') {
       searchBarRef.current && searchBarRef.current.blur();
+      resetClips();
     } else {
       pluginProcess.sendMessage(Messages.SearchClips, text, (err, clips) => {
         if (err) {
