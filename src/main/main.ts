@@ -22,6 +22,7 @@ function createWindow(): void {
     minWidth: 200,
     minHeight: 200,
     frame: isDevelopment || isDevserver,
+    skipTaskbar: true, // hide from taskbar for Windows
     webPreferences: {
       webSecurity: false,
       devTools: process.env.NODE_ENV === 'production' ? false : true,
@@ -81,7 +82,10 @@ function onReady() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', onReady);
-app.dock.hide();
+
+if (process.platform === 'darwin') {
+  app.dock.hide();
+}
 
 /**
  * win.setSkipTaskbar (true);
