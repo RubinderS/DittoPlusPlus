@@ -101,14 +101,6 @@ if (process.platform === 'darwin') {
 }
 
 /**
- * win.setSkipTaskbar (true);
- *
- * {
- * // ...
- * skipTaskbar: true,
- * // ...
- * }
- *
  * https://stackoverflow.com/questions/59668664/how-to-avoid-showing-a-dock-icon-while-my-electron-app-is-launching-on-macos
  */
 
