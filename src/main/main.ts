@@ -1,14 +1,16 @@
 /**
  * Entry point of the Election app.
  */
-import {BrowserWindow, app, globalShortcut} from 'electron';
+import {BrowserWindow, Menu, Tray, app, globalShortcut} from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as Datastore from 'nedb';
+import '@resources/icon.png';
 
 global.Datastore = Datastore;
 
 let mainWindow: Electron.BrowserWindow | null;
+let tray = null;
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isDevserver = process.env.NODE_ENV === 'devserver';
@@ -76,6 +78,17 @@ function unRegisterKeyboardShortcuts() {
 function onReady() {
   createWindow();
   registerKeyboardShortcuts();
+  app.whenReady().then(() => {
+    tray = new Tray(`src/resources/icon.png`);
+    const contextMenu = Menu.buildFromTemplate([
+      {label: 'Item1', type: 'radio'},
+      {label: 'Item2', type: 'radio'},
+      {label: 'Item3', type: 'radio', checked: true},
+      {label: 'Item4', type: 'radio'},
+    ]);
+    tray.setToolTip('This is my application.');
+    tray.setContextMenu(contextMenu);
+  });
 }
 
 // This method will be called when Electron has finished
