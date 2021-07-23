@@ -13,6 +13,7 @@
       "@engine/*": ["src/renderer/engine/*"],
       "@utils": ["src/utils"],
       "@utils/*": ["src/utils/*"],
+      "@resources/*": ["src/resources/*"],
       "@type": ["src/type"],
       "@type/*": ["src/type/*"]
     },

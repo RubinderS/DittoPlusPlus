@@ -5,7 +5,7 @@
   "main": "./dist/main.bundle.js",
   "scripts": {
     "start": "electron ./dist/main.bundle.js",
-    "build": "eslint ./src/** && rimraf dist && webpack --progress --colors",
+    "build": "eslint ./src/**/*.ts && rimraf dist && webpack --progress --colors",
     "build:dev": "cross-env NODE_ENV=development npm run build",
     "build:prod": "cross-env NODE_ENV=production npm run build",
     "build:remote:main": "nodemon -e ts,tsx -w ./src --exec \"npm run build:dev && npm start\"",
