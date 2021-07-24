@@ -1,6 +1,8 @@
 <img src="src/resources/clipboard-svgrepo-com.png"
      alt="Markdown Monster icon"
-     style="width: 50px; height:50px" />
+     width="50px"
+     height="50px"
+ />
 
 # Ditto++
 
