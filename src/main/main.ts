@@ -17,6 +17,10 @@ let isQuiting = false;
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isDevserver = process.env.NODE_ENV === 'devserver';
 
+const iconPath = path.resolve(
+  path.join(__dirname, 'src', 'resources', 'clipboard-svgrepo-com.png'),
+);
+
 function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -25,6 +29,7 @@ function createWindow(): void {
     minWidth: 200,
     minHeight: 200,
     frame: isDevelopment || isDevserver,
+    icon: iconPath, // icon for visible on taskbar
     skipTaskbar: true, // hide from taskbar for Windows
     webPreferences: {
       webSecurity: false,
@@ -109,11 +114,7 @@ function onReady() {
   createWindow();
   registerKeyboardShortcuts();
   app.whenReady().then(() => {
-    tray = new Tray(
-      path.resolve(
-        path.join(__dirname, 'src', 'resources', 'clipboard-svgrepo-com.png'),
-      ),
-    );
+    tray = new Tray(iconPath);
 
     const contextMenu = Menu.buildFromTemplate([
       {

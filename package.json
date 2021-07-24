@@ -22,11 +22,14 @@
       "output": "./out/"
     },
     "mac": {
-      "target": "pkg"
+      "target": "pkg",
+      "category": "public.app-category.utilities",
+      "icon": "./src/resources/clipboard-svgrepo-com.png"
     },
     "win": {
       "target": "nsis",
-      "asar": false
+      "asar": false,
+      "icon": "./src/resources/clipboard-svgrepo-com.png"
     },
     "buildVersion": "1.0.0"
   },
