@@ -5,7 +5,6 @@ import {BrowserWindow, Menu, Tray, app, globalShortcut} from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as Datastore from 'nedb';
-import '@resources/icon.png';
 import '@resources/clipboard-svgrepo-com.png';
 
 global.Datastore = Datastore;
