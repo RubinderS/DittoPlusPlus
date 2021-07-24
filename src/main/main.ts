@@ -148,7 +148,7 @@ function onReady() {
         toggleWindowVisibility();
       }
     });
-    tray.setToolTip('This is my application.');
+    tray.setToolTip('Ditto++');
     tray.setContextMenu(contextMenu);
   });
 }
