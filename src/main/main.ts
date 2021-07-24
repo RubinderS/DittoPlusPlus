@@ -6,15 +6,17 @@ import * as path from 'path';
 import * as url from 'url';
 import * as Datastore from 'nedb';
 import '@resources/icon.png';
+import '@resources/clipboard-svgrepo-com.png';
 
 global.Datastore = Datastore;
 
 let mainWindow: Electron.BrowserWindow | null;
 let tray = null;
+let isWindowShowing = true;
+let isQuiting = false;
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isDevserver = process.env.NODE_ENV === 'devserver';
-let isWindowShowing = true;
 
 function createWindow(): void {
   // Create the browser window.
@@ -49,6 +51,20 @@ function createWindow(): void {
 
   mainWindow.setAlwaysOnTop(true);
 
+  mainWindow.on('minimize', (event: any) => {
+    event.preventDefault();
+    hideWindow();
+  });
+
+  mainWindow.on('close', (event: any) => {
+    if (!isQuiting) {
+      event.preventDefault();
+      hideWindow();
+    }
+
+    return false;
+  });
+
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows
@@ -58,12 +74,27 @@ function createWindow(): void {
   });
 }
 
+function showWindow() {
+  if (mainWindow) {
+    mainWindow.show();
+    isWindowShowing = true;
+  }
+}
+
+function hideWindow() {
+  if (mainWindow) {
+    mainWindow.hide();
+    isWindowShowing = false;
+  }
+}
+
+function toggleWindowVisibility() {
+  isWindowShowing ? hideWindow() : showWindow();
+}
+
 function registerKeyboardShortcuts() {
   const res = globalShortcut.register('CommandOrControl+Shift+V', () => {
-    if (mainWindow) {
-      isWindowShowing ? mainWindow.hide() : mainWindow.show();
-      isWindowShowing = !isWindowShowing;
-    }
+    toggleWindowVisibility();
   });
 
   if (!res) {
@@ -79,13 +110,29 @@ function onReady() {
   createWindow();
   registerKeyboardShortcuts();
   app.whenReady().then(() => {
-    tray = new Tray(`src/resources/icon.png`);
+    tray = new Tray(`src/resources/clipboard-svgrepo-com.png`);
+
     const contextMenu = Menu.buildFromTemplate([
-      {label: 'Item1', type: 'radio'},
-      {label: 'Item2', type: 'radio'},
-      {label: 'Item3', type: 'radio', checked: true},
-      {label: 'Item4', type: 'radio'},
+      {
+        label: 'Open',
+        type: 'normal',
+        click: () => {
+          showWindow();
+        },
+      },
+      {
+        label: 'Quit',
+        type: 'normal',
+        click: () => {
+          isQuiting = true;
+          app.quit();
+        },
+      },
     ]);
+
+    tray.on('click', () => {
+      toggleWindowVisibility();
+    });
     tray.setToolTip('This is my application.');
     tray.setContextMenu(contextMenu);
   });
@@ -110,6 +157,7 @@ app.on('window-all-closed', () => {
   // to stay active until the user quits explicitly with Cmd + Q
   unRegisterKeyboardShortcuts();
   if (process.platform !== 'darwin') {
+    isQuiting = true;
     app.quit();
   }
 });
