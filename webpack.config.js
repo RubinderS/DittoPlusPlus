@@ -17,7 +17,9 @@ const isEnvDevelopment =
   process.env.NODE_ENV === 'development' ||
   process.env.NODE_ENV === 'devserver';
 
-const dbPath = isEnvProduction ? path.join(os.homedir(), 'db') : 'db';
+const settingsDir = isEnvProduction
+  ? path.join(os.homedir(), '.DittoPlusPlus')
+  : '.DittoPlusPlus';
 
 // #region Common settings
 const commonConfig = {
@@ -77,7 +79,7 @@ mainConfig.plugins = [
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-      DB_PATH: JSON.stringify(dbPath),
+      Settings_Dir: JSON.stringify(settingsDir),
     },
   }),
 ];
@@ -93,7 +95,7 @@ rendererConfig.plugins = [
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-      DB_PATH: JSON.stringify(dbPath),
+      Settings_Dir: JSON.stringify(settingsDir),
     },
   }),
 ];

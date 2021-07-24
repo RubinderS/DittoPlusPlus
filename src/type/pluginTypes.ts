@@ -4,6 +4,7 @@ import {IconType} from 'react-icons';
 
 export interface ProcessInitArgs {
   db?: Datastore;
+  pluginSettingsDir: string;
 }
 
 export interface RenderProps {

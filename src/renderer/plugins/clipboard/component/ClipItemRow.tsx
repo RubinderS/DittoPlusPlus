@@ -1,6 +1,6 @@
 import * as React from 'React';
 import {ClipItemDoc} from '../types';
-import {dimensions, imagesDir} from './utils';
+import {dimensions} from './utils';
 import * as path from 'path';
 import styled, {DefaultTheme} from 'styled-components';
 
@@ -8,6 +8,7 @@ interface Props {
   clipItem: ClipItemDoc;
   variant: ClipItemVariants;
   onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  imagesDir: string;
 }
 
 export type ClipItemVariants = 'light' | 'dark' | 'selected';
@@ -49,7 +50,7 @@ const StyledImage = styled.img`
 `;
 
 export const ClipItem = (props: Props) => {
-  const {clipItem, onClick} = props;
+  const {clipItem, onClick, imagesDir} = props;
 
   const renderClipItem = (clipItem: ClipItemDoc): React.ReactNode => {
     switch (clipItem.type) {

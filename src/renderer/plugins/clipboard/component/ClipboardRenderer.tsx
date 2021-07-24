@@ -30,17 +30,22 @@ const SimpleBarStyles: React.CSSProperties = {
 export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const [clipItems, updateClipItems] = useState<ClipItemDoc[]>([]);
   const [selectedIndex, updateSelectedIndex] = useState(0);
+  const [imagesDir, updateImagesDir] = useState<string>('');
   const [searchText, updateSearchText] = useState('');
   const {pluginProcess} = props;
   const searchBarRef = useRef<HTMLInputElement>(null);
   const clipsListRef = useRef<HTMLDivElement>(null);
 
   const resetClips = () => {
-    pluginProcess.sendMessage(Messages.GetAllClipItems, '', (err, clips) => {
-      if (!err) {
-        updateClipItems([...clips]);
-      }
-    });
+    pluginProcess.sendMessage(
+      Messages.GetAllClipItems,
+      undefined,
+      (err, clips) => {
+        if (!err) {
+          updateClipItems([...clips]);
+        }
+      },
+    );
   };
 
   const onKeyPress = (event: KeyboardEvent) => {
@@ -139,6 +144,14 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     pluginProcess.on(Events.ClipsInitialized, (clips: ClipItemDoc[]) => {
       updateClipItems([...clips]);
     });
+
+    pluginProcess.sendMessage(
+      Messages.GetImagesDir,
+      undefined,
+      (_err: any, _imagesDir: string) => {
+        updateImagesDir(_imagesDir);
+      },
+    );
   }, []);
 
   const handleClipItemSelected = (item: ClipItemDoc) => {
@@ -207,6 +220,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
           <ClipItem
             key={`${index}_clipItem`}
             clipItem={item}
+            imagesDir={imagesDir}
             variant={getClipItemVariant(index)}
             onClick={() => onClickClipItem(item)}
           />

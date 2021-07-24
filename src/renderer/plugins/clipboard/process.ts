@@ -10,23 +10,16 @@ import {
   Messages,
 } from './types';
 import * as Datastore from 'nedb';
-import {imagesDir, shiftItemToFront} from './component/utils';
+import {shiftItemToFront} from './component/utils';
 
 export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   db: Datastore<Partial<ClipItemDoc>>;
   lastClipId: string;
   clipItems: ClipItemDoc[];
+  imagesDir: string;
 
   constructor() {
     super();
-
-    if (!fs.existsSync(imagesDir)) {
-      fs.mkdir(imagesDir, (err) => {
-        if (err) {
-          throw err;
-        }
-      });
-    }
 
     const clipData = this.readClipboard();
     if (clipData) {
@@ -142,7 +135,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
 
       case 'image':
         const image = nativeImage.createFromPath(
-          path.join(imagesDir, `${clipItem._id}.png`),
+          path.join(this.imagesDir, `${clipItem._id}.png`),
         );
 
         this.lastClipId = image.getBitmap().toString();
@@ -187,7 +180,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
           });
 
           await this.saveFile(
-            path.join(imagesDir, `${savedDoc._id}.png`),
+            path.join(this.imagesDir, `${savedDoc._id}.png`),
             clipData.data.toPNG(),
           );
 
@@ -200,10 +193,18 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
   };
 
   initialize = (args: PluginTypes.ProcessInitArgs): void => {
-    const {db} = args;
+    const {db, pluginSettingsDir} = args;
 
     if (!db) {
       throw `database instance not provided to clipboard plugin`;
+    }
+
+    this.imagesDir = path.resolve(
+      path.join(pluginSettingsDir, 'clipboardImages'),
+    );
+
+    if (!fs.existsSync(this.imagesDir)) {
+      fs.mkdirSync(this.imagesDir);
     }
 
     this.db = db;
@@ -268,6 +269,10 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
         }
 
         cb(undefined, result);
+        break;
+
+      case Messages.GetImagesDir:
+        cb(undefined, this.imagesDir);
         break;
 
       default:

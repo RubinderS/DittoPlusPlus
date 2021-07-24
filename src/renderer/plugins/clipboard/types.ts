@@ -44,4 +44,5 @@ export const Messages = {
   ClipItemSelected: 'ClipItemSelected',
   GetAllClipItems: 'GetAllClipItems',
   SearchClips: 'SearchClips',
+  GetImagesDir: 'GetImagesDir',
 };

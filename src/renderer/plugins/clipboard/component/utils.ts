@@ -1,4 +1,3 @@
-import * as path from 'path';
 import {ClipItemDoc} from '../types';
 
 export const dimensions = {
@@ -64,10 +63,6 @@ export const isAlphanumeric = (keyCode: number): boolean => {
 
   return false;
 };
-
-export const imagesDir = path.resolve(
-  path.join(process.env.DB_PATH, 'clipboardImages'),
-);
 
 export const shiftItemToFront = (
   clipItems: ClipItemDoc[],
