@@ -24,7 +24,10 @@
     "mac": {
       "target": "pkg",
       "category": "public.app-category.utilities",
-      "icon": "./src/resources/clipboard-svgrepo-com.png"
+      "icon": "./src/resources/clipboard-svgrepo-com.png",
+      "extendInfo": {
+        "LSUIElement": true
+      }
     },
     "win": {
       "target": "nsis",
