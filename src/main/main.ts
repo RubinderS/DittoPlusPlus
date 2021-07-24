@@ -109,7 +109,11 @@ function onReady() {
   createWindow();
   registerKeyboardShortcuts();
   app.whenReady().then(() => {
-    tray = new Tray(`src/resources/clipboard-svgrepo-com.png`);
+    tray = new Tray(
+      path.resolve(
+        path.join(__dirname, 'src', 'resources', 'clipboard-svgrepo-com.png'),
+      ),
+    );
 
     const contextMenu = Menu.buildFromTemplate([
       {
