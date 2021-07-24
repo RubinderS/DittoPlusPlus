@@ -1,7 +1,14 @@
 /**
  * Entry point of the Election app.
  */
-import {BrowserWindow, Menu, Tray, app, globalShortcut} from 'electron';
+import {
+  BrowserWindow,
+  Menu,
+  Tray,
+  app,
+  globalShortcut,
+  nativeImage,
+} from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as Datastore from 'nedb';
@@ -114,7 +121,9 @@ function onReady() {
   createWindow();
   registerKeyboardShortcuts();
   app.whenReady().then(() => {
-    tray = new Tray(iconPath);
+    tray = new Tray(
+      nativeImage.createFromPath(iconPath).resize({width: 16, height: 16}),
+    );
 
     const contextMenu = Menu.buildFromTemplate([
       {
@@ -135,7 +144,9 @@ function onReady() {
     ]);
 
     tray.on('click', () => {
-      toggleWindowVisibility();
+      if (process.platform !== 'darwin') {
+        toggleWindowVisibility();
+      }
     });
     tray.setToolTip('This is my application.');
     tray.setContextMenu(contextMenu);
