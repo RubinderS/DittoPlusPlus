@@ -219,7 +219,7 @@ export class ClipboardProcess extends PluginTypes.ProcessAbstract {
     setInterval(this.watchClipboard, 200);
   };
 
-  sendMessage = (
+  send = (
     type: string,
     msgData: any,
     cb: (error: any, response: any) => void = () => {

@@ -7,12 +7,14 @@ import {
   Tray,
   app,
   globalShortcut,
+  ipcMain,
   nativeImage,
 } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as Datastore from 'nedb';
 import '@resources/clipboard-svgrepo-com.png';
+import {GlobalEvents} from '@type/globalEvents';
 
 global.Datastore = Datastore;
 
@@ -89,6 +91,7 @@ function showWindow() {
   if (mainWindow) {
     mainWindow.show();
     isWindowShowing = true;
+    mainWindow.webContents.send(GlobalEvents.ShowWindow);
   }
 }
 
@@ -96,6 +99,7 @@ function hideWindow() {
   if (mainWindow) {
     mainWindow.hide();
     isWindowShowing = false;
+    mainWindow.webContents.send(GlobalEvents.HideWindow);
   }
 }
 
@@ -150,6 +154,14 @@ function onReady() {
     });
     tray.setToolTip('Ditto++');
     tray.setContextMenu(contextMenu);
+
+    ipcMain.on(GlobalEvents.ShowWindow, () => {
+      showWindow();
+    });
+
+    ipcMain.on(GlobalEvents.HideWindow, () => {
+      hideWindow();
+    });
   });
 }
 

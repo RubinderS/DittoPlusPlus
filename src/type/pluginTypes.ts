@@ -12,9 +12,9 @@ export interface RenderProps {
 }
 
 export class ProcessAbstract extends EventEmitter {
-  sendMessage: (
+  send: (
     type: string,
-    msgData: any,
+    msgData?: any,
     cb?: (error: any, response: any) => void,
   ) => void;
   initialize: (args: ProcessInitArgs) => void;
