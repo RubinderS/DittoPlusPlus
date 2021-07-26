@@ -43,6 +43,9 @@ const StyledClipItem = styled.div<Pick<Props, 'variant'>>`
   &:focus {
     outline: '0px solid transparent';
   }
+  &:hover {
+    background-color: ${(props) => props.theme.themeColor[200]};
+  }
 `;
 
 const StyledImage = styled.img`
