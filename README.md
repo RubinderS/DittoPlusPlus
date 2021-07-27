@@ -20,7 +20,9 @@ when any file in the renderer process is changed, the renderer process reload th
 
 when any file is changed including the main process and renderer process, the whole application will be compiled and started again
 
-- Run `npm run build:remote:main`
+- Run either of the following for dev and prod modes respectively:-
+  - `npm run build:dev:remote:main`
+  - `npm run build:prod:remote:main`
 
 ### Build in dev and prod modes
 
