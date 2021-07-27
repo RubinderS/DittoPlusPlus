@@ -21,10 +21,10 @@ global.Datastore = Datastore;
 let mainWindow: Electron.BrowserWindow | null;
 let tray = null;
 let isWindowShowing = true;
-let isQuiting = false;
+let isQuitting = false;
 
 const isDevelopment = process.env.NODE_ENV === 'development';
-const isDevserver = process.env.NODE_ENV === 'devserver';
+const isDevServer = process.env.NODE_ENV === 'devserver';
 
 const iconPath = path.resolve(
   path.join(__dirname, 'src', 'resources', 'clipboard-svgrepo-com.png'),
@@ -37,7 +37,7 @@ function createWindow(): void {
     width: 800,
     minWidth: 200,
     minHeight: 200,
-    frame: isDevelopment || isDevserver,
+    frame: isDevelopment || isDevServer,
     icon: iconPath, // icon for visible on taskbar
     skipTaskbar: true, // hide from taskbar for Windows
     webPreferences: {
@@ -50,7 +50,7 @@ function createWindow(): void {
   });
 
   // and load the index.html of the app.
-  if (isDevserver) {
+  if (isDevServer) {
     mainWindow.loadURL('http://localhost:5555/');
   } else {
     mainWindow.loadURL(
@@ -70,7 +70,7 @@ function createWindow(): void {
   });
 
   mainWindow.on('close', (event: any) => {
-    if (!isQuiting) {
+    if (!isQuitting) {
       event.preventDefault();
       hideWindow();
     }
@@ -144,7 +144,7 @@ function onReady() {
         label: 'Quit',
         type: 'normal',
         click: () => {
-          isQuiting = true;
+          isQuitting = true;
           app.quit();
         },
       },
@@ -187,7 +187,7 @@ app.on('window-all-closed', () => {
   // to stay active until the user quits explicitly with Cmd + Q
   unRegisterKeyboardShortcuts();
   if (process.platform !== 'darwin') {
-    isQuiting = true;
+    isQuitting = true;
     app.quit();
   }
 });
