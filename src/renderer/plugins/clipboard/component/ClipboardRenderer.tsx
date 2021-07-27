@@ -10,6 +10,8 @@ import 'simplebar/dist/simplebar.min.css';
 import {dimensions, isAlphanumeric} from './utils';
 import {ClipItem, ClipItemVariants} from './ClipItemRow';
 import styled from 'styled-components';
+import {GlobalEvents} from '@type/globalEvents';
+import {ipcRenderer} from 'electron';
 
 const StyledContainer = styled.div`
   display: flex;
@@ -37,15 +39,11 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   const clipsListRef = useRef<HTMLDivElement>(null);
 
   const resetClips = () => {
-    pluginProcess.sendMessage(
-      Messages.GetAllClipItems,
-      undefined,
-      (err, clips) => {
-        if (!err) {
-          updateClipItems([...clips]);
-        }
-      },
-    );
+    pluginProcess.send(Messages.GetAllClipItems, undefined, (err, clips) => {
+      if (!err) {
+        updateClipItems([...clips]);
+      }
+    });
   };
 
   const onKeyPress = (event: KeyboardEvent) => {
@@ -145,7 +143,15 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       updateClipItems([...clips]);
     });
 
-    pluginProcess.sendMessage(
+    ipcRenderer.on(GlobalEvents.ShowWindow, () => {
+      //
+    });
+
+    ipcRenderer.on(GlobalEvents.HideWindow, () => {
+      //
+    });
+
+    pluginProcess.send(
       Messages.GetImagesDir,
       undefined,
       (_err: any, _imagesDir: string) => {
@@ -155,7 +161,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
   }, []);
 
   const handleClipItemSelected = (item: ClipItemDoc) => {
-    pluginProcess.sendMessage(Messages.ClipItemSelected, item, (err, res) => {
+    pluginProcess.send(Messages.ClipItemSelected, item, (err, res) => {
       if (err) {
         throw err;
       }
@@ -166,6 +172,10 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     });
 
     handleSearchUpdate('');
+
+    setImmediate(() => {
+      ipcRenderer.send(GlobalEvents.HideWindow);
+    });
   };
 
   const onClickClipItem = (item: ClipItemDoc) => {
@@ -181,7 +191,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
       searchBarRef.current && searchBarRef.current.blur();
       resetClips();
     } else {
-      pluginProcess.sendMessage(Messages.SearchClips, text, (err, clips) => {
+      pluginProcess.send(Messages.SearchClips, text, (err, clips) => {
         if (err) {
           throw err;
         }

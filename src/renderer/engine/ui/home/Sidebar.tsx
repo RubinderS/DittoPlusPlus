@@ -13,18 +13,19 @@ const StyledSideBar = styled.div`
   background-color: ${(props) => props.theme.themeColor[400]};
 `;
 
-const StyledPluginIcon = styled.div`
+const StyledPluginIcon = styled.div<{selected: boolean}>`
   display: flex;
   align-items: center;
   justify-content: center;
   max-width: 100%;
   height: 50px;
   width: 100%;
-  color: ${(props) => props.theme.themeColor[100]};
+  color: ${(props) =>
+    props.selected ? props.theme.themeColor[50] : props.theme.themeColor[200]};
 `;
 
 export const Sidebar = (props: Props) => {
-  const {activePlugins} = props;
+  const {activePlugins, selectedIndex} = props;
 
   return (
     <StyledSideBar>
@@ -33,7 +34,8 @@ export const Sidebar = (props: Props) => {
 
         return (
           <StyledPluginIcon
-            key={`${index}_sidebar_${plugin.name.toLowerCase()}`}
+            key={`sidebar_${plugin.name.toLowerCase()}`}
+            selected={selectedIndex === index}
           >
             <SideIcon />
           </StyledPluginIcon>

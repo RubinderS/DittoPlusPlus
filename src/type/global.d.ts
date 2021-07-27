@@ -1,9 +1,6 @@
-import * as Datastore from 'nedb';
+/* eslint-disable no-var */
+import * as _Datastore from 'nedb';
 
 declare global {
-  namespace NodeJS {
-    interface Global {
-      Datastore: typeof Datastore;
-    }
-  }
+  var Datastore: typeof _Datastore;
 }
