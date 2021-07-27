@@ -184,10 +184,6 @@ if (process.platform === 'darwin') {
   app.dock.hide();
 }
 
-/**
- * https://stackoverflow.com/questions/59668664/how-to-avoid-showing-a-dock-icon-while-my-electron-app-is-launching-on-macos
- */
-
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   // On OS X it is common for applications and their menu bar
