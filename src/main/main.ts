@@ -134,10 +134,10 @@ function onReady() {
 
     const contextMenu = Menu.buildFromTemplate([
       {
-        label: 'Open',
+        label: 'Show/Hide',
         type: 'normal',
         click: () => {
-          showWindow();
+          toggleWindowVisibility();
         },
       },
       {
