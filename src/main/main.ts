@@ -98,6 +98,9 @@ function showWindow() {
 function hideWindow() {
   if (mainWindow) {
     mainWindow.hide();
+    if (process.platform == 'darwin') {
+      app.hide();
+    }
     isWindowShowing = false;
     mainWindow.webContents.send(GlobalEvents.HideWindow);
   }
