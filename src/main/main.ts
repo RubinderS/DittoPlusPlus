@@ -31,6 +31,27 @@ const iconPath = path.resolve(
   path.join(__dirname, 'src', 'resources', 'clipboard-svgrepo-com.png'),
 );
 
+function showWindow() {
+  if (mainWindow) {
+    const {x, y} = screen.getCursorScreenPoint();
+    mainWindow.setPosition(x, y);
+    mainWindow.show();
+    isWindowShowing = true;
+    mainWindow.webContents.send(GlobalEvents.ShowWindow);
+  }
+}
+
+function hideWindow() {
+  if (mainWindow) {
+    mainWindow.hide();
+    if (process.platform == 'darwin') {
+      app.hide();
+    }
+    isWindowShowing = false;
+    mainWindow.webContents.send(GlobalEvents.HideWindow);
+  }
+}
+
 function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -86,27 +107,10 @@ function createWindow(): void {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-}
 
-function showWindow() {
-  if (mainWindow) {
-    const {x, y} = screen.getCursorScreenPoint();
-    mainWindow.setPosition(x, y);
-    mainWindow.show();
-    isWindowShowing = true;
-    mainWindow.webContents.send(GlobalEvents.ShowWindow);
-  }
-}
-
-function hideWindow() {
-  if (mainWindow) {
-    mainWindow.hide();
-    if (process.platform == 'darwin') {
-      app.hide();
-    }
-    isWindowShowing = false;
-    mainWindow.webContents.send(GlobalEvents.HideWindow);
-  }
+  mainWindow.on('blur', () => {
+    hideWindow();
+  });
 }
 
 function toggleWindowVisibility() {
