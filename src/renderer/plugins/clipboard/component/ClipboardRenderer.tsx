@@ -46,6 +46,12 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     });
   };
 
+  const hideWindow = () => {
+    setImmediate(() => {
+      ipcRenderer.send(GlobalEvents.HideWindow);
+    });
+  };
+
   const onKeyPress = (event: KeyboardEvent) => {
     const {keyCode} = event;
 
@@ -113,6 +119,8 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     if (keyCode === 27) {
       if (searchText) {
         resetClips();
+      } else {
+        hideWindow();
       }
 
       handleSearchUpdate('');
@@ -172,10 +180,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     });
 
     handleSearchUpdate('');
-
-    setImmediate(() => {
-      ipcRenderer.send(GlobalEvents.HideWindow);
-    });
+    hideWindow();
   };
 
   const onClickClipItem = (item: ClipItemDoc) => {
