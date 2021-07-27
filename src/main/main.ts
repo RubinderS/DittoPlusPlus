@@ -9,6 +9,7 @@ import {
   globalShortcut,
   ipcMain,
   nativeImage,
+  screen,
 } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
@@ -89,6 +90,8 @@ function createWindow(): void {
 
 function showWindow() {
   if (mainWindow) {
+    const {x, y} = screen.getCursorScreenPoint();
+    mainWindow.setPosition(x, y);
     mainWindow.show();
     isWindowShowing = true;
     mainWindow.webContents.send(GlobalEvents.ShowWindow);
