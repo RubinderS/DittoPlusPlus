@@ -10,6 +10,7 @@ interface Props {
 const StyledSideBar = styled.div`
   min-width: 40px;
   width: 40px;
+  -webkit-app-region: drag;
   background-color: ${(props) => props.theme.themeColor[400]};
 `;
 
