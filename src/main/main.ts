@@ -9,6 +9,7 @@ import {
   globalShortcut,
   ipcMain,
   nativeImage,
+  screen,
 } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
@@ -29,6 +30,35 @@ const isDevServer = process.env.NODE_ENV === 'devserver';
 const iconPath = path.resolve(
   path.join(__dirname, 'src', 'resources', 'clipboard-svgrepo-com.png'),
 );
+
+function showWindow() {
+  if (mainWindow) {
+    const {x, y} = screen.getCursorScreenPoint();
+    mainWindow.setPosition(x, y);
+
+    // workaround to show the application on current display
+    mainWindow.setVisibleOnAllWorkspaces(true); // put the window on all screens
+    mainWindow.focus(); // focus the window up front on the active screen
+    mainWindow.setVisibleOnAllWorkspaces(false); // disable all screen behavior
+
+    mainWindow.show();
+    isWindowShowing = true;
+    mainWindow.webContents.send(GlobalEvents.ShowWindow);
+  }
+}
+
+function hideWindow() {
+  if (mainWindow) {
+    mainWindow.hide();
+
+    if (process.platform == 'darwin') {
+      app.hide();
+    }
+
+    isWindowShowing = false;
+    mainWindow.webContents.send(GlobalEvents.HideWindow);
+  }
+}
 
 function createWindow(): void {
   // Create the browser window.
@@ -85,25 +115,10 @@ function createWindow(): void {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-}
 
-function showWindow() {
-  if (mainWindow) {
-    mainWindow.show();
-    isWindowShowing = true;
-    mainWindow.webContents.send(GlobalEvents.ShowWindow);
-  }
-}
-
-function hideWindow() {
-  if (mainWindow) {
-    mainWindow.hide();
-    if (process.platform == 'darwin') {
-      app.hide();
-    }
-    isWindowShowing = false;
-    mainWindow.webContents.send(GlobalEvents.HideWindow);
-  }
+  mainWindow.on('blur', () => {
+    hideWindow();
+  });
 }
 
 function toggleWindowVisibility() {
@@ -176,10 +191,6 @@ app.on('ready', onReady);
 if (process.platform === 'darwin') {
   app.dock.hide();
 }
-
-/**
- * https://stackoverflow.com/questions/59668664/how-to-avoid-showing-a-dock-icon-while-my-electron-app-is-launching-on-macos
- */
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {

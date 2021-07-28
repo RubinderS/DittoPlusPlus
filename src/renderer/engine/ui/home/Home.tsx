@@ -25,6 +25,7 @@ const StyledHeader = styled.div`
   padding-left: 5px;
   width: calc(100% - 5px);
   height: calc(${HeaderHeightPx}px - 3px);
+  -webkit-app-region: drag; // currently only works in prod mode
   color: ${(props) => props.theme.themeColor[100]};
   background-color: ${(props) => props.theme.themeColor[400]};
 `;
