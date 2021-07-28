@@ -35,6 +35,12 @@ function showWindow() {
   if (mainWindow) {
     const {x, y} = screen.getCursorScreenPoint();
     mainWindow.setPosition(x, y);
+
+    // workaround to show the application on current display
+    mainWindow.setVisibleOnAllWorkspaces(true); // put the window on all screens
+    mainWindow.focus(); // focus the window up front on the active screen
+    mainWindow.setVisibleOnAllWorkspaces(false); // disable all screen behavior
+
     mainWindow.show();
     isWindowShowing = true;
     mainWindow.webContents.send(GlobalEvents.ShowWindow);
