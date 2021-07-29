@@ -117,7 +117,9 @@ function createWindow(): void {
   });
 
   mainWindow.on('blur', () => {
-    hideWindow();
+    if (process.env.NODE_ENV === 'production') {
+      hideWindow();
+    }
   });
 }
 
