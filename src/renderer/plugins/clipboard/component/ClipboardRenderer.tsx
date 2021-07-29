@@ -236,6 +236,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
             key={`${index}_clipItem`}
             clipItem={item}
             imagesDir={imagesDir}
+            searchText={searchText}
             variant={getClipItemVariant(index)}
             onClick={() => onClickClipItem(item)}
           />

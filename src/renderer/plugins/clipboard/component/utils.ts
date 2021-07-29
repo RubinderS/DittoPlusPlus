@@ -76,3 +76,7 @@ export const shiftItemToFront = (
 
   return shiftedItems;
 };
+
+export const escapeRegExp = (s: string) => {
+  return s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+};

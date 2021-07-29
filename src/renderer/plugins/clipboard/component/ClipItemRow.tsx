@@ -3,12 +3,14 @@ import {ClipItemDoc} from '../types';
 import {dimensions} from './utils';
 import * as path from 'path';
 import styled, {DefaultTheme} from 'styled-components';
+import {TextItem} from './TextItem';
 
 interface Props {
   clipItem: ClipItemDoc;
   variant: ClipItemVariants;
   onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   imagesDir: string;
+  searchText: string;
 }
 
 export type ClipItemVariants = 'light' | 'dark' | 'selected';
@@ -53,12 +55,12 @@ const StyledImage = styled.img`
 `;
 
 export const ClipItem = (props: Props) => {
-  const {clipItem, onClick, imagesDir} = props;
+  const {clipItem, onClick, imagesDir, searchText} = props;
 
   const renderClipItem = (clipItem: ClipItemDoc): React.ReactNode => {
     switch (clipItem.type) {
       case 'text':
-        return clipItem.text;
+        return <TextItem searchText={searchText} text={clipItem.text} />;
 
       case 'image':
         return (
