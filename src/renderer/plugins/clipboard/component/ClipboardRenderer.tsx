@@ -156,7 +156,7 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     });
 
     ipcRenderer.on(GlobalEvents.HideWindow, () => {
-      //
+      handleSearchUpdate('');
     });
 
     pluginProcess.send(
