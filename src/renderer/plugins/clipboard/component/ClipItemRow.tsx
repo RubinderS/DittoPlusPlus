@@ -55,6 +55,10 @@ const StyledImage = styled.img`
   height: ${clipItemDimensions.heightPx}px;
 `;
 
+const StyledHighlightedSpan = styled.span`
+  background-color: rgba(0, 0, 0, 0.1);
+`;
+
 const TextItem = (props: {text: string; searchText: string}) => {
   const {text, searchText} = props;
 
@@ -62,14 +66,48 @@ const TextItem = (props: {text: string; searchText: string}) => {
     return <p>{text}</p>;
   }
 
-  const html = `<p>${text.replace(
-    new RegExp(escapeRegExp(searchText), 'gim'),
-    (match) => {
-      return `<span style="background-color: rgba(0, 0, 0, 0.1);">${match}</span>`;
-    },
-  )}</p>`;
+  const regex = new RegExp(escapeRegExp(searchText), 'gim');
+  const textChunks: {chunk: string; isHighlighted: boolean}[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
 
-  return <div>{ReactHtmlParser(html)}</div>;
+  while ((match = regex.exec(text))) {
+    if (match) {
+      const startIndex = match.index;
+      const endIndex = match.index + match[0].length;
+
+      textChunks.push({
+        chunk: text.slice(lastIndex, startIndex),
+        isHighlighted: false,
+      });
+
+      textChunks.push({
+        chunk: text.slice(startIndex, endIndex),
+        isHighlighted: true,
+      });
+
+      lastIndex = endIndex;
+    }
+  }
+
+  textChunks.push({
+    chunk: text.slice(lastIndex),
+    isHighlighted: false,
+  });
+
+  return (
+    <p>
+      {textChunks.map((textChunk) => {
+        const {chunk, isHighlighted} = textChunk;
+
+        if (isHighlighted) {
+          return <StyledHighlightedSpan>{chunk}</StyledHighlightedSpan>;
+        } else {
+          return <span>{chunk}</span>;
+        }
+      })}
+    </p>
+  );
 };
 
 export const ClipItem = (props: Props) => {
