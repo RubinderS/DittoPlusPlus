@@ -49,9 +49,7 @@ export const TextItem = (props: Props) => {
 
   return (
     <p>
-      {textChunks.map((textChunk) => {
-        const {chunk, isHighlighted} = textChunk;
-
+      {textChunks.map(({chunk, isHighlighted}) => {
         if (isHighlighted) {
           return <StyledHighlightedSpan>{chunk}</StyledHighlightedSpan>;
         } else {
