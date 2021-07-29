@@ -3,12 +3,15 @@ import {ClipItemDoc} from '../types';
 import {dimensions} from './utils';
 import * as path from 'path';
 import styled, {DefaultTheme} from 'styled-components';
+import {escapeRegExp} from 'lodash';
+import ReactHtmlParser from 'react-html-parser';
 
 interface Props {
   clipItem: ClipItemDoc;
   variant: ClipItemVariants;
   onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   imagesDir: string;
+  searchText: string;
 }
 
 export type ClipItemVariants = 'light' | 'dark' | 'selected';
@@ -52,13 +55,30 @@ const StyledImage = styled.img`
   height: ${clipItemDimensions.heightPx}px;
 `;
 
+const TextItem = (props: {text: string; searchText: string}) => {
+  const {text, searchText} = props;
+
+  if (!searchText) {
+    return <p>{text}</p>;
+  }
+
+  const html = `<p>${text.replace(
+    new RegExp(escapeRegExp(searchText), 'gim'),
+    (match) => {
+      return `<span style="background-color: rgba(0, 0, 0, 0.1);">${match}</span>`;
+    },
+  )}</p>`;
+
+  return <div>{ReactHtmlParser(html)}</div>;
+};
+
 export const ClipItem = (props: Props) => {
-  const {clipItem, onClick, imagesDir} = props;
+  const {clipItem, onClick, imagesDir, searchText} = props;
 
   const renderClipItem = (clipItem: ClipItemDoc): React.ReactNode => {
     switch (clipItem.type) {
       case 'text':
-        return clipItem.text;
+        return <TextItem searchText={searchText} text={clipItem.text} />;
 
       case 'image':
         return (
