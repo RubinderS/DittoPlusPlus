@@ -49,7 +49,10 @@ function showWindow() {
 
 function hideWindow() {
   if (mainWindow) {
-    mainWindow.minimize();
+    if (process.platform === 'win32') {
+      mainWindow.minimize();
+    }
+
     mainWindow.hide();
 
     if (process.platform === 'darwin') {
