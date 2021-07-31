@@ -24,6 +24,7 @@ let tray = null;
 let isWindowShowing = true;
 let isQuitting = false;
 
+const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isDevServer = process.env.NODE_ENV === 'devserver';
 
@@ -75,7 +76,7 @@ function createWindow(): void {
     icon: iconPath, // icon for visible on taskbar
     webPreferences: {
       webSecurity: false,
-      devTools: process.env.NODE_ENV === 'production' ? false : true,
+      devTools: isProduction ? false : true,
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
@@ -122,7 +123,7 @@ function createWindow(): void {
   });
 
   mainWindow.on('blur', () => {
-    if (process.env.NODE_ENV === 'production') {
+    if (isProduction) {
       hideWindow();
     }
   });
