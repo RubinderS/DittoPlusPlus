@@ -49,6 +49,7 @@ function showWindow() {
 
 function hideWindow() {
   if (mainWindow) {
+    mainWindow.minimize();
     mainWindow.hide();
 
     if (process.platform === 'darwin') {
