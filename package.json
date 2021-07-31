@@ -1,6 +1,6 @@
 {
   "name": "dittoplusplus",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "DittoPlusPlus",
   "main": "./dist/main.bundle.js",
   "scripts": {
@@ -17,8 +17,9 @@
     "test": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.ts\""
   },
   "build": {
-    "appId": "dittoplusplus",
-    "productName": "DittoPlusPlus",
+    "appId": "rubinders.dittoplusplus",
+    "productName": "Ditto++",
+    "artifactName": "Ditto++ v${version}.${ext}",
     "directories": {
       "app": "./dist/",
       "output": "./out/"
