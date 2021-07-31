@@ -69,7 +69,6 @@ function createWindow(): void {
     minHeight: 200,
     frame: isDevelopment || isDevServer,
     icon: iconPath, // icon for visible on taskbar
-    skipTaskbar: true, // hide from taskbar for Windows
     webPreferences: {
       webSecurity: false,
       devTools: process.env.NODE_ENV === 'production' ? false : true,
@@ -78,6 +77,8 @@ function createWindow(): void {
       enableRemoteModule: true,
     },
   });
+
+  mainWindow.setSkipTaskbar(true);
 
   // and load the index.html of the app.
   if (isDevServer) {
