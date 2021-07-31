@@ -13,6 +13,7 @@
     "build:remote:renderer": "cross-env NODE_ENV=devserver npm run build && webpack-dev-server",
     "pkg:win": "rimraf out && npm run build:prod && electron-builder build --win --x64",
     "pkg:mac": "rimraf out && npm run build:prod && electron-builder build --mac --x64",
+    "pkg:linux": "rimraf out && npm run build:prod && electron-builder build --linux --x64",
     "test": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.ts\""
   },
   "build": {
