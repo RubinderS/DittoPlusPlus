@@ -174,8 +174,11 @@ function onReady() {
         toggleWindowVisibility();
       }
     });
+
     tray.setToolTip('Ditto++');
     tray.setContextMenu(contextMenu);
+
+    app.setLoginItemSettings({openAtLogin: true, openAsHidden: true});
 
     ipcMain.on(GlobalEvents.ShowWindow, () => {
       showWindow();
