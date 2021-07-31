@@ -152,11 +152,11 @@ export const ClipboardRenderer = (props: PluginTypes.RenderProps) => {
     });
 
     ipcRenderer.on(GlobalEvents.ShowWindow, () => {
-    if(process.platform === 'linux') {
-      setImmediate(() => {
-        searchBarRef.current && searchBarRef.current.blur();
-       });
-    }
+      if (process.platform === 'linux') {
+        setImmediate(() => {
+          searchBarRef.current && searchBarRef.current.blur();
+        });
+      }
     });
 
     ipcRenderer.on(GlobalEvents.HideWindow, () => {
