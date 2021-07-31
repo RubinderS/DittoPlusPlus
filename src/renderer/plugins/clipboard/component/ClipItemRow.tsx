@@ -1,4 +1,4 @@
-import * as React from 'React';
+import * as React from 'react';
 import {ClipItemDoc} from '../types';
 import {dimensions} from './utils';
 import * as path from 'path';

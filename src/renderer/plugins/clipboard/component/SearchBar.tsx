@@ -1,4 +1,4 @@
-import * as React from 'React';
+import * as React from 'react';
 import {dimensions} from './utils';
 import styled from 'styled-components';
 
