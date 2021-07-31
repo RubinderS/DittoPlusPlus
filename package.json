@@ -25,7 +25,7 @@
       "output": "./out/"
     },
     "mac": {
-      "target": "pkg",
+      "target": "dmg",
       "category": "public.app-category.utilities",
       "icon": "./src/resources/clipboard-svgrepo-com.png",
       "extendInfo": {
@@ -36,6 +36,27 @@
       "target": "nsis",
       "asar": false,
       "icon": "./src/resources/clipboard-svgrepo-com.png"
+    },
+    "dmg": {
+      "icon": "./src/resources/clipboard-svgrepo-com.png",
+      "background": null,
+      "backgroundColor": "#ffffff",
+      "window": {
+        "width": "400",
+        "height": "300"
+      },
+      "contents": [
+        {
+          "x": 100,
+          "y": 100
+        },
+        {
+          "x": 300,
+          "y": 100,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
     },
     "buildVersion": "1.0.0"
   },
