@@ -17,6 +17,8 @@ import * as Datastore from 'nedb';
 import '@resources/clipboard-svgrepo-com.png';
 import {GlobalEvents} from '@type/globalEvents';
 
+const exeName = path.basename(process.execPath);
+
 global.Datastore = Datastore;
 
 let mainWindow: Electron.BrowserWindow | null;
@@ -24,6 +26,7 @@ let tray = null;
 let isWindowShowing = true;
 let isQuitting = false;
 
+const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isDevServer = process.env.NODE_ENV === 'devserver';
 
@@ -49,6 +52,10 @@ function showWindow() {
 
 function hideWindow() {
   if (mainWindow) {
+    if (process.platform === 'win32') {
+      mainWindow.minimize();
+    }
+
     mainWindow.hide();
 
     if (process.platform === 'darwin') {
@@ -71,7 +78,7 @@ function createWindow(): void {
     icon: iconPath, // icon for visible on taskbar
     webPreferences: {
       webSecurity: false,
-      devTools: process.env.NODE_ENV === 'production' ? false : true,
+      devTools: isProduction ? false : true,
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
@@ -118,7 +125,7 @@ function createWindow(): void {
   });
 
   mainWindow.on('blur', () => {
-    if (process.env.NODE_ENV === 'production') {
+    if (isProduction) {
       hideWindow();
     }
   });
@@ -177,7 +184,18 @@ function onReady() {
     tray.setToolTip('Ditto++');
     tray.setContextMenu(contextMenu);
 
-    app.setLoginItemSettings({openAtLogin: true, openAsHidden: true});
+    if (process.env.IS_Packaged) {
+      app.setLoginItemSettings({
+        openAtLogin: true,
+        openAsHidden: true,
+        args: [
+          '--processStart',
+          `"${exeName}"`,
+          '--process-start-args',
+          `"--hidden"`,
+        ],
+      });
+    }
 
     ipcMain.on(GlobalEvents.ShowWindow, () => {
       showWindow();

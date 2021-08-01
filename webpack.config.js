@@ -80,6 +80,7 @@ mainConfig.plugins = [
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       Settings_Dir: JSON.stringify(settingsDir),
+      IS_Packaged: JSON.stringify(process.env.IS_Packaged) ? true : false,
     },
   }),
 ];
@@ -96,6 +97,7 @@ rendererConfig.plugins = [
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       Settings_Dir: JSON.stringify(settingsDir),
+      IS_Packaged: JSON.stringify(process.env.IS_Packaged) ? true : false,
     },
   }),
 ];

@@ -2,19 +2,88 @@
   "name": "dittoplusplus",
   "version": "1.0.0",
   "description": "DittoPlusPlus",
+  "keywords": [],
+  "homepage": "https://github.com/Rubinder25/DittoPlusPlus#readme",
+  "bugs": {
+    "url": "https://github.com/Rubinder25/DittoPlusPlus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rubinder25/DittoPlusPlus"
+  },
+  "license": "MIT",
+  "author": "Rubinder Singh",
   "main": "./dist/main.bundle.js",
   "scripts": {
     "start": "electron ./dist/main.bundle.js",
     "build": "eslint ./src/**/*.ts && rimraf dist && webpack --progress --colors",
     "build:dev": "cross-env NODE_ENV=development npm run build",
     "build:prod": "cross-env NODE_ENV=production npm run build",
-    "build:remote:dev:main": "nodemon -e ts,tsx -w ./src --exec \"npm run build:dev && npm start\"",
-    "build:remote:prod:main": "nodemon -e ts,tsx -w ./src --exec \"npm run build:prod && npm start\"",
+    "build:remote:dev:main": "nodemon -e ts,tsx -w ./src --exec npm run build:dev && npm start",
+    "build:remote:prod:main": "nodemon -e ts,tsx -w ./src --exec npm run build:prod && npm start",
     "build:remote:renderer": "cross-env NODE_ENV=devserver npm run build && webpack-dev-server",
-    "pkg:win": "rimraf out && npm run build:prod && electron-builder build --win --x64",
-    "pkg:mac": "rimraf out && npm run build:prod && electron-builder build --mac --x64",
-    "pkg:linux": "rimraf out && npm run build:prod && electron-builder build --linux --x64",
+    "pkg": "cross-env IS_Packaged=true NODE_ENV=production npm run build",
+    "pkg:win": "npm run pkg && electron-builder build --win --x64",
+    "pkg:mac": "npm run pkg && electron-builder build --mac --x64",
+    "pkg:linux": "npm run pkg && electron-builder build --linux --x64",
     "test": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.ts\""
+  },
+  "resolutions": {
+    "styled-components": "5"
+  },
+  "dependencies": {
+    "@use-it/event-listener": "0.1.6",
+    "material-colors-ts": "1.0.4",
+    "nedb": "1.8.0",
+    "react": "16.12.0",
+    "react-dom": "16.12.0",
+    "react-icons": "4.2.0",
+    "simplebar-react": "2.3.0",
+    "styled-components": "5.3.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "4.14.165",
+    "@types/mocha": "5.2.7",
+    "@types/nedb": "1.8.10",
+    "@types/node": "14.17.6",
+    "@types/react": "16.9.13",
+    "@types/react-dom": "16.9.4",
+    "@types/react-icons": "3.0.0",
+    "@types/react-router": "4.4.5",
+    "@types/react-router-dom": "4.3.5",
+    "@types/styled-components": "5.1.10",
+    "@typescript-eslint/eslint-plugin": "4.8.2",
+    "@typescript-eslint/parser": "4.8.2",
+    "acorn": "6.4.1",
+    "ajv": "6.10.2",
+    "copy-pkg-json-webpack-plugin": "0.0.38",
+    "cross-env": "5.2.1",
+    "css-loader": "1.0.1",
+    "electron": "13.1.7",
+    "electron-builder": "22.11.7",
+    "eslint": "7.14.0",
+    "eslint-config-prettier": "6.15.0",
+    "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-react": "7.21.5",
+    "file-loader": "2.0.0",
+    "html-webpack-plugin": "3.2.0",
+    "lodash": "4.17.20",
+    "mocha": "5.2.0",
+    "nodemon": "2.0.4",
+    "prettier": "2.2.0",
+    "rimraf": "2.7.1",
+    "source-map-loader": "0.2.4",
+    "style-loader": "0.23.1",
+    "ts-loader": "5.4.5",
+    "ts-node": "7.0.1",
+    "tsconfig-paths": "3.9.0",
+    "tsconfig-paths-webpack-plugin": "3.3.0",
+    "tslint": "5.20.1",
+    "tslint-microsoft-contrib": "5.2.1",
+    "typescript": "3.7.2",
+    "webpack": "4.41.2",
+    "webpack-cli": "3.3.10",
+    "webpack-dev-server": "3.11.0"
   },
   "build": {
     "appId": "rubinders.dittoplusplus",
@@ -25,7 +94,7 @@
       "output": "./out/"
     },
     "mac": {
-      "target": "pkg",
+      "target": "dmg",
       "category": "public.app-category.utilities",
       "icon": "./src/resources/clipboard-svgrepo-com.png",
       "extendInfo": {
@@ -37,74 +106,27 @@
       "asar": false,
       "icon": "./src/resources/clipboard-svgrepo-com.png"
     },
+    "dmg": {
+      "icon": "./src/resources/clipboard-svgrepo-com.png",
+      "background": null,
+      "backgroundColor": "#ffffff",
+      "window": {
+        "width": "400",
+        "height": "300"
+      },
+      "contents": [
+        {
+          "x": 100,
+          "y": 100
+        },
+        {
+          "x": 300,
+          "y": 100,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
     "buildVersion": "1.0.0"
-  },
-  "author": "Rubinder Singh",
-  "license": "MIT",
-  "dependencies": {
-    "@types/react-icons": "^3.0.0",
-    "@use-it/event-listener": "^0.1.6",
-    "material-colors-ts": "^1.0.4",
-    "nedb": "^1.8.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-icons": "^4.2.0",
-    "simplebar-react": "^2.3.0",
-    "styled-components": "^5.3.0"
-  },
-  "devDependencies": {
-    "@types/lodash": "^4.14.165",
-    "@types/mocha": "^5.2.7",
-    "@types/nedb": "^1.8.10",
-    "@types/react": "^16.9.13",
-    "@types/react-dom": "^16.9.4",
-    "@types/react-router": "^4.4.5",
-    "@types/react-router-dom": "^4.3.5",
-    "@types/styled-components": "^5.1.10",
-    "@typescript-eslint/eslint-plugin": "^4.8.2",
-    "@typescript-eslint/parser": "^4.8.2",
-    "acorn": "^6.4.1",
-    "ajv": "^6.10.2",
-    "copy-pkg-json-webpack-plugin": "0.0.38",
-    "cross-env": "^5.2.1",
-    "css-loader": "^1.0.1",
-    "electron": "^12.0.8",
-    "electron-builder": "^22.11.7",
-    "eslint": "^7.14.0",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-react": "^7.21.5",
-    "file-loader": "^2.0.0",
-    "html-webpack-plugin": "^3.2.0",
-    "lodash": "^4.17.20",
-    "mocha": "^5.2.0",
-    "nodemon": "^2.0.4",
-    "prettier": "^2.2.0",
-    "rimraf": "^2.7.1",
-    "source-map-loader": "^0.2.4",
-    "spectron": "^5.0.0",
-    "style-loader": "^0.23.1",
-    "ts-loader": "^5.4.5",
-    "ts-node": "^7.0.1",
-    "tsconfig-paths": "^3.9.0",
-    "tsconfig-paths-webpack-plugin": "^3.3.0",
-    "tslint": "^5.20.1",
-    "tslint-microsoft-contrib": "^5.2.1",
-    "typescript": "^3.7.2",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.11.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Rubinder25/DittoPlusPlus"
-  },
-  "keywords": [],
-  "bugs": {
-    "url": "https://github.com/Rubinder25/DittoPlusPlus/issues"
-  },
-  "homepage": "https://github.com/Rubinder25/DittoPlusPlus#readme",
-  "resolutions": {
-    "styled-components": "^5"
   }
 }
