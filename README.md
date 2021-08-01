@@ -23,7 +23,7 @@ Cross platform clipboard manager inspired by Ditto for windows
 alt="screenshot"
 width="500px" />
 
-### Highlights the searched items
+### Search highlight
 
 <img src="screenshots/2021-08-01-15-14-03.png"
      alt="screenshot"
