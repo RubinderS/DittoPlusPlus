@@ -28,7 +28,7 @@ jobs:
         run: npm i
   
       - name: build:win
-        run: npm run pkg:win
+        run: npm run pkg:mac
        
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.2.4
