@@ -16,7 +16,7 @@
   "main": "./dist/main.bundle.js",
   "scripts": {
     "start": "electron ./dist/main.bundle.js",
-    "build": "eslint ./src/**/*.ts && rimraf dist && webpack --progress --colors",
+    "build": "eslint ./src/**/*.ts && rimraf dist && webpack --progress --color",
     "build:dev": "cross-env NODE_ENV=development npm run build",
     "build:prod": "cross-env NODE_ENV=production npm run build",
     "build:remote:dev:main": "nodemon -e ts,tsx -w ./src --exec npm run build:dev && npm start",
@@ -56,7 +56,7 @@
     "@typescript-eslint/parser": "4.8.2",
     "acorn": "6.4.1",
     "ajv": "6.10.2",
-    "copy-pkg-json-webpack-plugin": "0.0.38",
+    "copy-pkg-json-webpack-plugin": "0.0.40",
     "cross-env": "5.2.1",
     "css-loader": "1.0.1",
     "electron": "13.1.7",
@@ -66,10 +66,10 @@
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-react": "7.21.5",
     "file-loader": "2.0.0",
-    "html-webpack-plugin": "3.2.0",
+    "html-webpack-plugin": "5.3.2",
     "lodash": "4.17.20",
     "mocha": "5.2.0",
-    "nan": "^2.14.2",
+    "nan": "2.14.2",
     "nodemon": "2.0.4",
     "prettier": "2.2.0",
     "rimraf": "2.7.1",
@@ -82,9 +82,9 @@
     "tslint": "5.20.1",
     "tslint-microsoft-contrib": "5.2.1",
     "typescript": "3.7.2",
-    "webpack": "4.41.2",
-    "webpack-cli": "3.3.10",
-    "webpack-dev-server": "3.11.0"
+    "webpack": "5.47.1",
+    "webpack-cli": "4.7.2",
+    "webpack-dev-server": "3.11.2"
   },
   "build": {
     "appId": "rubinders.dittoplusplus",
