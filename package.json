@@ -22,9 +22,10 @@
     "build:remote:dev:main": "nodemon -e ts,tsx -w ./src --exec \"npm run build:dev && npm start\"",
     "build:remote:prod:main": "nodemon -e ts,tsx -w ./src --exec \"npm run build:prod && npm start\"",
     "build:remote:renderer": "cross-env NODE_ENV=devserver npm run build && webpack-dev-server",
-    "pkg:win": "rimraf out && npm run build:prod && electron-builder build --win --x64",
-    "pkg:mac": "rimraf out && npm run build:prod && electron-builder build --mac --x64",
-    "pkg:linux": "rimraf out && npm run build:prod && electron-builder build --linux --x64",
+    "pkg": "cross-env IS_Packaged=true NODE_ENV=production \"rimraf out && npm run build\"",
+    "pkg:win": "npm run pkg && electron-builder build --win --x64",
+    "pkg:mac": "npm run pkg && electron-builder build --mac --x64",
+    "pkg:linux": "npm run pkg && electron-builder build --linux --x64",
     "test": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.ts\""
   },
   "resolutions": {

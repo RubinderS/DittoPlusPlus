@@ -17,6 +17,8 @@ import * as Datastore from 'nedb';
 import '@resources/clipboard-svgrepo-com.png';
 import {GlobalEvents} from '@type/globalEvents';
 
+const exeName = path.basename(process.execPath);
+
 global.Datastore = Datastore;
 
 let mainWindow: Electron.BrowserWindow | null;
@@ -182,7 +184,18 @@ function onReady() {
     tray.setToolTip('Ditto++');
     tray.setContextMenu(contextMenu);
 
-    app.setLoginItemSettings({openAtLogin: true, openAsHidden: true});
+    if (process.env.IS_Packaged) {
+      app.setLoginItemSettings({
+        openAtLogin: true,
+        openAsHidden: true,
+        args: [
+          '--processStart',
+          `"${exeName}"`,
+          '--process-start-args',
+          `"--hidden"`,
+        ],
+      });
+    }
 
     ipcMain.on(GlobalEvents.ShowWindow, () => {
       showWindow();
