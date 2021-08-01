@@ -7,6 +7,10 @@
 
 Cross platform clipboard manager inspired by Ditto for windows
 
+<img src="screenshots/2021-08-01-21-25-02.png"
+     alt="screenshot"
+     width="700px" />
+
 ## How to use
 
 - The application lives in system tray
@@ -18,11 +22,11 @@ Cross platform clipboard manager inspired by Ditto for windows
 ## Features
 
 <img src="screenshots/2021-08-01-15-13-11.png"
-alt="ss1"
+alt="screenshot"
 width="500px" />
 
 ### highlights the searched items
 
 <img src="screenshots/2021-08-01-15-14-03.png"
-alt="ss1"
-width="500px" />
+     alt="screenshot"
+     width="500px" />
