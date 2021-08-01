@@ -17,8 +17,12 @@ Cross platform clipboard manager inspired by Ditto for windows
 
 ## Features
 
-![](screenshots/2021-08-01-15-13-11.png)
+<img src="screenshots/2021-08-01-15-13-11.png"
+alt="ss1"
+width="500px" />
 
 ### highlights the searched items
 
-![](screenshots/2021-08-01-15-14-03.png)
+<img src="screenshots/2021-08-01-15-14-03.png"
+alt="ss1"
+width="500px" />
