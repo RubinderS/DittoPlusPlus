@@ -19,13 +19,11 @@ Cross platform clipboard manager inspired by Ditto for windows
 - press enter or click to copy the currently selected item on clipboard
 - to search through the clipboard history simply start typing the search query
 
-## Features
-
 <img src="screenshots/2021-08-01-15-13-11.png"
 alt="screenshot"
 width="500px" />
 
-### highlights the searched items
+### Highlights the searched items
 
 <img src="screenshots/2021-08-01-15-14-03.png"
      alt="screenshot"
