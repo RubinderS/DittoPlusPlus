@@ -67,7 +67,7 @@
     "eslint-plugin-react": "7.21.5",
     "file-loader": "2.0.0",
     "html-webpack-plugin": "5.3.2",
-    "lodash": "4.17.20",
+    "lodash": "4.17.21",
     "mocha": "5.2.0",
     "nan": "2.14.2",
     "nodemon": "2.0.4",
