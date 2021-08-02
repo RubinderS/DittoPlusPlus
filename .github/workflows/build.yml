@@ -80,5 +80,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "out/*.exe"
-          bodyFile: "My Release"
+          body: "My Release"
           token: ${{ secrets.TOKEN }}
