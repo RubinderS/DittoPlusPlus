@@ -40,15 +40,9 @@ jobs:
         with:
           name: Ditto++_Setup_MacOS
           path: out/*.dmg
-          
-      - name: Release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "out/*.dmg"
-          body: "My Release"
-          token: ${{ secrets.TOKEN }}
 
   build-win:
+    needs: build-mac
     runs-on: windows-latest
    
     strategy:
@@ -75,10 +69,15 @@ jobs:
         with:
           name: Ditto++_Setup_Windows
           path: out/*.exe
-
+          
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.0.10
+        with:
+          name: Ditto++_Setup_MacOS
+    
       - name: Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "out/*.exe"
+          artifacts: "out/*.exe, Ditto++_Setup_MacOS"
           body: "My Release"
           token: ${{ secrets.TOKEN }}
