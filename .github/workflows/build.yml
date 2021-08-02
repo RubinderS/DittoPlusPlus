@@ -40,9 +40,9 @@ jobs:
           path: out/*.dmg
           
       - name: Release
-      - uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1
         with:
-          artifacts: "out/*.exe"
+          artifacts: "out/*.dmg"
           bodyFile: "My Release"
           token: ${{ secrets.TOKEN }}
 
@@ -75,7 +75,7 @@ jobs:
           path: out/*.exe
 
       - name: Release
-      - uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1
         with:
           artifacts: "out/*.exe"
           bodyFile: "My Release"
