@@ -5,8 +5,8 @@ name: Build
 on:
   push:
     tags:
-    - '*'
-  
+      - '*'
+
   pull_request:
     branches: [master]
 
@@ -31,7 +31,7 @@ jobs:
         with:
           name: GITHUB_TOKEN
           value: ${{ secrets.TOKEN }}
-          
+
       - name: build:mac
         run: npm run pkg:mac
 
@@ -44,7 +44,7 @@ jobs:
   build-win:
     needs: build-mac
     runs-on: windows-latest
-   
+
     strategy:
       matrix:
         node-version: [14.17.2]
@@ -69,15 +69,15 @@ jobs:
         with:
           name: Ditto++_Setup_Windows
           path: out/*.exe
-          
+
       - name: Download a Build Artifact
         uses: actions/download-artifact@v2.0.10
         with:
           name: Ditto++_Setup_MacOS
-    
+
       - name: Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "out/*.exe, Ditto++_Setup_MacOS"
-          body: "My Release"
+          artifacts: 'out/*.exe, *.dmg'
+          body: 'My Release'
           token: ${{ secrets.TOKEN }}
