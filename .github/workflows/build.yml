@@ -45,7 +45,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "out/*.dmg"
-          bodyFile: "My Release"
+          body: "My Release"
           token: ${{ secrets.TOKEN }}
 
   build-win:
