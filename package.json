@@ -89,7 +89,6 @@
   "build": {
     "appId": "rubinders.dittoplusplus",
     "productName": "Ditto++",
-    "artifactName": "Ditto++ v${version}.${ext}",
     "directories": {
       "app": "./dist/",
       "output": "./out/"
@@ -98,6 +97,7 @@
       "target": "dmg",
       "category": "public.app-category.utilities",
       "icon": "./src/resources/clipboard-svgrepo-com.png",
+      "artifactName": "Ditto++_v${version}_Setup_Mac.${ext}",
       "extendInfo": {
         "LSUIElement": true
       }
@@ -105,7 +105,8 @@
     "win": {
       "target": "nsis",
       "asar": false,
-      "icon": "./src/resources/clipboard-svgrepo-com.png"
+      "icon": "./src/resources/clipboard-svgrepo-com.png",
+      "artifactName": "Ditto++_v${version}_Setup_Windows.${ext}"
     },
     "dmg": {
       "icon": "./src/resources/clipboard-svgrepo-com.png",
