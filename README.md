@@ -7,7 +7,7 @@
 
 Cross platform clipboard manager inspired by Ditto for windows
 
-<img src="screenshots/2021-08-01-21-25-02.png"
+<img src="screenshots/2021-08-02-19-36-11.png"
      alt="screenshot"
      width="700px" />
 
