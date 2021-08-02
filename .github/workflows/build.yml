@@ -13,7 +13,7 @@ on:
 jobs:
   build:
     # The type of runner that the job will run on
-    runs-on: windows-latest
+    runs-on: macos-latest
    
     strategy:
       matrix:
@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: install dependencies
-        run: npm i
+        run: npm i --legacy-peer-deps
   
       - name: Set and export environment variable
         uses: myci-actions/export-env-var@1
@@ -36,11 +36,18 @@ jobs:
       - name: build:win
         run: npm run pkg:win
 
+      - name: build:mac
+        run: npm run pkg:mac
+
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: Ditributale files
-          path: out/Ditto++ v1.0.0.exe
+          name: Ditto++_Setup_Windows
+          path: out/*.exe
 
-      - name: Automatic GitHub Release
-        uses: justincy/github-action-npm-release@2.0.2
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: Ditto++_Setup_MacOS
+          path: out/*.dmg
+
