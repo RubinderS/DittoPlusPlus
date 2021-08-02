@@ -7,11 +7,6 @@ on:
     tags:
       - '*'
 
-  pull_request:
-    branches: [master]
-
-  workflow_dispatch:
-
 jobs:
   build-mac:
     runs-on: macos-latest
@@ -79,5 +74,4 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: 'out/*.exe, *.dmg'
-          body: 'My Release'
           token: ${{ secrets.TOKEN }}
