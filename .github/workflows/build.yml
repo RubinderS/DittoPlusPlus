@@ -27,13 +27,17 @@ jobs:
       - name: install dependencies
         run: npm i
   
+      - name: Set and export environment variable
+        uses: myci-actions/export-env-var@1
+        with:
+          name: GH_TOKEN
+          value: ${{ secrets.TOKEN }}
+
       - name: build:win
         run: npm run pkg:win
-       
+
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.2.4
         with:
           name: Ditributale files
           path: out/*.exe
-
-
