@@ -11,22 +11,47 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    # The type of runner that the job will run on
+  build-mac:
     runs-on: macos-latest
+
+    strategy:
+      matrix:
+        node-version: [14.17.2]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install dependencies
+        run: npm i --legacy-peer-deps
+
+      - name: Set and export environment variable
+        uses: myci-actions/export-env-var@1
+        with:
+          name: GITHUB_TOKEN
+          value: ${{ secrets.TOKEN }}
+          
+      - name: build:mac
+        run: npm run pkg:mac
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: Ditto++_Setup_MacOS
+          path: out/*.dmg
+
+  build-win:
+    runs-on: windows-latest
    
     strategy:
       matrix:
         node-version: [14.17.2]
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
       - name: install dependencies
         run: npm i --legacy-peer-deps
-  
+
       - name: Set and export environment variable
         uses: myci-actions/export-env-var@1
         with:
@@ -36,18 +61,8 @@ jobs:
       - name: build:win
         run: npm run pkg:win
 
-      - name: build:mac
-        run: npm run pkg:mac
-
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.2.4
         with:
           name: Ditto++_Setup_Windows
           path: out/*.exe
-
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.2.4
-        with:
-          name: Ditto++_Setup_MacOS
-          path: out/*.dmg
-
