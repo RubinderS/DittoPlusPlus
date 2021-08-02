@@ -30,7 +30,7 @@ jobs:
       - name: Set and export environment variable
         uses: myci-actions/export-env-var@1
         with:
-          name: GH_TOKEN
+          name: GITHUB_TOKEN
           value: ${{ secrets.TOKEN }}
 
       - name: build:win
@@ -40,4 +40,7 @@ jobs:
         uses: actions/upload-artifact@v2.2.4
         with:
           name: Ditributale files
-          path: out/*.exe
+          path: out/Ditto++ v1.0.0.exe
+
+      - name: Automatic GitHub Release
+        uses: justincy/github-action-npm-release@2.0.2
