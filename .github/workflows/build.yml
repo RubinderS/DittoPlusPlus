@@ -4,9 +4,9 @@ name: Build
 
 on:
   push:
-    branches: [  ]
+    branches: [master]
   pull_request:
-    branches: [  ]
+    branches: [master]
 
   workflow_dispatch:
 
@@ -38,6 +38,13 @@ jobs:
         with:
           name: Ditto++_Setup_MacOS
           path: out/*.dmg
+          
+      - name: Release
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "out/*.exe"
+          bodyFile: "My Release"
+          token: ${{ secrets.TOKEN }}
 
   build-win:
     runs-on: windows-latest
@@ -66,3 +73,10 @@ jobs:
         with:
           name: Ditto++_Setup_Windows
           path: out/*.exe
+
+      - name: Release
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "out/*.exe"
+          bodyFile: "My Release"
+          token: ${{ secrets.TOKEN }}
