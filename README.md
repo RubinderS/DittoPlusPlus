@@ -28,3 +28,7 @@ width="500px" />
 <img src="screenshots/2021-08-01-15-14-03.png"
      alt="screenshot"
      width="500px" />
+
+### Download
+
+Find your download: [https://github.com/RubinderS/DittoPlusPlus/releases/](https://github.com/RubinderS/DittoPlusPlus/releases/)
