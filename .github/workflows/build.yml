@@ -2,8 +2,8 @@ name: Build
 
 on:
   push:
-    branches:
-      - 'releases/**'
+    tags:
+      - '*'
 
 jobs:
   build-mac:
