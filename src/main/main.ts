@@ -205,6 +205,8 @@ function onReady() {
     ipcMain.on(GlobalEvents.HideWindow, () => {
       hideWindow();
     });
+
+    hideWindow();
   });
 }
 
