@@ -59,7 +59,7 @@
     "copy-pkg-json-webpack-plugin": "0.0.40",
     "cross-env": "5.2.1",
     "css-loader": "1.0.1",
-    "electron": "13.1.7",
+    "electron": "15.5.5",
     "electron-builder": "22.11.7",
     "eslint": "7.14.0",
     "eslint-config-prettier": "6.15.0",
